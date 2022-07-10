@@ -1,12 +1,134 @@
 <!DOCTYPE html>
-<html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seolmango's webpage</title>
-</head>
-<body>
-  <h1>한번에 된다는 미친 상상중</h1>
-</body>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="설망고의 웹페이지 입니다">
+    <meta name="author" content="Seolmango">
+    <link rel="icon" href="data\icon.ico">
+
+    <title>seolmango의 웹 페이지</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+    @font-face {
+      font-family: 'OTWelcomeRA';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/OTWelcomeRA.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+      <header class="blog-header py-3">
+        <div class="row flex-nowrap justify-content-between align-items-center">
+          <div class="text-center">
+            <h1 class="blog-header-logo text-dark">Seolmango's WebPage</h1>
+          </div>
+        </div>
+      </header>
+
+      <div class="nav-scroller py-1 mb-2">
+        <nav class="nav d-flex justify-content-between">
+          <a class="p-2 text-muted" href="devlife\index.html">개발</a>
+          <a class="p-2 text-muted" href="study\index.html">공부</a>
+          <a class="p-2 text-muted" href="etc\index.html">잡것</a>
+        </nav>
+      </div>
+
+      <div class="jumbotron p-3 p-md-5 text-white rounded bg-dark">
+        <div class="col-md-6 px-0">
+          <h1 class="display-4 font-italic">그래서 여기가 뭐하는 곳인데?</h1>
+          <p class="lead my-3">이 웹페이지?, 아니 블로그? 만든 사람 조차도 뭐라고 부를지 못 정한 이곳에 관한 설명이 필요하지 않나요?</p>
+          <p class="lead mb-0"><a href="etc\lists\introduce.html" class="text-white font-weight-bold">읽어보기</a></p>
+        </div>
+      </div>
+
+      <div class="row mb-2">
+        <div class="col-md-6">
+          <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+              <strong class="d-inline-block mb-2 text-primary">개발</strong>
+              <h3 class="mb-0">
+                <a class="text-dark" href="devlife\lists\myprojects.html">프로젝트 소개</a>
+              </h3>
+              <div class="mb-1 text-muted">2022/07/10</div>
+              <p class="card-text mb-auto">주인장의 프로젝트들을 소개한 글?입니다</p>
+              <a href="devlife\lists\myprojects.html">읽어보기</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card flex-md-row mb-4 box-shadow h-md-250">
+            <div class="card-body d-flex flex-column align-items-start">
+              <strong class="d-inline-block mb-2 text-success">공부</strong>
+              <h3 class="mb-0">
+                <a class="text-dark" href="study\lists\whatisQA.html">양자 어닐러란?</a>
+              </h3>
+              <div class="mb-1 text-muted">2022/07/10</div>
+              <p class="card-text mb-auto">다른 과제로 인해 작성했던 양자 어닐러에 관한 글</p>
+              <a href="study\lists\whatisQA.html">읽어보기</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main role="main" class="container">
+      <div class="row">
+        <div class="col-md-8 blog-main">
+          <div class="blog-post">
+            <h2 class="blog-post-title">안녕하세요? Seolmango입니다!</h2>
+            <p class="blog-post-meta">2022/07/10 by Seolmango</p>
+
+            <p>안녕하세요!! 어떤 방법으로 이곳을 찾았는지는 모르겠지만 오셨군요... 아주 원시적인 방법으로 구현된 웹페이지?블로그?입니다!</p>
+            <hr>
+            <p>이곳은 저 Seolmango가 프로그래밍 연습을 핑계로 Github Pages를 이용해서 원시적으로 구현하고 있는 웹페이지 겸 블로그 입니다.</p>
+            <blockquote>
+              <p>공부하면서 만들다보니 <strong>버그가 존재할 확률이 큽니다.</strong> 또한 바쁜 일상을 보내는 주인장의 특성상 <strong>활동이 적을 확률이 큽니다.</strong> 더 말하자면, 아무생각없이 글을 쓰기 때문에 맞춤법 오류가 있을 확률은 <strong>100%</strong> 입니다.</p>
+            </blockquote>
+            <p>일일히 html 노가다를 통해 구현하는 블로그이다보니 댓글이나 반응 같이 <strong>이 페이지를 방문하는 여러분들과의 소통은 사실상 불가능</strong>합니다.</p>
+            <h3>개발</h3>
+            <p>개발일지나 개발관련 팁같은 것들을 올리는 카테고리입니다.</p>
+            <h3>공부</h3>
+            <p>제가 공부하는 것들 중 알릴만한 것들이나 글로 적어도 될 정도의 퀼리티를 가진 것들만 올리는 카테고리입니다. 주로</p>
+            <ol>
+              <li>수학</li>
+              <li>과학</li>
+            </ol>
+            <p>관련된 글들을 많이 올릴 생각입니다.</p>
+            <h3>잡것</h3>
+            <p>공지사항이나 아무말을 적을 생각입니다. 또는 기능을 테스트하는 글을 올릴수도 있습니다.</p>
+          </div><!-- /.blog-post -->
+
+        </div><!-- /.blog-main -->
+
+        <aside class="col-md-4 blog-sidebar">
+          <div class="p-3 bg-light rounded">
+            <h4 class="font-italic">연락처</h4>
+            <ol class="list-unstyled">
+              <li><a href="https://github.com/seolmango">GitHub</a></li>
+              <li><a href="https://www.instagram.com/seolmango/">Instagram</a></li>
+              <li><a href="mailto:seolchaehwan@naver.com">메일보내기</a></li>
+            </ol>
+          </div>
+        </aside><!-- /.blog-sidebar -->
+
+      </div><!-- /.row -->
+
+    </main><!-- /.container -->
+
+    <footer class="blog-footer text-center">
+      <p>이 페이지는 <a href="https://twitter.com/mdo">@mdo</a>님이 <a href="https://getbootstrap.com/">Bootstrap</a>을 이용하여 만드신 템플릿을 이용하여 제작되었습니다.</p>
+      <p>
+        <a href="#">맨 위로 돌아가기</a>
+      </p>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </html>
