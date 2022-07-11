@@ -63,13 +63,13 @@
 
             <p>아래의 리스트에서는 주인장이 제작한 리포지토리들을 소개합니다. 자세한 설명은 리스트 아래에 따로 적어놓고 있습니다.</p>
             <ol>
-              <li><a href="https://github.com/Seol7523/KoreanWordDetection">한국어 욕설 필터링 모듈</a></li>
-              <li><a href="https://github.com/Seol7523/ProbabilityProblem1">컴퓨터로 해결해본 확률 문제</a></li>
-              <li><a href="https://github.com/Seol7523/FibonacciBenfordLawCheck">n진법에서 피보나치 수열은 벤포드 법칙이 성립하는지 테스트</a></li>
-              <li><a href="https://switch.azurewebsites.net/">웹 게임(비공개 레포라서 게임의 링크로 연결</a></li>
+              <li><a href="https://github.com/Seol7523/KoreanWordDetection">한국어 욕설 필터링 모듈</a><a href="#con1">(설명보기)</a></li>
+              <li><a href="https://github.com/Seol7523/ProbabilityProblem1">컴퓨터로 해결해본 확률 문제</a><a href="#con2">(설명보기)</a></li>
+              <li><a href="https://github.com/Seol7523/FibonacciBenfordLawCheck">n진법에서 피보나치 수열은 벤포드 법칙이 성립하는지 테스트</a><a href="#con3">(설명보기)</a></li>
+              <li><a href="https://switch.azurewebsites.net/">웹 게임(비공개 레포라서 게임의 링크로 연결</a><a href="#con4">(설명보기)</a></li>
             </ol>
             <br>
-            <h3>한국어 욕설 필터링</h3>
+            <h3 id="con1">한국어 욕설 필터링</h3>
             <p>욕설을 탐지하는 방법은 크게 두가지가 있습니다. 많은 욕설 채팅 데이터를 이용해서 머신러닝을 통해 욕설을 분류하는 방법, 그리고 단순히 금칙어 리스트안에 있는 단어가 글에 존재하는지 확인하는 방법이 있죠.</p>
             <p>하지만 두가지 방법 모두 장단점이 있습니다. 머신러닝을 통한 방법은 욕설의 탐지율이 높고 오탐을 할 가능성도 낮다는 장점이 있지만 많은 양의 라벨링된 욕설 데이터가 필요하고 새로운 욕설이나 어떤 집단만의 금칙어를 추가해야하는 경우 그 방법이 복잡합니다.</p>
             <p>금칙어 기반의 방식은 어떨까요? 여긴 새로운 욕설의 추가도 쉽고 알고리즘도 단순합니다. 하지만 유저들의 채팅 데이터는 경우가 좀 다르죠. 많은 오타와 수많은 우회법이 있기 때문입니다. 예를 들어볼까요? 우리는 '시간'이라는 말이 욕설이라고 가정해봅시다. 그럼 금칙어리스트에 '시간','sigan','tlrks','ㅅ1간','^ㅣ간' 등의 말들도 추가해줘야합니다. 이런방식으론 실시간으로 대응하기 쉽지 않습니다.</p>
@@ -78,16 +78,16 @@
             <img src="https://github.com/Seol7523/KoreanBadwordDetection/raw/main/example/2.gif">
             <img src="https://github.com/Seol7523/KoreanBadwordDetection/raw/main/example/3.gif">
             <br>
-            <h3>컴퓨터로 해결해본 확률문제</h3>
+            <h3 id="con2">컴퓨터로 해결해본 확률문제</h3>
             <p>친구가 갑자기 심각한 얼굴로 저에게 물어봐서 심심풀이로 해본 문제해결입니다.</p>
             <br>
-            <h3>n진법에서 피보나치 수열은 벤포드 법칙이 성립하는지 테스트</h3>
+            <h3 id="con3">n진법에서 피보나치 수열은 벤포드 법칙이 성립하는지 테스트</h3>
             <p>학교 발표중 한 친구가 벤포드 법칙에 관해서 발표를 하더군요... 그때 선생님께서 하신 질문을 해결하기 위해서 벤포드 법칙을 위한 모듈을 만들었고 해당 모듈을 이용하여 n진법의 경우도 해결해본 프로젝트입니다. 결과는 아래와 같습니다.</p>
             <img src="https://github.com/Seol7523/FibonacciBenfordLawCheck/raw/master/results/result(Base10_10000).png">
             <img src="https://github.com/Seol7523/FibonacciBenfordLawCheck/raw/master/results/result(Base8_10000).png">
             <img src="https://github.com/Seol7523/FibonacciBenfordLawCheck/raw/master/results/result(Base20_10000).png">
             <br>
-            <h3>웹게임</h3>
+            <h3 id="con4">웹게임</h3>
             <p>그냥 해보고 싶어서 만들기 시작한 웹게임입니다. 술래잡기와 비슷한 룰로 제작중이고 이것도 쌩 노가다로 제작중입니다. html canvas와 socket.io가 중요한 역할을 하고 있습니다.</p>
             <p>처음엔 그냥 저 혼자 심심풀이로 해보던 프로젝트였는데 지금은 이끼 낀 금화님(프로그래밍), H님(사운드)님과 함께 제작중입니다.</p>
           </div><!-- /.blog-post -->
