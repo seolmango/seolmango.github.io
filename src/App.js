@@ -11,7 +11,12 @@ const get_user_theme = () => {
     if (user_theme) {
         return user_theme;
     } else {
-        return "dark";
+        if (!window.matchMedia) return "dark";
+        if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            return "dark";
+        } else {
+            return "light";
+        }
     }
 }
 export const ThemeContext = createContext(null);
