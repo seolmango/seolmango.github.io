@@ -1,3 +1,15 @@
 .title {
-    font-family: yg-jalnan;
+    font-family: yg-jalnan, serif;
+}
+
+.navbar-items {
+    font-family: GmarketSansMedium, sans-serif;
+}
+
+.icons {
+    vertical-align: center;
+    horiz-align: center;
+    width: 20px;
+    height: 20px;
+    padding-left: 5px;
 }
