@@ -6,13 +6,22 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
 import {createContext, useState} from "react";
 
+const get_user_theme = () => {
+    const user_theme = localStorage.getItem("theme");
+    if (user_theme) {
+        return user_theme;
+    } else {
+        return "dark";
+    }
+}
 export const ThemeContext = createContext(null);
 
 function App() {
-    const [theme, setTheme] = useState("dark");
+    const [theme, setTheme] = useState(get_user_theme());
 
     const toggleTheme = () => {
         setTheme(theme === "light" ? "dark" : "light")
+        localStorage.setItem("theme", theme === "light" ? "dark" : "light");
     }
   return (
     <div className="App">
