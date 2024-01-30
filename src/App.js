@@ -34,7 +34,7 @@ function App() {
           <BrowserRouter>
               <MyNavbar current={theme} toggle={toggleTheme}/>
               <Routes>
-                  <Route path="/" element={<Main />} />
+                  <Route path="/" element={<Main current={theme}/>} />
                   <Route path="/projects" element={<Projects />} />
               </Routes>
           </BrowserRouter>
