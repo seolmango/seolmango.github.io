@@ -37,10 +37,10 @@ const MyNavbar = (props) => {
                 <Navbar.Collapse>
                     <Nav className="me-auto navbar-items">
                         <LinkContainer to="/">
-                            <Nav.Link className="navbar-item">Home</Nav.Link>
+                            <Nav.Link className={"normal"}>Home</Nav.Link>
                         </LinkContainer>
                         <LinkContainer to="/projects">
-                            <Nav.Link className="navbar-item">Projects</Nav.Link>
+                            <Nav.Link className={"normal"}>Projects</Nav.Link>
                         </LinkContainer>
                     </Nav>
                     <ReactSwitch className={"switch-button"} onChange={props.toggle} checked={props.current === "dark"} checkedIcon={get_dark_icon()} uncheckedIcon={get_light_icon()} onColor={"#888"}/>

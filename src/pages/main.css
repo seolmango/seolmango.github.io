@@ -1,4 +1,42 @@
-.container {
-    font-family: GmarketSansMedium, sans-serif;
+.profile-box {
+    border-radius: 70%;
+    overflow: hidden;
     text-align: center;
+    max-width: 200px;
+    max-height: 200px;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: auto;
+}
+
+.profile-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.hello-area {
+    margin-top: 20px;
+    text-align: left;
+    margin-left: 20px;
+}
+
+.inline {
+    display: inline;
+}
+
+.blink {
+    animation: blink 0.5s infinite;
+}
+
+@keyframes blink {
+    to {
+        opacity: 0;
+    }
 }

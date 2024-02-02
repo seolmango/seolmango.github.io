@@ -1,55 +1,69 @@
 import React from 'react';
 import "./main.css";
-import {Carousel} from "react-bootstrap";
-import galsim_img from "../assets/projects_/galsim.jpg";
-import kbwd_img from "../assets/projects_/KoreanBadwordDetection.webp";
+import {Row, Col, Container} from "react-bootstrap";
+import profile from "../assets/myprofile.jpeg";
 
+const typing_text_list = [
+    "I'm Seolmango!",
+    "I make what I want!",
+    "I'm a member of 0-inf!"
+];
+let typing_text = typing_text_list[0];
+let typing_text_list_index = 0;
+let typing_text_index = 1;
+let waitcount = 0;
 
-const Projects = (props) => {
-    return (
-        <Carousel data-bs-theme={(props.current==="light") ? "dark" : "light"} fade>
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={galsim_img}
-                    alt="Galaxy Simulator"
-                />
-                <Carousel.Caption>
-                    <h3>Galaxy Simulator</h3>
-                    <p>Simulate the collision of two galaxies!</p>
-                </Carousel.Caption>
-            </Carousel.Item>
-            <Carousel.Item>
-                <img
-                    className="d-block w-100"
-                    src={kbwd_img}
-                    alt="Korean Badword Detection"
-                />
-                <Carousel.Caption>
-                    <h3>Korean Badword Detection</h3>
-                    <p>A Python module for detecting and filtering Korean swear words without using deep learning.</p>
-                </Carousel.Caption>
-            </Carousel.Item>
-        </Carousel>
-    )
+function typing() {
+    if(waitcount > 0){
+        waitcount--;
+        return;
+    }
+    if (typing_text_index < typing_text.length) {
+        let text = typing_text.charAt(typing_text_index);
+        const area = document.getElementById("typing");
+        area.innerHTML += text;
+        typing_text_index++;
+        if(typing_text_index === typing_text.length){
+            waitcount = 10;
+        }
+    }else{
+        typing_text_list_index++;
+        if(typing_text_list_index === typing_text_list.length){
+            typing_text_list_index = 0;
+        }
+        typing_text = typing_text_list[typing_text_list_index];
+        typing_text_index = 1;
+        const area = document.getElementById("typing");
+        area.innerHTML = typing_text.charAt(0);
+    }
 }
+
+const typingInterval = setInterval(typing, 200);
+
 const Main = (props) => {
     return (
-      <div>
-          <div className={"container"}>
-              <h1 className={"title"}>
-                  Hello, World!
-              </h1>
-              <p>
-                  I am a student interested in coding.
-              </p>
-              <p>
-                  It's hard for me, and even if it's something I've never made before, I make it when I'm interested.
-                  So I used Python, JavaScript, and C to create web games, simulations, tiny DBMSs.
-              </p>
-              <Projects current={props.current}/>
-          </div>
-      </div>
+      <Container>
+          <Row>
+              <Col sm={8}>
+                  <div className={"hello-area"}>
+                      <h1 className={"title"}>Hello!</h1>
+                      <h1 className={"title inline"} id={"typing"}>I</h1>
+                      <h1 className={"title inline blink"}>|</h1>
+                  </div>
+              </Col>
+              <Col sm={4}>
+                  <div className={'profile-area'}>
+                      <div className={"profile-box"}>
+                          <img
+                              src={profile}
+                              alt={"profile"}
+                              className={"profile-image"}
+                          />
+                      </div>
+                  </div>
+              </Col>
+          </Row>
+      </Container>
     );
 }
 
