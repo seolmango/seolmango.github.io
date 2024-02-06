@@ -23,21 +23,12 @@
 
 .hello-area {
     text-align: left;
-    margin: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .inline {
     display: inline;
-}
-
-.blink {
-    animation: blink 0.5s infinite;
-}
-
-@keyframes blink {
-    to {
-        opacity: 0;
-    }
 }
 
 .description-area{
