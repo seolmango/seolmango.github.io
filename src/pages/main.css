@@ -18,13 +18,12 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 20px;
+    margin: 20px;
 }
 
 .hello-area {
-    margin-top: 20px;
     text-align: left;
-    margin-left: 20px;
+    margin: 20px;
 }
 
 .inline {
@@ -39,4 +38,36 @@
     to {
         opacity: 0;
     }
+}
+
+.description-area{
+    text-align: center;
+    border-radius: 20px;
+    border: #676767 2px solid;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.contact-area{
+    text-align: center;
+    border-radius: 20px;
+    border: #676767 2px solid;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    word-break: break-all;
+}
+
+.des-con-con {
+    justify-content: space-between;
+}
+
+.contact-items {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
