@@ -6,6 +6,11 @@ import {MdEmail} from "react-icons/md";
 import {FaInstagram, FaGithub} from "react-icons/fa";
 import {TbBrandYoutube} from "react-icons/tb";
 import {TypeAnimation} from "react-type-animation";
+import {Carousel} from "react-bootstrap";
+import {Link} from "react-router-dom";
+import galsim_title_image from "../assets/projects/galsim/title.webp";
+import fileRenamer_title_image from "../assets/projects/fileRenamer/title.webp";
+import switchio_title_image from "../assets/projects/switchio/title.webp";
 
 const Main = (props) => {
     return (
@@ -89,6 +94,50 @@ const Main = (props) => {
                   </div>
               </Col>
           </Row>
+          <div className={"projects-area"}>
+              <h2 className={"title"}>My Projects</h2>
+              <Carousel data-bs-theme={"dark"}>
+                  <Carousel.Item>
+                      <img
+                          src={galsim_title_image}
+                          alt={"galaxy simulation"}
+                          className={"project-image"}
+                      />
+                      <Carousel.Caption>
+                          <h3 className={'title'}>Galaxy simulation</h3>
+                          <Link to={"/projects/galaxysimulation"}>
+                              <p>View more</p>
+                          </Link>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                      <img
+                          src={fileRenamer_title_image}
+                          alt={"file renamer"}
+                          className={"project-image"}
+                      />
+                      <Carousel.Caption>
+                          <h3 className={'title text-white'}>File Renamer</h3>
+                          <Link to={"/projects/filerenamer"}>
+                              <p>View more</p>
+                          </Link>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+                  <Carousel.Item>
+                      <img
+                          src={switchio_title_image}
+                          alt={"switchio"}
+                          className={"project-image"}
+                      />
+                      <Carousel.Caption>
+                          <h3 className={'title'}>Switchio</h3>
+                          <Link to={"/projects/switchio"}>
+                              <p>View more</p>
+                          </Link>
+                      </Carousel.Caption>
+                  </Carousel.Item>
+              </Carousel>
+          </div>
       </Container>
     );
 }

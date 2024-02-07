@@ -62,3 +62,18 @@
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+.projects-area {
+    text-align: center;
+    border-radius: 20px;
+    border: #676767 2px solid;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+}
+
+.project-image {
+    width: 100%;
+    object-fit: cover;
+    margin: auto;
+}
