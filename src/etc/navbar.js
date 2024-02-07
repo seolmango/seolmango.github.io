@@ -1,6 +1,6 @@
 import React from "react";
 import {Container, Navbar, Nav} from "react-bootstrap";
-import zerotoing from "../assets/zerotoing.png";
+import zerotoing from "../assets/zerotoing.webp";
 import "./Navbar.css";
 import {LinkContainer} from "react-router-bootstrap";
 

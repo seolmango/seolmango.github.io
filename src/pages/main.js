@@ -1,7 +1,7 @@
 import React from 'react';
 import "./main.css";
 import {Row, Col, Container} from "react-bootstrap";
-import profile from "../assets/myprofile.jpeg";
+import profile from "../assets/myprofile.webp";
 import {MdEmail} from "react-icons/md";
 import {FaInstagram, FaGithub} from "react-icons/fa";
 import {TbBrandYoutube} from "react-icons/tb";
