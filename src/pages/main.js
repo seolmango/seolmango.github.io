@@ -5,7 +5,7 @@ import profile from "../assets/myprofile.jpeg";
 import {MdEmail} from "react-icons/md";
 import {FaInstagram, FaGithub} from "react-icons/fa";
 import {TbBrandYoutube} from "react-icons/tb";
-import Typical from "react-typical";
+import {TypeAnimation} from "react-type-animation";
 
 const Main = (props) => {
     return (
@@ -14,11 +14,20 @@ const Main = (props) => {
               <Col sm={8}>
                   <div className={"hello-area"}>
                       <h1 className={"title"}>Hello!</h1>
-                      <Typical className={"title"}
-                          steps={['I\'m Seolmango!', 1500, 'I make what I want!', 1500, 'I\'m a member of 0-inf!', 1500]}
-                          loop={Infinity}
-                          wrapper="h1"
-                        />
+                      <TypeAnimation
+                          sequence={[
+                              "I'm Seolmango!",
+                              2000,
+                              "I make what I want!",
+                              2000,
+                              "I'm a member of 0-inf!",
+                              2000
+                          ]}
+                          wrapper={"h1"}
+                          repeat={Infinity}
+                          className={"title"}
+                          speed={50}
+                      />
                   </div>
               </Col>
               <Col sm={4}>
