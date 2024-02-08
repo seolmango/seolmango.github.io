@@ -7,7 +7,8 @@ import {FaInstagram, FaGithub} from "react-icons/fa";
 import {TbBrandYoutube} from "react-icons/tb";
 import {TypeAnimation} from "react-type-animation";
 import {Carousel} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {LinkContainer} from "react-router-bootstrap";
+import {Button} from "react-bootstrap";
 import galsim_title_image from "../assets/projects/galsim/title.webp";
 import fileRenamer_title_image from "../assets/projects/fileRenamer/title.webp";
 import switchio_title_image from "../assets/projects/switchio/title.webp";
@@ -95,7 +96,7 @@ const Main = (props) => {
               </Col>
           </Row>
           <div className={"projects-area"}>
-              <h2 className={"title"}>My Projects</h2>
+              <h2 className={"title"}>Projects</h2>
               <Carousel data-bs-theme={"dark"}>
                   <Carousel.Item>
                       <img
@@ -105,9 +106,9 @@ const Main = (props) => {
                       />
                       <Carousel.Caption>
                           <h3 className={'title'}>Galaxy simulation</h3>
-                          <Link to={"/projects/galaxysimulation"}>
-                              <p>View more</p>
-                          </Link>
+                          <LinkContainer to={"/projects/detail/galsim"}>
+                              <Button variant={"info"} className={"normal"}><span className={"normal"}>View Detail</span></Button>
+                          </LinkContainer>
                       </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
@@ -118,9 +119,9 @@ const Main = (props) => {
                       />
                       <Carousel.Caption>
                           <h3 className={'title text-white'}>File Renamer</h3>
-                          <Link to={"/projects/filerenamer"}>
-                              <p>View more</p>
-                          </Link>
+                          <LinkContainer to={"/projects/fileRenamer"}>
+                              <Button variant={"info"} className={"normal"}><span className={"normal"}>View Detail</span></Button>
+                          </LinkContainer>
                       </Carousel.Caption>
                   </Carousel.Item>
                   <Carousel.Item>
@@ -131,12 +132,15 @@ const Main = (props) => {
                       />
                       <Carousel.Caption>
                           <h3 className={'title'}>Switchio</h3>
-                          <Link to={"/projects/switchio"}>
-                              <p>View more</p>
-                          </Link>
+                          <LinkContainer to={"/projects/switchio"}>
+                              <Button variant={"info"}><span className={"normal"}>View Detail</span></Button>
+                          </LinkContainer>
                       </Carousel.Caption>
                   </Carousel.Item>
               </Carousel>
+              <LinkContainer to={"/projects"}>
+                  <Button variant={"info"}><span className={"normal"}>Check More Projects</span></Button>
+              </LinkContainer>
           </div>
       </Container>
     );

@@ -1,0 +1,16 @@
+.project-list {
+    text-align: center;
+    justify-content: center;
+}
+
+.project-card-item {
+    margin: 10px auto;
+    max-width: 400px;
+}
+
+.project-pagination {
+    text-align: center;
+    justify-content: center;
+    margin: 20px auto;
+    width: max-content;
+}
