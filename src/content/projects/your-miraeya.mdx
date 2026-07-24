@@ -1,0 +1,51 @@
+---
+title: "나를 짝사랑하는 기업을 찾아보자"
+hook: "지금까지의 실험들과는 결이 다르게, 실제로 다른 사람이 써볼 만한 서비스를 만드는 중이다."
+date: 2026-07-23
+category: "진행 중"
+stack: ["TypeScript", "React", "Vite"]
+repo: "https://github.com/seolmango/your-miraeya"
+demo: "https://seolmango.github.io/your-miraeya/"
+status: "진행중"
+---
+import Stage from "../../components/Stage.astro";
+import Callout from "../../components/Callout.astro";
+
+<Stage tag="MOTIVE" title="왜 만들었나">
+
+이 로그에 있는 프로젝트 대부분은 궁금증이나 장난에서 출발했다. `your-miraeya`는
+조금 다르다 — "나를 필요로 할 만한 기업을 거꾸로 찾아본다"는 아이디어를,
+나 혼자만 쓰고 끝낼 게 아니라 실제로 다른 사람도 써볼 만한 형태로
+만들어보고 싶어서 시작했다. 지금까지 쌓아온 잡다한 실험들이 결국 "제대로
+된 것 하나를 완주해보자"는 쪽으로 이어진 셈이다.
+
+</Stage>
+
+<Stage tag="BUILD" title="어떻게 만들었나">
+
+React 19 + TypeScript + Vite로 프런트엔드를 구성하고 GitHub Pages로
+데모를 배포하고 있다. 커밋 로그를 보면 이 프로젝트에서 실제로 시간을 많이
+쓴 부분이 드러난다 — 화면 레이아웃을 다듬는 것 외에, **공유 방식 개선**과
+**인앱 브라우저 대응**에 여러 차례 손을 댔다.
+
+카카오톡이나 인스타그램 같은 앱 안에서 링크를 열면 뜨는 "인앱 브라우저"는
+일반 모바일 브라우저와 미묘하게 다르게 동작해서 공유 링크를 통해 들어온
+방문자에게 레이아웃이 깨지거나 일부 기능이 먹통이 되는 경우가 실제로
+많다. 한국에서 웹 서비스를 공유 중심으로 설계하면 반드시 마주치게 되는
+문제인데, 이번 프로젝트에서 직접 부딪혀서 고쳐가는 중이다.
+
+</Stage>
+
+<Stage tag="RESULT" title="지금 상태">
+
+아직 진행 중인 프로젝트다. 지금까지는 일단 데모를 배포해두고 공유 흐름과
+인앱 브라우저 호환성처럼 "실제 사용자가 겪는" 문제들을 하나씩 고쳐나가는
+단계에 가깝다. 지금까지 만든 것 중 가장 오래, 가장 진지하게 붙잡고 있는
+프로젝트인 만큼, 이 로그에도 계속 진행 상황을 남길 생각이다.
+
+<Callout label="바로가기">
+지금 배포된 데모는 <a href="https://seolmango.github.io/your-miraeya/">seolmango.github.io/your-miraeya</a>에서
+직접 확인할 수 있다.
+</Callout>
+
+</Stage>

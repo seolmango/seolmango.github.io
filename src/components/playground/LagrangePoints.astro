@@ -1,0 +1,368 @@
+---
+// Ported from github.com/seolmango/threeParticle. The heatmap is the exact
+// effective-potential formula from potential.py (mass ratio ALPHA for the
+// Sun–Jupiter system), and the click-to-drop trajectory integrates the
+// exact rotating-frame equations of motion from trojan.py — including its
+// real starting condition for the default trajectory, not a made-up one.
+---
+
+<div class="lp-toy">
+  <div class="frame">
+    <canvas class="view"></canvas>
+    <p class="hint">캔버스를 클릭하면 그 자리에 소행성을 정지 상태로 놓습니다</p>
+  </div>
+  <div class="controls">
+    <button type="button" data-action="toggle">일시정지</button>
+    <button type="button" data-action="clear">지우기</button>
+    <p class="caption">
+      <span class="dot amber" aria-hidden="true"></span>기본 궤적은
+      trojan.py의 실제 초기값 · <span class="cross" aria-hidden="true">+</span>
+      표시는 L4/L5 근사 위치
+    </p>
+  </div>
+</div>
+
+<style>
+  .lp-toy {
+    margin: 2rem 0;
+  }
+
+  .frame {
+    position: relative;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    overflow: hidden;
+    touch-action: none;
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: 420px;
+  }
+
+  .view {
+    cursor: crosshair;
+  }
+
+  .hint {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.9rem;
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    pointer-events: none;
+    text-shadow: 0 0 4px var(--paper-raised);
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 0.9rem;
+  }
+
+  button {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  button:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .caption {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  .dot.amber {
+    background: var(--amber);
+  }
+
+  .cross {
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  const ALPHA = 0.000954; // Sun–Jupiter mass ratio, same as trojan.py
+  const RANGE = 1.5; // display domain: [-1.5, 1.5] on both axes, same as the source scripts
+  const TIME_SPEED = 0.6; // sim-time units advanced per real second
+  const SUBSTEPS = 4;
+  const PARTICLE_COLORS = ["--teal", "--focus", "--amber"];
+
+  function potential(x, y) {
+    const r1 = Math.sqrt((x - ALPHA) ** 2 + y * y);
+    const r2 = Math.sqrt((x + 1 - ALPHA) ** 2 + y * y);
+    return -(1 - ALPHA) / r1 - ALPHA / r2 - (x * x + y * y) / 2;
+  }
+
+  function derivs([x, dx, y, dy]) {
+    const r1 = Math.sqrt((x - ALPHA) ** 2 + y * y);
+    const r2 = Math.sqrt((x + 1 - ALPHA) ** 2 + y * y);
+    const dx2 =
+      (-(1 - ALPHA) * (x - ALPHA)) / r1 ** 3 - (ALPHA * (x + 1 - ALPHA)) / r2 ** 3 + 2 * dy + x;
+    const dy2 = (-(1 - ALPHA) * y) / r1 ** 3 - (ALPHA * y) / r2 ** 3 - 2 * dx + y;
+    return [dx, dx2, dy, dy2];
+  }
+
+  function rk4Step(state, dt) {
+    const k1 = derivs(state);
+    const s2 = state.map((v, i) => v + (k1[i] * dt) / 2);
+    const k2 = derivs(s2);
+    const s3 = state.map((v, i) => v + (k2[i] * dt) / 2);
+    const k3 = derivs(s3);
+    const s4 = state.map((v, i) => v + k3[i] * dt);
+    const k4 = derivs(s4);
+    return state.map((v, i) => v + (dt / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]));
+  }
+
+  function hexToRgb(hex) {
+    const clean = hex.trim().replace("#", "");
+    const bigint = parseInt(clean, 16);
+    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function lerpRgb(a, b, t) {
+    return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+  }
+
+  const TRAIL_LENGTH = 50;
+
+  function initLagrangeToy(root) {
+    const viewCanvas = root.querySelector("canvas.view");
+    const hint = root.querySelector(".hint");
+    const toggleBtn = root.querySelector('[data-action="toggle"]');
+    const clearBtn = root.querySelector('[data-action="clear"]');
+    const viewCtx = viewCanvas.getContext("2d");
+    // The static heatmap + markers are baked into this offscreen canvas once
+    // per resize, then blitted back full-opacity every frame before drawing
+    // trails on top. (An earlier version faded a semi-transparent overlay
+    // with destination-out — cute, but browsers store canvas pixels
+    // premultiplied, so un-premultiplying very-low-alpha remnants back to
+    // straight alpha amplifies rounding error and drifts the color toward
+    // white. Redrawing from a pristine bitmap sidesteps that entirely.)
+    const baseCanvas = document.createElement("canvas");
+    const baseCtx = baseCanvas.getContext("2d");
+
+    const style = getComputedStyle(document.documentElement);
+    const tealRgb = hexToRgb(style.getPropertyValue("--teal") || "#2e6f63");
+    const paperRgb = hexToRgb(style.getPropertyValue("--paper-raised") || "#f6f7f3");
+    const amberRgb = hexToRgb(style.getPropertyValue("--amber") || "#b5651d");
+    const inkRgb = hexToRgb(style.getPropertyValue("--ink") || "#202b26");
+    const inkSoft = style.getPropertyValue("--ink-soft").trim() || "#4b564f";
+    const ruleStrong = style.getPropertyValue("--rule-strong").trim() || "#9aa89c";
+    const fontMono = style.getPropertyValue("--font-mono").trim() || "monospace";
+    const particleColors = PARTICLE_COLORS.map((v) => style.getPropertyValue(v).trim());
+
+    let width = 0;
+    let height = 0;
+    let playing = true;
+    let colorCursor = 0;
+
+    function toPixel(x, y) {
+      return [width / 2 + (x / RANGE) * (width / 2), height / 2 - (y / RANGE) * (height / 2)];
+    }
+
+    function toSim(px, py) {
+      return [((px - width / 2) / (width / 2)) * RANGE, ((height / 2 - py) / (height / 2)) * RANGE];
+    }
+
+    const DEFAULT_STATE = [-0.532, 0.078, 0.92, 0.043]; // trojan.py's real "5" initial condition
+
+    function makeDefaultParticle() {
+      return { state: [...DEFAULT_STATE], color: amberRgb, history: [], alive: true };
+    }
+
+    let particles = [makeDefaultParticle()];
+
+    function drawBase() {
+      // ImageData writes raw backing pixels regardless of ctx transform, so
+      // this loop maps directly in backing-pixel space (bw × bh) rather
+      // than going through the CSS-pixel toSim() used everywhere else.
+      const w = baseCanvas.width;
+      const h = baseCanvas.height;
+      const img = baseCtx.createImageData(w, h);
+      let zMin = Infinity;
+      let zMax = -Infinity;
+      const zs = new Float32Array(w * h);
+      for (let py = 0; py < h; py++) {
+        for (let px = 0; px < w; px++) {
+          const sx = ((px - w / 2) / (w / 2)) * RANGE;
+          const sy = ((h / 2 - py) / (h / 2)) * RANGE;
+          const z = Math.max(potential(sx, sy), -2);
+          zs[py * w + px] = z;
+          if (z < zMin) zMin = z;
+          if (z > zMax) zMax = z;
+        }
+      }
+      const span = zMax - zMin || 1;
+      for (let i = 0; i < zs.length; i++) {
+        const t = (zs[i] - zMin) / span;
+        const rgb =
+          t < 0.5 ? lerpRgb(tealRgb, paperRgb, t / 0.5) : lerpRgb(paperRgb, amberRgb, (t - 0.5) / 0.5);
+        img.data[i * 4] = rgb[0];
+        img.data[i * 4 + 1] = rgb[1];
+        img.data[i * 4 + 2] = rgb[2];
+        img.data[i * 4 + 3] = 255;
+      }
+      baseCtx.putImageData(img, 0, 0);
+
+      // mass + L4/L5 markers, drawn in CSS-pixel space via the dpr transform
+      baseCtx.setTransform(w / width, 0, 0, h / height, 0, 0);
+      const [sunX, sunY] = toPixel(ALPHA, 0);
+      const [jupX, jupY] = toPixel(ALPHA - 1, 0);
+      baseCtx.fillStyle = ruleStrong;
+      baseCtx.beginPath();
+      baseCtx.arc(sunX, sunY, 5, 0, Math.PI * 2);
+      baseCtx.fill();
+      baseCtx.beginPath();
+      baseCtx.arc(jupX, jupY, 3.5, 0, Math.PI * 2);
+      baseCtx.fill();
+
+      baseCtx.strokeStyle = inkSoft;
+      baseCtx.font = `11px ${fontMono}`;
+      baseCtx.fillStyle = inkSoft;
+      for (const [label, ly] of [
+        ["L4", Math.sqrt(3) / 2],
+        ["L5", -Math.sqrt(3) / 2],
+      ]) {
+        const [lx, lyPx] = toPixel(ALPHA - 0.5, ly);
+        baseCtx.beginPath();
+        baseCtx.moveTo(lx - 5, lyPx);
+        baseCtx.lineTo(lx + 5, lyPx);
+        baseCtx.moveTo(lx, lyPx - 5);
+        baseCtx.lineTo(lx, lyPx + 5);
+        baseCtx.stroke();
+        baseCtx.fillText(label, lx + 7, lyPx - 6);
+      }
+      baseCtx.setTransform(1, 0, 0, 1, 0, 0);
+    }
+
+    function resize() {
+      const rect = viewCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      width = rect.width;
+      height = rect.height;
+      viewCanvas.width = width * dpr;
+      viewCanvas.height = height * dpr;
+      baseCanvas.width = width * dpr;
+      baseCanvas.height = height * dpr;
+      drawBase();
+    }
+
+    function stepParticle(p, dt) {
+      if (!p.alive) return;
+      const subDt = dt / SUBSTEPS;
+      for (let i = 0; i < SUBSTEPS; i++) {
+        p.state = rk4Step(p.state, subDt);
+        const [x, , y] = p.state;
+        const r1 = Math.sqrt((x - ALPHA) ** 2 + y * y);
+        const r2 = Math.sqrt((x + 1 - ALPHA) ** 2 + y * y);
+        if (r1 < 0.03 || r2 < 0.03 || Math.abs(x) > 3 || Math.abs(y) > 3) {
+          p.alive = false;
+          return;
+        }
+      }
+    }
+
+    let lastTime = performance.now();
+
+    function frame(now) {
+      const dt = Math.min((now - lastTime) / 1000, 1 / 30) * TIME_SPEED;
+      lastTime = now;
+
+      const dpr = (viewCanvas.width / width) || 1;
+      viewCtx.setTransform(1, 0, 0, 1, 0, 0);
+      viewCtx.drawImage(baseCanvas, 0, 0);
+      viewCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      for (const p of particles) {
+        if (playing) stepParticle(p, dt);
+        p.history.push([p.state[0], p.state[2]]);
+        if (p.history.length > TRAIL_LENGTH) p.history.shift();
+
+        const [r, g, b] = p.color;
+        for (let i = 0; i < p.history.length; i++) {
+          const [sx, sy] = p.history[i];
+          const [px, py] = toPixel(sx, sy);
+          const fade = (i + 1) / p.history.length;
+          const alpha = fade * (p.alive ? 1 : 0.35);
+          // A dark outline keeps the dot legible even where the heatmap
+          // underneath happens to match the particle's own fill color
+          // (the L4/L5 region is the same amber as the default particle).
+          viewCtx.strokeStyle = `rgba(${inkRgb[0]},${inkRgb[1]},${inkRgb[2]},${alpha * 0.8})`;
+          viewCtx.lineWidth = 1;
+          viewCtx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
+          viewCtx.beginPath();
+          viewCtx.arc(px, py, 2.4, 0, Math.PI * 2);
+          viewCtx.fill();
+          viewCtx.stroke();
+        }
+      }
+
+      requestAnimationFrame(frame);
+    }
+
+    viewCanvas.addEventListener("pointerdown", (e) => {
+      hint.style.display = "none";
+      const rect = viewCanvas.getBoundingClientRect();
+      const [sx, sy] = toSim(e.clientX - rect.left, e.clientY - rect.top);
+      const color = hexToRgb(particleColors[colorCursor % particleColors.length]);
+      colorCursor++;
+      particles.push({ state: [sx, 0, sy, 0], color, history: [], alive: true });
+      playing = true;
+      toggleBtn.textContent = "일시정지";
+    });
+
+    toggleBtn.addEventListener("click", () => {
+      playing = !playing;
+      toggleBtn.textContent = playing ? "일시정지" : "재생";
+    });
+
+    clearBtn.addEventListener("click", () => {
+      particles = [makeDefaultParticle()];
+      colorCursor = 0;
+      playing = true;
+      toggleBtn.textContent = "일시정지";
+    });
+
+    window.addEventListener("resize", resize);
+    resize();
+    requestAnimationFrame((t) => {
+      lastTime = t;
+      requestAnimationFrame(frame);
+    });
+  }
+
+  document.querySelectorAll(".lp-toy").forEach(initLagrangeToy);
+</script>

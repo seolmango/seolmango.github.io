@@ -1,0 +1,150 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const toys = await getCollection("playground", ({ data }) => !data.draft);
+const sorted = toys.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const dateFmt = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "2-digit" });
+---
+
+<BaseLayout
+  title="플레이그라운드 — seolmango"
+  description="글로 다 담기 아까운 것들 — 브라우저에서 바로 만지작거릴 수 있는 자잘한 웹 실험 모음."
+>
+  <section class="hero wrap">
+    <p class="eyebrow">SEOLMANGO / PLAYGROUND</p>
+    <h1>읽는 대신<br />만져보는 실험</h1>
+    <p class="lede">
+      로그가 "왜, 어떻게 만들었나"를 기록하는 곳이라면, 여기는 결과물을 직접
+      건드려보는 곳입니다. 대부분 캔버스와 순수 자바스크립트로만 짠 작은 토이라
+      정식 프로젝트로 부르기엔 민망하지만, 그래서 더 가볍게 계속 늘려갈 생각입니다.
+    </p>
+  </section>
+
+  <section class="wrap grid-section">
+    {sorted.length === 0 ? (
+      <p class="empty">아직 채우는 중입니다 — 곧 첫 토이가 올라옵니다.</p>
+    ) : (
+      <ol class="grid">
+        {sorted.map((entry) => (
+          <li>
+            <a class="card" href={`/playground/${entry.id}/`}>
+              <span class="date">{dateFmt.format(entry.data.date)}</span>
+              <h2>{entry.data.title}</h2>
+              <p class="hook">{entry.data.hook}</p>
+              <ul class="tags">
+                {entry.data.tags.map((t) => (
+                  <li>{t}</li>
+                ))}
+              </ul>
+              <span class="go">열어보기 →</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 5vw, 3rem);
+  }
+
+  .hero .eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 1.15;
+  }
+
+  .lede {
+    max-width: 60ch;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+  }
+
+  .grid-section {
+    padding-block: 1rem 4rem;
+  }
+
+  .empty {
+    color: var(--ink-soft);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+
+  .grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--teal);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .card:hover {
+    border-color: var(--rule-strong);
+    border-top-color: var(--amber);
+  }
+
+  .date {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.5rem;
+  }
+
+  .card h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.2rem;
+  }
+
+  .card .hook {
+    margin: 0 0 1rem;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    flex-grow: 1;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .tags li {
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    background: var(--teal-soft);
+    color: var(--teal);
+  }
+
+  .card .go {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--amber);
+  }
+</style>

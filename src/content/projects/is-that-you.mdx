@@ -1,0 +1,48 @@
+---
+title: "카톡 대화로 누가 말했는지 맞히기"
+hook: "같은 단체 채팅방에서도 사람마다 말투가 다르다. 그럼 대화 내용만 보고 화자를 맞힐 수 있을까?"
+date: 2025-06-18
+category: "머신러닝 실험"
+stack: ["Python", "TensorFlow", "Keras", "KoNLPy"]
+repo: "https://github.com/seolmango/IsThatYou"
+status: "완료"
+---
+import Stage from "../../components/Stage.astro";
+
+<Stage tag="MOTIVE" title="왜 만들었나">
+
+같은 단체 채팅방 안에서도 사람마다 말투가 확연히 다르다는 걸 자주 느꼈다.
+말버릇, 문장 길이, 자주 쓰는 어미 같은 것들. 그렇다면 "이 문장, 누가
+말했을까"를 모델이 맞힐 수 있을지 궁금해졌고, 동시에 개인 대화 데이터를
+직접 다뤄보고 싶기도 했다.
+
+</Stage>
+
+<Stage tag="BUILD" title="어떻게 만들었나">
+
+카카오톡 대화 내보내기 파일을 전처리해 학습 데이터로 만들고 다음과 같은
+시퀀스 모델을 TensorFlow/Keras로 구성했다.
+
+```text
+[Input] (batch_size, MAX_LEN)
+   → Embedding(vocab_size, EMBEDDING_DIM)
+   → GRU(HIDDEN_UNITS)
+   → Dense(number_of_users, activation="softmax")
+```
+
+형태소 분석에는 KoNLPy를 사용했다. CLI 두 개로 전체 흐름을 나눴는데,
+`Train.py -f data.txt`로 본인의 대화 파일을 넣어 학습시키고, 학습이 끝난
+뒤 `run.py -p model`을 실행해 문장을 입력하면 화자를 예측해 보여준다.
+
+</Stage>
+
+<Stage tag="RESULT" title="결과">
+
+데이터 양이 충분하고 사람별 발화량이 균등할수록 정확도가 높아진다는 걸
+실험적으로 확인했다. 데이터가 적거나 특정 인원 발화량이 유독 많은
+채팅방에서는 정확도가 확 떨어졌다 — 실제 데이터를 다뤄보지 않으면 배우기
+어려운, 클래스 불균형 문제를 몸으로 겪어본 셈이다. 텍스트 분류라는
+자연어처리 문제를 데이터 전처리부터 학습, 추론까지 혼자 힘으로
+파이프라인화해본 경험이 남았다.
+
+</Stage>

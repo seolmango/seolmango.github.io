@@ -1,0 +1,51 @@
+---
+title: "확장 칼만 필터로 로켓 비행 경로 복원하기"
+hook: "GPS만으로는 로켓처럼 빠른 물체의 궤적을 정밀하게 못 잡는다. IMU 센서를 섞어서 궤적을 다시 그려봤다."
+date: 2026-03-23
+category: "로켓 동아리 & 센서"
+stack: ["Python", "NumPy", "Extended Kalman Filter"]
+repo: "https://github.com/seolmango/Tracker"
+status: "완료"
+---
+import Stage from "../../components/Stage.astro";
+import Callout from "../../components/Callout.astro";
+
+<Stage tag="MOTIVE" title="왜 만들었나">
+
+로켓이 발사된 뒤 실제로 어떤 경로를 그리며 날아갔는지 알고 싶었다. 문제는
+GPS만으로는 갱신 주기가 느려서, 로켓처럼 빠르게 움직이고 자세도 빠르게
+바뀌는 물체의 위치·자세를 정밀하게 잡아내기 어렵다는 점이었다. 동아리에서
+[`KHAOS-Tracking-Algorithm`](https://github.com/seolmango/KHAOS-Tracking-Algorithm)이라는
+비행 경로 추적 알고리즘을 함께 다뤄본 적이 있었는데, 그 경험을 개인적으로
+더 확장해보고 싶어서 시작한 후속 작업이 이 프로젝트다.
+
+</Stage>
+
+<Stage tag="BUILD" title="어떻게 만들었나">
+
+가속도계·자이로스코프·지자기 센서로 구성된 IMU 데이터와 GPS 데이터를
+확장 칼만 필터(EKF)로 융합해 궤적을 추정하는 방식으로 구현했다. 한 번에
+세 가지 방식의 궤적을 나란히 계산해서 서로 비교할 수 있게 만들었다.
+
+- **GPS 단독** 궤적 (`GPSTrajectories`)
+- **GPS + IMU를 EKF로 융합**한 궤적 (`EKFTrajectories`)
+- **GPS 없이 IMU만으로** 추정한 궤적 (`EKFTrajectories2`)
+
+각 방식의 결과를 겹쳐서 영상으로 렌더링해, 어떤 방식이 실제 궤적에 더
+가까운지 눈으로 비교할 수 있게 했다.
+
+</Stage>
+
+<Stage tag="RESULT" title="결과">
+
+GPS 단독 궤적보다 EKF로 GPS와 IMU를 융합한 궤적이 훨씬 매끄럽고 그럴듯하게
+나온다는 걸 결과 영상으로 확인했다. 센서 퓨전은 자율주행이나 드론에서도
+널리 쓰이는 기법인데, 그걸 로켓 동아리라는 맥락에서 직접 구현해본 경험이
+꽤 값졌다.
+
+<Callout label="참고">
+`KHAOS-Tracking-Algorithm`은 동아리원의 원본 저장소를 포크해 함께 작업한
+것이고, `Tracker`는 그 알고리즘을 바탕으로 개인적으로 확장한 저장소다.
+</Callout>
+
+</Stage>

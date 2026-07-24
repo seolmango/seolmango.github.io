@@ -1,0 +1,219 @@
+---
+// Mirrors the core loop of github.com/seolmango/fileRenamer: a regex with
+// named capture groups extracts variables from each filename, and those
+// variables (plus an auto-incrementing Counter) get substituted into a
+// rename template. The original also lets you embed raw Python in the
+// template for advanced cases — that's arbitrary code execution, so it's
+// intentionally left out of this browser port; everything else is real.
+---
+
+<div class="rr-toy">
+  <div class="grid">
+    <label class="field">
+      <span class="field-label">검색 패턴 (Python <code>(?P&lt;name&gt;…)</code>도 그대로 붙여넣기 가능)</span>
+      <input type="text" data-role="pattern" spellcheck="false" />
+    </label>
+    <label class="field">
+      <span class="field-label">새 이름 템플릿</span>
+      <input type="text" data-role="template" spellcheck="false" />
+    </label>
+  </div>
+  <label class="field">
+    <span class="field-label">샘플 파일 목록 (한 줄에 하나씩, 자유롭게 고쳐도 됨)</span>
+    <textarea data-role="files" spellcheck="false" rows="5"></textarea>
+  </label>
+
+  <p class="error" data-role="error" hidden></p>
+
+  <table class="preview">
+    <thead>
+      <tr>
+        <th>원본</th>
+        <th>결과</th>
+      </tr>
+    </thead>
+    <tbody data-role="rows"></tbody>
+  </table>
+</div>
+
+<style>
+  .rr-toy {
+    margin: 2rem 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+  }
+
+  .field-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+
+  .field-label code {
+    font-size: 0.95em;
+  }
+
+  input[type="text"],
+  textarea {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.5rem 0.65rem;
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .error {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--amber);
+    margin: 0 0 1rem;
+  }
+
+  .preview {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .preview th {
+    text-align: left;
+    font-size: 0.72rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .preview td {
+    padding: 0.4rem 0.5rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+
+  .preview .arrow {
+    color: var(--ink-soft);
+    padding: 0 0.4rem;
+  }
+
+  .preview .new-name {
+    color: var(--teal);
+  }
+
+  .preview .no-match {
+    color: var(--ink-soft);
+    font-style: italic;
+  }
+</style>
+
+<script>
+  function buildRegex(patternText) {
+    // Accept Python-flavoured named groups, `(?P<name>...)`, alongside the
+    // native JS `(?<name>...)` syntax so a pattern copied straight from
+    // the real repo's README works unmodified.
+    const jsPattern = patternText.replace(/\(\?P</g, "(?<");
+    return new RegExp(jsPattern);
+  }
+
+  function applyTemplate(template, values) {
+    return template.replace(/\{(\w+)\}/g, (whole, key) =>
+      Object.prototype.hasOwnProperty.call(values, key) ? String(values[key]) : whole
+    );
+  }
+
+  function initRenameToy(root) {
+    const patternInput = root.querySelector('[data-role="pattern"]');
+    const templateInput = root.querySelector('[data-role="template"]');
+    const filesInput = root.querySelector('[data-role="files"]');
+    const errorEl = root.querySelector('[data-role="error"]');
+    const rowsEl = root.querySelector('[data-role="rows"]');
+
+    function update() {
+      const filenames = filesInput.value.split("\n").map((s) => s.trim()).filter(Boolean);
+      rowsEl.innerHTML = "";
+      errorEl.hidden = true;
+
+      let regex;
+      try {
+        regex = buildRegex(patternInput.value);
+      } catch (err) {
+        errorEl.hidden = false;
+        errorEl.textContent = `정규식 오류: ${err instanceof Error ? err.message : err}`;
+        return;
+      }
+
+      let counter = 1;
+      for (const name of filenames) {
+        const tr = document.createElement("tr");
+        const oldTd = document.createElement("td");
+        oldTd.textContent = name;
+        tr.appendChild(oldTd);
+
+        const newTd = document.createElement("td");
+        const match = regex.exec(name);
+        if (match) {
+          const values = { ...(match.groups || {}), Counter: counter };
+          try {
+            const newName = applyTemplate(templateInput.value, values);
+            newTd.innerHTML = "";
+            const arrow = document.createElement("span");
+            arrow.className = "arrow";
+            arrow.textContent = "→";
+            const newSpan = document.createElement("span");
+            newSpan.className = "new-name";
+            newSpan.textContent = newName;
+            newTd.append(arrow, newSpan);
+          } catch (err) {
+            newTd.textContent = `템플릿 오류: ${err instanceof Error ? err.message : err}`;
+          }
+          counter++;
+        } else {
+          newTd.className = "no-match";
+          newTd.textContent = "(패턴에 안 맞음)";
+        }
+        tr.appendChild(newTd);
+        rowsEl.appendChild(tr);
+      }
+    }
+
+    patternInput.addEventListener("input", update);
+    templateInput.addEventListener("input", update);
+    filesInput.addEventListener("input", update);
+
+    patternInput.value = "(?P<year>\\d{4})(?P<month>\\d{2})(?P<day>\\d{2})\\.(?P<ext>\\w+)";
+    templateInput.value = "{year}-{month}-{day}_{Counter}.{ext}";
+    filesInput.value = ["20230422.jpg", "20230501.png", "recipe.txt", "20231225.jpg"].join("\n");
+    update();
+  }
+
+  document.querySelectorAll(".rr-toy").forEach(initRenameToy);
+</script>

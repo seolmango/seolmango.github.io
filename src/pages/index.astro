@@ -1,0 +1,230 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const allProjects = await getCollection("projects", ({ data }) => !data.draft);
+const sorted = allProjects.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const pinned = sorted.find((p) => p.data.category === "진행 중");
+const log = sorted.filter((p) => p.id !== pinned?.id);
+
+const dateFmt = new Intl.DateTimeFormat("ko-KR", { year: "numeric", month: "2-digit" });
+---
+
+<BaseLayout
+  title="seolmango — 실험 노트"
+  description="수소 원자 오비탈부터 로켓 궤적 추적, 장난 같은 크롬 확장까지 — 만들고 나서야 왜 만들었는지 알게 된 것들의 기록."
+>
+  <section class="hero wrap">
+    <p class="eyebrow">SEOLMANGO / FIELD LOG</p>
+    <h1>실험은 대체로<br />사소하게 시작한다</h1>
+    <p class="lede">
+      수소 원자 오비탈부터 로켓 궤적 추적, 장난 같은 크롬 확장까지 — 만들고 나서야
+      왜 만들었는지 알게 된 것들을 여기에 기록합니다. 광주과학고등학교에서 물리와
+      코드를 오가며 놀다가, 요즘은 조금 더 본격적인 것도 만들고 있습니다.
+    </p>
+  </section>
+
+  {pinned && (
+    <section class="wrap pinned-wrap">
+      <a class="pinned" href={`/projects/${pinned.id}/`}>
+        <p class="eyebrow">지금 만들고 있는 것</p>
+        <h2>{pinned.data.title}</h2>
+        <p>{pinned.data.hook}</p>
+        <span class="go">기록 보기 →</span>
+      </a>
+    </section>
+  )}
+
+  <section class="wrap log-section" id="log">
+    <p class="eyebrow section-label">LOG — 시간순 기록</p>
+    <ol class="log">
+      {log.map((entry) => (
+        <li>
+          <a href={`/projects/${entry.id}/`}>
+            <span class="date">{dateFmt.format(entry.data.date)}</span>
+            <span class="title-line">
+              <span class="title">{entry.data.title}</span>
+              <span class="cat">{entry.data.category}</span>
+            </span>
+            <span class="hook">{entry.data.hook}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="wrap about" id="about">
+    <p class="eyebrow section-label">ABOUT</p>
+    <p>
+      광주과학고등학교에서 물리, 수학, 코드를 오가며 이것저것 만들어보는 중입니다.
+      수업 시간에 배운 개념(양자수, 3체 문제, 벤포드 법칙 같은 것들)을 직접 계산하고
+      시각화해보는 걸 좋아하고, 로켓 동아리 I.F에서는 실제 하드웨어로 데이터를 모으고
+      분석하는 작업도 합니다. 가끔은 아무 쓸모 없는 것도 만듭니다 — 그게 더 재밌을 때가
+      있어서요.
+    </p>
+    <p>
+      요즘은 <a href="https://seolmango.github.io/your-miraeya/" target="_blank" rel="noopener noreferrer">your-miraeya</a>라는,
+      조금 더 본격적인 프로젝트를 만들고 있습니다. 연락은 이메일이나 GitHub로 주세요.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: clamp(3rem, 8vw, 6rem) clamp(2rem, 5vw, 3rem);
+  }
+
+  .hero .eyebrow {
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    line-height: 1.15;
+  }
+
+  .lede {
+    max-width: 60ch;
+    font-size: 1.15rem;
+    color: var(--ink-soft);
+  }
+
+  .pinned-wrap {
+    padding-bottom: clamp(2rem, 5vw, 3rem);
+  }
+
+  .pinned {
+    display: block;
+    padding: 1.75rem 2rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-strong);
+    border-left: 4px solid var(--amber);
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .pinned:hover {
+    border-left-color: var(--teal);
+  }
+
+  .pinned h2 {
+    margin: 0.3rem 0 0.5rem;
+    font-size: 1.5rem;
+  }
+
+  .pinned p {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 60ch;
+  }
+
+  .pinned .go {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--amber);
+  }
+
+  .section-label {
+    margin-bottom: 1.5rem;
+  }
+
+  .log-section {
+    padding-block: 2rem 3rem;
+  }
+
+  .log {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1.5rem;
+    border-left: 1.5px dashed var(--rule-strong);
+  }
+
+  .log li {
+    position: relative;
+    margin-bottom: 0.15rem;
+  }
+
+  .log li::before {
+    content: "";
+    position: absolute;
+    left: -1.94rem;
+    top: 1.65rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1.5px solid var(--rule-strong);
+  }
+
+  .log li:hover::before {
+    background: var(--amber);
+    border-color: var(--amber);
+  }
+
+  .log a {
+    display: block;
+    padding: 1.1rem 1.25rem;
+    margin-left: -1.25rem;
+    border-radius: var(--radius);
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .log a:hover {
+    background: var(--paper-raised);
+  }
+
+  .date {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+  }
+
+  .title-line {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .title {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+  }
+
+  .cat {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--teal);
+    background: var(--teal-soft);
+    padding: 0.1rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .log .hook {
+    display: block;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    max-width: 62ch;
+  }
+
+  .about {
+    padding-block: 2rem 4rem;
+    border-top: 1px solid var(--rule);
+    max-width: 900px;
+  }
+
+  .about p {
+    max-width: var(--measure);
+  }
+</style>

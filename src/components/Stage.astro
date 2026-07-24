@@ -1,0 +1,58 @@
+---
+// The recurring three-beat structure of every post — motive, build, result —
+// mirrors the actual scientific-method shape of these projects (hypothesis /
+// method / result), so it's rendered as a real section marker, not filler.
+// Usage inside an .mdx post body:
+//   <Stage tag="MOTIVE" title="왜 만들었나">...</Stage>
+interface Props {
+  tag: string;
+  title: string;
+}
+
+const { tag, title } = Astro.props;
+---
+
+<section class="stage">
+  <header>
+    <span class="tag">{tag}</span>
+    <h2>{title}</h2>
+  </header>
+  <div class="content"><slot /></div>
+</section>
+
+<style>
+  .stage {
+    margin-top: 3rem;
+  }
+
+  .stage + .stage {
+    border-top: 1px solid var(--rule);
+    padding-top: 2.75rem;
+  }
+
+  header {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+  }
+
+  .content :global(p:first-child) {
+    margin-top: 0;
+  }
+</style>

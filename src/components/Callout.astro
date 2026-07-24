@@ -1,0 +1,46 @@
+---
+// Usage inside any .mdx post body:
+//   <Callout label="TMI">아직 다룰 줄 아는 악기도 없이 만들었다.</Callout>
+interface Props {
+  label?: string;
+}
+
+const { label = "TMI" } = Astro.props;
+---
+
+<aside class="callout">
+  <p class="tag">{label}</p>
+  <div class="body"><slot /></div>
+</aside>
+
+<style>
+  .callout {
+    margin: 1.75rem 0;
+    padding: 1rem 1.25rem;
+    background: var(--teal-soft);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  .tag {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+
+  .body {
+    font-size: 0.98rem;
+  }
+
+  .body :global(p) {
+    margin: 0;
+  }
+
+  .body :global(p + p) {
+    margin-top: 0.6rem;
+  }
+</style>

@@ -1,0 +1,213 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import TrajectoryRail from "../components/TrajectoryRail.astro";
+
+interface Props {
+  title: string;
+  hook: string;
+  date: Date;
+  category: string;
+  stack: string[];
+  repo?: string;
+  demo?: string;
+  status: "완료" | "진행중" | "아카이브";
+  stars?: number;
+}
+
+const { title, hook, date, category, stack, repo, demo, status, stars } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat("ko-KR", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(date);
+---
+
+<BaseLayout title={title} description={hook} ogType="article">
+  <TrajectoryRail />
+  <article class="post">
+    <header class="wrap post-head">
+      <p class="eyebrow"><a href="/">← 로그로</a> / {category}</p>
+      <h1>{title}</h1>
+      <p class="hook">{hook}</p>
+
+      <dl class="meta">
+        <div>
+          <dt>상태</dt>
+          <dd class={`status status-${status}`}>{status}</dd>
+        </div>
+        <div>
+          <dt>기록일</dt>
+          <dd>{formattedDate}</dd>
+        </div>
+        {stars !== undefined && stars > 0 && (
+          <div>
+            <dt>Stars</dt>
+            <dd>★ {stars}</dd>
+          </div>
+        )}
+        <div class="stack">
+          <dt>스택</dt>
+          <dd>
+            {stack.map((s) => (
+              <span class="chip">{s}</span>
+            ))}
+          </dd>
+        </div>
+      </dl>
+
+      <div class="cta-row">
+        {repo && (
+          <a class="cta" href={repo} target="_blank" rel="noopener noreferrer">
+            저장소 보기 ↗
+          </a>
+        )}
+        {demo && (
+          <a class="cta ghost" href={demo} target="_blank" rel="noopener noreferrer">
+            라이브 데모 ↗
+          </a>
+        )}
+      </div>
+    </header>
+
+    <div class="wrap prose">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .post-head {
+    padding-top: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .post-head .eyebrow {
+    margin: 0 0 1.1rem;
+  }
+
+  .post-head .eyebrow a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  .post-head .eyebrow a:hover {
+    color: var(--amber);
+  }
+
+  h1 {
+    margin: 0 0 0.6rem;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    max-width: 22ch;
+  }
+
+  .hook {
+    margin: 0 0 1.75rem;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: 1.1rem;
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.75rem 2.5rem;
+    margin: 0 0 1.75rem;
+  }
+
+  .meta > div {
+    margin: 0;
+  }
+
+  .meta dt {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.3rem;
+  }
+
+  .meta dd {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+  }
+
+  .status {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.78rem !important;
+  }
+
+  .status-완료 {
+    background: var(--teal-soft);
+    color: var(--teal);
+  }
+
+  .status-진행중 {
+    background: var(--amber-soft);
+    color: var(--amber);
+  }
+
+  .status-아카이브 {
+    background: var(--paper-raised);
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+  }
+
+  .stack dd {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  .chip {
+    padding: 0.15rem 0.55rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+  }
+
+  .cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .cta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius);
+    background: var(--ink);
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .cta:hover {
+    background: var(--amber);
+    color: var(--paper);
+  }
+
+  .cta.ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--rule-strong);
+  }
+
+  .cta.ghost:hover {
+    border-color: var(--teal);
+    color: var(--teal);
+  }
+
+  .prose {
+    padding-block: 2.5rem 4rem;
+    max-width: calc(var(--measure) + 2.5rem);
+  }
+
+  .prose :global(> *) {
+    max-width: var(--measure);
+  }
+</style>

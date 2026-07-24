@@ -1,0 +1,52 @@
+---
+title: "두 은하의 충돌 시뮬레이션"
+hook: "은하 충돌은 수억 년에 걸쳐 일어난다. 관측으로는 못 보니까, 컴퓨터로 감아 돌려봤다."
+date: 2023-11-28
+category: "물리·수학 시뮬레이션"
+stack: ["Python", "NumPy", "Matplotlib"]
+repo: "https://github.com/seolmango/galaxy_simulation"
+status: "완료"
+stars: 7
+---
+import Stage from "../../components/Stage.astro";
+import YouTube from "../../components/YouTube.astro";
+
+<Stage tag="MOTIVE" title="왜 만들었나">
+
+안테나 은하 같은 사진을 보면, 두 은하가 충돌하면서 나선팔이 길게 늘어지고
+별들이 흩뿌려지는 모습이 나온다. 그런데 그 과정 자체는 수억 년에 걸쳐
+일어나는 일이라, 아무리 기다려도 사람이 직접 관측할 수는 없다. 그렇다면
+남은 방법은 하나뿐이다 — 중력 방정식을 세우고 컴퓨터로 시간을 빨리 감아
+돌려보는 것.
+
+</Stage>
+
+<Stage tag="BUILD" title="어떻게 만들었나">
+
+두 은하 각각의 질량비, 은하면의 기울기(구면좌표계 θ, φ), 은하 사이의 거리,
+전체 별의 개수를 입력값으로 받아 중력 상호작용을 수치적으로 적분하는
+방식으로 구현했다. 은하 하나에 속한 별들은 은하 중심에 대해 궤도 운동을
+하고 두 은하가 서로에게 미치는 중력 때문에 시간이 지날수록 궤도가
+흐트러지는 과정을 시뮬레이션한다.
+
+물리 모델은 천문 교육용 은하 충돌 시뮬레이션을 다룬 논문(Verkade, 2020)을
+참고해서 세웠다. 계산 결과는 매 시점의 별 위치를 담은 `simulation.npy`
+파일로 저장하고 이를 별도 스크립트에서 읽어 Matplotlib으로 영상을
+렌더링하는 두 단계로 파이프라인을 나눴다 — 계산과 시각화를 분리해두면
+같은 시뮬레이션 결과로 여러 각도의 영상을 실험해볼 수 있어서 편했다.
+
+{/* 사진을 추가하려면: public/images/galaxy-collision/example.jpg 에 원본
+    리포의 example.jpg를 넣고 아래 주석을 해제하세요.
+<img src="/images/galaxy-collision/example.jpg" alt="은하 충돌 시뮬레이션 스틸컷" /> */}
+
+</Stage>
+
+<Stage tag="RESULT" title="결과">
+
+이 계정에서 스타를 가장 많이(7개) 받은 프로젝트다. 결과 영상에서 나선팔이
+충돌 과정에서 길게 늘어졌다가 재편되는 모습이 실제 관측 사진과 꽤 비슷하게
+나와서 만족스러웠다.
+
+<YouTube id="efWby_ctrzI" caption="두 은하가 충돌하는 시뮬레이션 결과" />
+
+</Stage>

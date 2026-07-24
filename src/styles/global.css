@@ -1,0 +1,162 @@
+/* ---------------------------------------------------------------------
+   Design system — "실험 노트" (field log)
+
+   The whole site is styled like an engineer's lab notebook: pale
+   graph-paper background, a literary serif for the actual writing (this
+   is a personal log, not marketing copy), and a monospace "instrument"
+   face for anything that reads like data — dates, stacks, status, repo
+   links. Two accents (amber / teal) instead of one, echoing the two
+   halves of everything on this site: the physics side and the code side.
+   ------------------------------------------------------------------- */
+
+:root {
+  --paper: #edf0ea;
+  --paper-raised: #f6f7f3;
+  --ink: #202b26;
+  --ink-soft: #4b564f;
+  --rule: #c7cec3;
+  --rule-strong: #9aa89c;
+  --amber: #b5651d;
+  --amber-soft: #e8dcc8;
+  --teal: #2e6f63;
+  --teal-soft: #dbe8e2;
+  --focus: #1a5c9c;
+
+  --font-display: "IBM Plex Sans KR", "IBM Plex Sans", system-ui, sans-serif;
+  --font-body: "Gowun Batang", "Noto Serif KR", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --measure: 66ch;
+  --radius: 3px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #121613;
+    --paper-raised: #191f1b;
+    --ink: #e9ece6;
+    --ink-soft: #aab5ac;
+    --rule: #313b34;
+    --rule-strong: #45524a;
+    --amber: #e2a15c;
+    --amber-soft: #3a2e1c;
+    --teal: #6cbfae;
+    --teal-soft: #1c322c;
+    --focus: #7cb8ec;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  background-image:
+    linear-gradient(var(--rule) 1px, transparent 1px),
+    linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+  background-size: 28px 28px;
+  background-position: -1px -1px;
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-image:
+      linear-gradient(var(--rule) 1px, transparent 1px),
+      linear-gradient(90deg, var(--rule) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--ink);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--amber);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--teal);
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+code, pre, kbd {
+  font-family: var(--font-mono);
+}
+
+pre {
+  padding: 1rem 1.1rem;
+  overflow-x: auto;
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  line-height: 1.6;
+}
+
+:not(pre) > code {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  padding: 0.1em 0.35em;
+  font-size: 0.9em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.wrap {
+  max-width: 1040px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 2.5rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

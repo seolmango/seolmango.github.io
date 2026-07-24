@@ -1,0 +1,19 @@
+---
+title: "GSA-Lang 라이브 인터프리터"
+hook: "광주과학고 기숙사 은어로 만든 진짜 프로그래밍 언어. 브라우저에서 바로 실행해볼 수 있게 파서·인터프리터를 통째로 옮겨왔다."
+date: 2026-07-24
+tags: ["JavaScript", "언어 인터프리터", "GSA-Lang"]
+---
+import GsaLangRepl from "../../components/playground/GsaLangRepl.astro";
+
+[GSA-Lang](/projects/gsa-lang/)은 실제로 동작하는 esoteric 프로그래밍 언어다. 원본은
+파이썬으로 짠 렉서·파서·인터프리터(`parser.py`, `execute.py`)로 돌아가는데, 여기서는
+그 두 파일의 문자열 매칭·슬라이싱 로직을 한 줄 한 줄 그대로 자바스크립트로 옮겨서
+브라우저에서 바로 돌려볼 수 있게 만들었다.
+
+<GsaLangRepl />
+
+기본으로 불러온 예제는 원본 리포의 `examples/gugudan.gsa`(구구단표)다. 표준입력에
+`3`, `4`를 미리 넣어둬서 3단과 4단을 바로 계산해 보여준다. "간단한 계산기" 예제는
+`examples/cal.gsa`를 그대로 가져온 것이고, 코드를 직접 고쳐서 실행해봐도 된다 —
+단, 친절한 에러 메시지는 원본과 마찬가지로 기대하지 않는 게 좋다.

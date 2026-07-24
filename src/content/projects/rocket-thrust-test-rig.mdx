@@ -1,0 +1,53 @@
+---
+title: "로드셀로 로켓 추력 측정하기"
+hook: "로켓을 쏘아 올리기 전에, 엔진이 얼마나 힘을 내는지 지상에서 미리 알아야 했다."
+date: 2024-09-20
+category: "로켓 동아리 & 센서"
+stack: ["Python", "Arduino", "matplotlib", "pyserial"]
+repo: "https://github.com/seolmango/IF-rocket-project-code"
+status: "완료"
+stars: 1
+---
+import Stage from "../../components/Stage.astro";
+
+<Stage tag="MOTIVE" title="왜 만들었나">
+
+광주과학고 로켓 동아리 I.F에서 로켓을 발사하기 전에는 엔진의 실제 추력을
+지상에서 미리 확인하는 시험이 필요했다. 감으로 짐작할 수는 없으니, 로드셀
+(무게 측정 센서)과 아두이노를 이용한 추력 테스트 장치를 만들고, 그 장치가
+쏟아내는 데이터를 받아 정리하고 분석하는 코드가 필요했다.
+
+</Stage>
+
+<Stage tag="BUILD" title="어떻게 만들었나">
+
+파이프라인은 세 단계로 나눴다.
+
+1. **데이터 수집** — 아두이노에 올린 `collectData.ino`가 로드셀 값을
+   시리얼 통신으로 계속 흘려보낸다.
+2. **저장** — 파이썬 `data.py`가 그 값을 타임스탬프와 함께 실시간으로
+   받아 CSV로 저장한다. (아두이노 IDE의 시리얼 모니터가 켜져 있으면
+   포트가 충돌해서 에러가 나는, 꽤나 자주 걸렸던 함정이 하나 있었다.)
+3. **분석** — `visualize.py`가 로켓의 질량, 발사 전후 센서값, 발사
+   시작/종료 시점의 데이터 인덱스 같은 설정값을 받아 힘-시간, 속도-시간,
+   위치-시간 그래프를 자동으로 뽑아낸다.
+
+측정 원점을 잡기 위한 영점 보정(`ZERO_DATA`)이나, 연소 구간만 잘라보기
+위한 인덱스 설정(`LOOK_START`, `LOOK_END`) 등 실험 도구다운 세세한
+파라미터들을 문서화해뒀다.
+
+{/* 사진을 추가하려면: public/images/rocket-thrust/result.png 에 원본
+    리포의 example/Dummy Data Test/result.png를 넣고 아래 주석을
+    해제하세요.
+<img src="/images/rocket-thrust/result.png" alt="추력 테스트 결과 그래프" /> */}
+
+</Stage>
+
+<Stage tag="RESULT" title="결과">
+
+실제 동아리 활동에서 발사 전 지상 시험 데이터를 분석하는 데 그대로
+사용한 도구다. 로드셀·아두이노라는 하드웨어와, 데이터 수집·분석이라는
+소프트웨어를 처음부터 끝까지 직접 연결해본 경험이라는 점에서 지금까지
+만든 것 중 가장 "엔지니어링"에 가까운 프로젝트였다.
+
+</Stage>

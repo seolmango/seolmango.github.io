@@ -1,0 +1,68 @@
+---
+// The signature device of the site: article reading-progress rendered as a
+// dot travelling down a dashed "flight path" in the margin, rather than a
+// bar pinned to the top of the viewport. It's a nod to the trajectory /
+// orbit-tracking themes that recur across the actual posts (EKF rocket
+// tracking, restricted three-body Lagrange points, galaxy simulation).
+---
+
+<div class="rail" aria-hidden="true">
+  <div class="track">
+    <div class="dot"></div>
+  </div>
+</div>
+
+<style>
+  .rail {
+    position: fixed;
+    left: clamp(0.75rem, 3vw, 2.25rem);
+    top: 6.5rem;
+    bottom: 4rem;
+    width: 1px;
+    display: none;
+    z-index: 5;
+  }
+
+  @media (min-width: 1180px) {
+    .rail {
+      display: block;
+    }
+  }
+
+  .track {
+    position: relative;
+    height: 100%;
+    border-left: 1.5px dashed var(--rule-strong);
+  }
+
+  .dot {
+    position: absolute;
+    left: -4.5px;
+    top: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 4px var(--paper), 0 0 0 5px var(--amber-soft);
+    transform: translateY(0);
+    will-change: transform;
+  }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>(".rail .track");
+  const dot = document.querySelector<HTMLElement>(".rail .dot");
+
+  function update() {
+    if (!track || !dot) return;
+    const doc = document.documentElement;
+    const scrollable = doc.scrollHeight - doc.clientHeight;
+    const fraction = scrollable > 0 ? Math.min(Math.max(window.scrollY / scrollable, 0), 1) : 0;
+    const travel = track.clientHeight - dot.clientHeight;
+    dot.style.transform = `translateY(${fraction * travel}px)`;
+  }
+
+  update();
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", update);
+</script>

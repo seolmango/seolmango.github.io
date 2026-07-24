@@ -1,0 +1,499 @@
+---
+// The actual lexer/parser/interpreter this ports line-for-line lives at
+// github.com/seolmango/gsa-lang (parser.py classifies each line by its
+// Korean suffix + indentation, execute.py walks the resulting tree). This
+// component is a faithful JS re-implementation of that same dispatch
+// table — same keywords, same string-slicing offsets, same bugs — not a
+// reinterpretation of "what the language probably means."
+---
+
+<div class="gsa-toy">
+  <div class="presets">
+    <button type="button" data-preset="gugudan">구구단표 (원본 예제)</button>
+    <button type="button" data-preset="cal">간단한 계산기 (원본 예제)</button>
+    <button type="button" data-preset="blank">비우기</button>
+  </div>
+
+  <div class="panes">
+    <div class="pane">
+      <label class="field-label" for="gsa-code">코드</label>
+      <textarea id="gsa-code" spellcheck="false" rows="16"></textarea>
+      <label class="field-label" for="gsa-stdin">표준입력 (줄바꿈으로 구분, "너 뭐야." 호출 순서대로 소비됨)</label>
+      <textarea id="gsa-stdin" spellcheck="false" rows="2"></textarea>
+      <button type="button" class="run" data-action="run">실행 ▶</button>
+    </div>
+    <div class="pane">
+      <p class="field-label">출력</p>
+      <pre class="output" data-role="output"></pre>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gsa-toy {
+    margin: 2rem 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+  }
+
+  .presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .presets button {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--rule-strong);
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .presets button:hover {
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+
+  .panes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (max-width: 700px) {
+    .panes {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .pane {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .field-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin: 0.5rem 0 0;
+  }
+
+  .field-label:first-child {
+    margin-top: 0;
+  }
+
+  textarea,
+  .output {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    line-height: 1.5;
+    background: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 0.65rem 0.75rem;
+    resize: vertical;
+  }
+
+  .output {
+    flex: 1;
+    min-height: 220px;
+    margin: 0;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  .run {
+    align-self: flex-start;
+    margin-top: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    border: none;
+    background: var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+  }
+
+  .run:hover {
+    background: var(--amber);
+  }
+</style>
+
+<script>
+  const START = "사감실에서 알립니다.";
+  const END = "소등하고 취침하기 바랍니다.";
+  const MAX_LOOP_ITERATIONS = 200000;
+
+  function countLeadingSpaces(s) {
+    let n = 0;
+    while (n < s.length && /\s/.test(s[n])) n++;
+    return n;
+  }
+
+  function parseLines(lines, alreadyStarted) {
+    const result = [];
+    let started = !!alreadyStarted;
+    let index = 0;
+    while (index < lines.length) {
+      const line = lines[index];
+      if (!started && line !== START) {
+        index++;
+        continue;
+      }
+      if (!line.endsWith(".")) {
+        result.push({ type: 0, text: line });
+        index++;
+        continue;
+      }
+      if (line === START) {
+        result.push({ type: 4, text: line });
+        started = true;
+        index++;
+      } else if (line.endsWith(END)) {
+        result.push({ type: 5, text: line });
+        index++;
+        return result;
+      } else if (line.endsWith("사감실로 오시기 바랍니다.")) {
+        result.push({ type: 1, text: line });
+        index++;
+      } else if (line.endsWith("로 이방하지마.")) {
+        result.push({ type: 3, text: line });
+        index++;
+      } else if (line.includes("너 지금 이방만")) {
+        result.push({ type: 3, text: line });
+        index++;
+      } else if (line.includes("너 맨날")) {
+        result.push({ type: 3, text: line });
+        index++;
+      } else if (line.endsWith("퇴사.")) {
+        result.push({ type: 2, text: line });
+        index++;
+      } else if (line.endsWith("너 뭐야.")) {
+        result.push({ type: 2, text: line });
+        index++;
+      } else if (
+        line.endsWith("너는 이방 횟수 계산도 못하니.") ||
+        line.endsWith("너는 말이 말로 안들리니.")
+      ) {
+        result.push({ type: 6, text: line });
+        index++;
+      } else if (
+        line.endsWith("수학처럼 국어도 공부해봐.") ||
+        line.endsWith("국어도 수학이야.")
+      ) {
+        result.push({ type: 6, text: line });
+        index++;
+      } else if (line.endsWith("이렇게 만들었어.")) {
+        result.push({ type: 1, text: line });
+        index++;
+      } else if (line.endsWith("이게 사실이면.")) {
+        const level = countLeadingSpaces(line);
+        let trueStart = index + 1;
+        let trueEnd = trueStart;
+        while (trueEnd < lines.length && countLeadingSpaces(lines[trueEnd]) >= level + 1) trueEnd++;
+        const trueBlock = parseLines(lines.slice(trueStart, trueEnd), true);
+        if (
+          trueEnd < lines.length &&
+          lines[trueEnd].endsWith("근데 아니면.") &&
+          countLeadingSpaces(lines[trueEnd]) === level
+        ) {
+          let falseStart = trueEnd + 1;
+          let falseEnd = falseStart;
+          while (falseEnd < lines.length && countLeadingSpaces(lines[falseEnd]) >= level + 1) falseEnd++;
+          const falseBlock = parseLines(lines.slice(falseStart, falseEnd), true);
+          result.push({ type: 7, text: line, trueBlock, falseBlock });
+          index = falseEnd;
+        } else {
+          result.push({ type: 7, text: line, trueBlock, falseBlock: null });
+          index = trueEnd;
+        }
+      } else if (line.endsWith("자꾸 했던 말 반복하게 할래.")) {
+        const level = countLeadingSpaces(line);
+        let trueStart = index + 1;
+        let trueEnd = trueStart;
+        while (trueEnd < lines.length && countLeadingSpaces(lines[trueEnd]) >= level + 1) trueEnd++;
+        const trueBlock = parseLines(lines.slice(trueStart, trueEnd), true);
+        result.push({ type: 8, text: line, trueBlock });
+        index = trueEnd;
+      } else {
+        result.push({ type: 0, text: line });
+        index++;
+      }
+    }
+    return result;
+  }
+
+  function evalCondition(code, vars) {
+    const count = (code.match(/\?/g) || []).length;
+    const parts = code.split("?").map((s) => s.trim());
+    let result = false;
+    for (let i = 0; i < count; i++) {
+      let expr = parts[i];
+      let isOr = true;
+      if (expr.startsWith("그리고")) {
+        isOr = false;
+        expr = expr.slice(4);
+      } else if (expr.startsWith("또는")) {
+        expr = expr.slice(3);
+      }
+      const toks = expr.split(" ");
+      let temp = false;
+      if (expr.endsWith("호라고")) {
+        temp = vars[toks[0].slice(0, -2)] === parseInt(toks[1].slice(0, -3), 10);
+      } else if (expr.endsWith("라고 했다고")) {
+        temp = vars[toks[0].slice(0, -1)] === toks[1].slice(1, -3);
+      } else if (expr.endsWith("랑 같은 짓을 했다고")) {
+        temp = vars[toks[0].slice(0, -1)] === vars[toks[1].slice(0, -1)];
+      } else if (expr.endsWith("호가 아니라고")) {
+        temp = vars[toks[0].slice(0, -2)] !== parseInt(toks[1].slice(0, -2), 10);
+      } else if (expr.endsWith("라고 안했다고")) {
+        temp = vars[toks[0].slice(0, -1)] !== toks[1].slice(1, -3);
+      } else if (expr.endsWith("랑 같은 짓을 안했다고")) {
+        temp = vars[toks[0].slice(0, -1)] !== vars[toks[1].slice(0, -1)];
+      }
+      result = isOr ? result || temp : result && temp;
+    }
+    return result;
+  }
+
+  function runBlock(block, vars, ctx) {
+    for (const node of block) {
+      execLine(node, vars, ctx);
+      if (ctx.halt) return;
+    }
+  }
+
+  function execLine(node, vars, ctx) {
+    const code = node.text.trim();
+    switch (node.type) {
+      case 1: {
+        if (code.endsWith("사감실로 오시기 바랍니다.")) {
+          const toks = code.split(" ");
+          if (code.startsWith('"')) {
+            const m = code.match(/"([^"]*)"/);
+            if (m) vars[toks[toks.length - 4]] = m[1];
+          } else {
+            vars[toks[1]] = parseFloat(toks[0].slice(0, -1));
+          }
+        } else if (code.endsWith("이렇게 만들었어.")) {
+          const toks = code.split(" ");
+          vars[toks[2].slice(0, -1)] = vars[toks[0].slice(0, -1)];
+        }
+        return;
+      }
+      case 2: {
+        if (code.endsWith("퇴사.")) {
+          const name = code.split(" ")[0];
+          ctx.write(code.includes("넘어갈 생각 말고") ? String(vars[name]) : String(vars[name]) + "\n");
+        } else if (code.endsWith("너 뭐야.")) {
+          const name = code.split(" ")[0];
+          vars[name] = ctx.readLine();
+        }
+        return;
+      }
+      case 3: {
+        const toks = code.split(" ");
+        if (code.endsWith("로 이방하지마.")) {
+          const name = toks[0].slice(0, -1);
+          vars[name] = toks[1].endsWith("방으로")
+            ? vars[name] + vars[toks[1].slice(0, -3)]
+            : vars[name] + parseFloat(toks[1].slice(0, -2));
+        } else if (code.includes("너 지금 이방만")) {
+          const name = toks[0].slice(0, -1);
+          vars[name] = vars[name] * parseFloat(toks[4].slice(0, -4));
+        } else if (code.includes("너 맨날")) {
+          const name = toks[0].slice(0, -1);
+          vars[name] = vars[name] * vars[toks[3].slice(0, -1)];
+        }
+        return;
+      }
+      case 5: {
+        ctx.halt = true;
+        return;
+      }
+      case 6: {
+        const name = code.split(" ")[0];
+        if (code.endsWith("너는 이방 횟수 계산도 못하니.")) {
+          vars[name] = String(vars[name]);
+        } else if (code.endsWith("너는 말이 말로 안들리니.")) {
+          vars[name] = parseInt(vars[name], 10);
+        } else if (code.endsWith("수학처럼 국어도 공부해봐.")) {
+          vars[name] = String.fromCharCode(Math.trunc(Number(vars[name])));
+        } else if (code.endsWith("국어도 수학이야.")) {
+          const s = String(vars[name]);
+          let sum = 0;
+          for (let i = 0; i < s.length; i++) sum += s.codePointAt(i);
+          vars[name] = sum;
+        }
+        return;
+      }
+      case 7: {
+        const cond = evalCondition(code, vars);
+        const block = cond ? node.trueBlock : node.falseBlock;
+        if (block) runBlock(block, vars, ctx);
+        return;
+      }
+      case 8: {
+        let guard = 0;
+        while (evalCondition(code, vars)) {
+          runBlock(node.trueBlock, vars, ctx);
+          if (ctx.halt) return;
+          guard++;
+          if (guard > MAX_LOOP_ITERATIONS) {
+            ctx.write("\n[중단됨: 반복이 너무 많아 자동으로 멈췄습니다]\n");
+            return;
+          }
+        }
+        return;
+      }
+      default:
+        return;
+    }
+  }
+
+  function run(codeText, stdinText, outEl) {
+    const lines = codeText.split("\n");
+    const stdinLines = stdinText.split("\n");
+    let stdinCursor = 0;
+    let buffer = "";
+    const ctx = {
+      halt: false,
+      write(s) {
+        buffer += s;
+      },
+      readLine() {
+        return stdinCursor < stdinLines.length ? stdinLines[stdinCursor++] : "";
+      },
+    };
+    try {
+      const program = parseLines(lines, false);
+      const vars = {};
+      runBlock(program, vars, ctx);
+      outEl.textContent = buffer || "(출력 없음)";
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      outEl.textContent =
+        (buffer ? buffer + "\n" : "") +
+        `🚨 사감 선생님 등장: 실행 중 오류가 발생했습니다.\n(실제 GSA-Lang처럼 친절한 에러 메시지는 없습니다 — 원인: ${message})`;
+    }
+  }
+
+  const GUGUDAN = `사감실에서 알립니다.
+
+"a를 입력하세요 > "한 김광곽 사감실로 오시기 바랍니다.
+김광곽 넘어갈 생각 말고 퇴사.
+설망고 너 뭐야.
+설망고 너는 말이 말로 안들리니.
+설망고! 1호로 이방하지마.
+
+"b를 입력하세요 > "한 김광곽 사감실로 오시기 바랍니다.
+김광곽 넘어갈 생각 말고 퇴사.
+삽동부 너 뭐야.
+삽동부 너는 말이 말로 안들리니.
+삽동부! 1호로 이방하지마.
+
+1호 추석망고 사감실로 오시기 바랍니다.
+1호 정월망고 사감실로 오시기 바랍니다.
+
+설망고가 추석망고랑 같은 짓을 안했다고? 자꾸 했던 말 반복하게 할래.
+ 1호 정월망고 사감실로 오시기 바랍니다.
+ 삽동부가 정월망고랑 같은 짓을 안했다고? 자꾸 했던 말 반복하게 할래.
+  추석망고 넘어갈 생각 말고 퇴사.
+  " × "한 김광곽 사감실로 오시기 바랍니다.
+  김광곽 넘어갈 생각 말고 퇴사.
+  정월망고 넘어갈 생각 말고 퇴사.
+  " = "한 김광곽 사감실로 오시기 바랍니다.
+  김광곽 넘어갈 생각 말고 퇴사.
+  추석망고! 너가 크리스마스망고를 이렇게 만들었어.
+  크리스마스망고! 너 맨날 정월망고랑 이방하지.
+  크리스마스망고 퇴사.
+  정월망고! 1호로 이방하지마.
+ 추석망고! 1호로 이방하지마.
+ "---------------"한 김광곽 사감실로 오시기 바랍니다.
+ 김광곽 퇴사.
+
+소등하고 취침하기 바랍니다.`;
+
+  const CAL = `사감실에서 알립니다.
+
+"최--첨--단 계산기"한 김광곽 사감실로 오시기 바랍니다.
+김광곽 퇴사.
+"a > "한 김광곽 사감실로 오시기 바랍니다.
+김광곽 넘어갈 생각 말고 퇴사.
+
+설망고 너 뭐야.
+설망고 너는 말이 말로 안들리니.
+
+"b > "한 김광곽 사감실로 오시기 바랍니다.
+김광곽 넘어갈 생각 말고 퇴사.
+
+삽동부 너 뭐야.
+삽동부 너는 말이 말로 안들리니.
+
+설망고! 너가 이광곽을 이렇게 만들었어.
+설망고! 삽동부방으로 이방하지마.
+
+이광곽 너는 이방 횟수 계산도 못하니.
+
+이광곽 넘어갈 생각 말고 퇴사.
+
+" + "한 김광곽 사감실로 오시기 바랍니다.
+김광곽 넘어갈 생각 말고 퇴사.
+
+삽동부 넘어갈 생각 말고 퇴사.
+
+" = "한 김광곽 사감실로 오시기 바랍니다.
+김광곽 넘어갈 생각 말고 퇴사.
+
+설망고 퇴사.
+
+소등하고 취침하기 바랍니다.`;
+
+  function initGsaToy(root) {
+    const codeEl = root.querySelector("#gsa-code");
+    const stdinEl = root.querySelector("#gsa-stdin");
+    const outEl = root.querySelector('[data-role="output"]');
+    const runBtn = root.querySelector('[data-action="run"]');
+
+    function doRun() {
+      run(codeEl.value, stdinEl.value, outEl);
+    }
+
+    root.querySelectorAll("[data-preset]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const preset = btn.getAttribute("data-preset");
+        if (preset === "gugudan") {
+          codeEl.value = GUGUDAN;
+          stdinEl.value = "3\n4";
+        } else if (preset === "cal") {
+          codeEl.value = CAL;
+          stdinEl.value = "12\n8";
+        } else {
+          codeEl.value = "";
+          stdinEl.value = "";
+        }
+        doRun();
+      });
+    });
+
+    runBtn.addEventListener("click", doRun);
+
+    codeEl.value = GUGUDAN;
+    stdinEl.value = "3\n4";
+    doRun();
+  }
+
+  document.querySelectorAll(".gsa-toy").forEach(initGsaToy);
+</script>

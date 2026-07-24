@@ -1,0 +1,46 @@
+---
+title: "물리 계산을 거쳐야만 조절되는 볼륨"
+hook: "버튼 하나로 되는 걸 왜 굳이 물리 시뮬레이션으로 만드냐고? 쓸데없이 정교한 걸 만드는 게 재밌어서."
+date: 2022-07-30
+category: "장난 프로젝트"
+stack: ["JavaScript", "물리 시뮬레이션"]
+repo: "https://github.com/seolmango/hardmodelife"
+demo: "https://seolmango.github.io/hardmodelife/physicsVolume"
+status: "완료"
+---
+import Stage from "../../components/Stage.astro";
+import Callout from "../../components/Callout.astro";
+
+<Stage tag="MOTIVE" title="왜 만들었나">
+
+`hardmodelife`는 "쓸데없이 복잡한 세상을 만들기 위한" 시리즈 프로젝트다.
+첫 번째이자 아직은 유일한 아이디어가 이거였다 — 볼륨 조절 버튼을 누르면
+바로 소리가 바뀌는 게 아니라, 몇 가지 물리값을 설정한 뒤 시뮬레이션을
+돌려야만 최종 볼륨이 정해지는 다이얼. 실용성은 전혀 없지만, 없어도 되는
+정교함을 일부러 만들어보고 싶었다.
+
+</Stage>
+
+<Stage tag="BUILD" title="어떻게 만들었나">
+
+물리값(질량, 마찰, 탄성 같은 값들로 볼륨의 움직임을 결정)을 설정하면 그
+값들을 바탕으로 시뮬레이션이 돌아가고, 그 시뮬레이션의 결과가 최종 볼륨
+값으로 반영되는 구조다. 웹으로 바로 만져볼 수 있게 만들어서 GitHub Pages로
+[라이브 데모](https://seolmango.github.io/hardmodelife/physicsVolume)까지
+배포해뒀다.
+
+</Stage>
+
+<Stage tag="RESULT" title="결과">
+
+아이디어 하나로 시작한 시리즈지만, "쓸데없는 것에 진심인" 컨셉 자체가
+포트폴리오에 재미있는 색깔을 더해준다고 생각한다. 진지한 시뮬레이션들
+사이에 이런 프로젝트가 하나쯤 있는 게, 오히려 더 사람이 만든 것처럼
+보이게 하는 것 같다.
+
+<Callout label="TMI">
+README에 대놓고 "아이디어 받아요"라고 적어뒀다. 볼륨 다이얼처럼 쓸데없는
+것에 대한 아이디어가 있으면 언제든 제보를 환영합니다.
+</Callout>
+
+</Stage>

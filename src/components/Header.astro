@@ -1,0 +1,82 @@
+---
+const nav = [
+  { href: "/", label: "로그" },
+  { href: "/playground", label: "플레이그라운드" },
+  { href: "/#about", label: "소개" },
+];
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a class="brand" href="/">
+      <span class="mark" aria-hidden="true"></span>
+      seolmango
+    </a>
+    <nav aria-label="주요 메뉴">
+      {nav.map((item) => (
+        <a href={item.href}>{item.label}</a>
+      ))}
+      <a href="https://github.com/seolmango" target="_blank" rel="noopener noreferrer">
+        GitHub
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(6px);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: 0.9rem;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .brand:hover {
+    color: var(--ink);
+  }
+
+  .mark {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 0 3px var(--amber-soft);
+  }
+
+  nav {
+    display: flex;
+    gap: 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+  }
+
+  nav a:hover {
+    color: var(--amber);
+  }
+</style>
