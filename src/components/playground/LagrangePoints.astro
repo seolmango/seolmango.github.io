@@ -1,15 +1,17 @@
 ---
 // Ported from github.com/seolmango/threeParticle. The heatmap is the exact
 // effective-potential formula from potential.py (mass ratio ALPHA for the
-// Sun–Jupiter system), and the click-to-drop trajectory integrates the
+// Sun–Jupiter system), and every dropped/thrown trajectory integrates the
 // exact rotating-frame equations of motion from trojan.py — including its
 // real starting condition for the default trajectory, not a made-up one.
+// L1–L3 aren't in the source scripts (only L4/L5 have a closed form); they're
+// solved numerically at load time against that same equation of motion.
 ---
 
 <div class="lp-toy">
   <div class="frame">
     <canvas class="view"></canvas>
-    <p class="hint">캔버스를 클릭하면 그 자리에 소행성을 정지 상태로 놓습니다</p>
+    <p class="hint">클릭하면 정지 상태로, 드래그 후 놓으면 그 방향·속도로 던집니다</p>
   </div>
   <div class="controls">
     <button type="button" data-action="toggle">일시정지</button>
@@ -17,7 +19,7 @@
     <p class="caption">
       <span class="dot amber" aria-hidden="true"></span>기본 궤적은
       trojan.py의 실제 초기값 · <span class="cross" aria-hidden="true">+</span>
-      표시는 L4/L5 근사 위치
+      표시는 L1~L5 위치
     </p>
   </div>
 </div>
@@ -34,12 +36,15 @@
     border-radius: var(--radius);
     overflow: hidden;
     touch-action: none;
+    max-width: 640px;
+    margin: 0 auto;
   }
 
   canvas {
     display: block;
     width: 100%;
-    height: 420px;
+    aspect-ratio: 1 / 1;
+    height: auto;
   }
 
   .view {
@@ -115,6 +120,9 @@
   const TIME_SPEED = 0.6; // sim-time units advanced per real second
   const SUBSTEPS = 4;
   const PARTICLE_COLORS = ["--teal", "--focus", "--amber"];
+  const CLICK_THRESHOLD_SIM = 0.015; // drags shorter than this (in sim units) count as a plain click
+  const VELOCITY_SCALE = 0.35; // drag distance (sim units) -> launch speed
+  const MAX_LAUNCH_SPEED = 1.4; // clamp so a corner-to-corner drag doesn't launch absurdly fast
 
   function potential(x, y) {
     const r1 = Math.sqrt((x - ALPHA) ** 2 + y * y);
@@ -141,6 +149,33 @@
     const k4 = derivs(s4);
     return state.map((v, i) => v + (dt / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]));
   }
+
+  // L1/L2/L3 have no closed form, so they're found by Newton's method on
+  // the same acceleration function the integrator uses: at y=0 with zero
+  // velocity, derivs(...)[1] is exactly d(effective potential)/dx, and a
+  // Lagrange point is where that's zero.
+  function collinearAccel(x) {
+    return derivs([x, 0, 0, 0])[1];
+  }
+
+  function solveCollinear(x0) {
+    let x = x0;
+    for (let i = 0; i < 60; i++) {
+      const h = 1e-6;
+      const f = collinearAccel(x);
+      const fp = (collinearAccel(x + h) - collinearAccel(x - h)) / (2 * h);
+      const dx = f / fp;
+      x -= dx;
+      if (Math.abs(dx) < 1e-13) break;
+    }
+    return x;
+  }
+
+  const HILL_RADIUS = Math.cbrt(ALPHA / 3);
+  const JUPITER_X = ALPHA - 1;
+  const L1_X = solveCollinear(JUPITER_X + HILL_RADIUS); // between the Sun and Jupiter
+  const L2_X = solveCollinear(JUPITER_X - HILL_RADIUS); // beyond Jupiter
+  const L3_X = solveCollinear(1); // opposite Jupiter, across the Sun
 
   function hexToRgb(hex) {
     const clean = hex.trim().replace("#", "");
@@ -188,6 +223,8 @@
     let height = 0;
     let playing = true;
     let colorCursor = 0;
+    let dragStart = null; // { simX, simY, pointerId } — press point, in sim units
+    let dragCurrent = null; // { simX, simY } — live pointer position while dragging
 
     function toPixel(x, y) {
       return [width / 2 + (x / RANGE) * (width / 2), height / 2 - (y / RANGE) * (height / 2)];
@@ -252,18 +289,24 @@
       baseCtx.strokeStyle = inkSoft;
       baseCtx.font = `11px ${fontMono}`;
       baseCtx.fillStyle = inkSoft;
-      for (const [label, ly] of [
-        ["L4", Math.sqrt(3) / 2],
-        ["L5", -Math.sqrt(3) / 2],
+      // label offsets are hand-placed: L1/L2 sit right next to Jupiter and
+      // to each other (real Hill-sphere geometry, not a display bug), so
+      // their labels are pushed opposite directions to stay legible.
+      for (const [label, sx, sy, dx, dy] of [
+        ["L1", L1_X, 0, 8, 14],
+        ["L2", L2_X, 0, -24, -10],
+        ["L3", L3_X, 0, 7, -6],
+        ["L4", ALPHA - 0.5, Math.sqrt(3) / 2, 7, -6],
+        ["L5", ALPHA - 0.5, -Math.sqrt(3) / 2, 7, -6],
       ]) {
-        const [lx, lyPx] = toPixel(ALPHA - 0.5, ly);
+        const [lx, lyPx] = toPixel(sx, sy);
         baseCtx.beginPath();
         baseCtx.moveTo(lx - 5, lyPx);
         baseCtx.lineTo(lx + 5, lyPx);
         baseCtx.moveTo(lx, lyPx - 5);
         baseCtx.lineTo(lx, lyPx + 5);
         baseCtx.stroke();
-        baseCtx.fillText(label, lx + 7, lyPx - 6);
+        baseCtx.fillText(label, lx + dx, lyPx + dy);
       }
       baseCtx.setTransform(1, 0, 0, 1, 0, 0);
     }
@@ -330,18 +373,112 @@
         }
       }
 
+      if (dragStart && dragCurrent) drawDragPreview();
+
       requestAnimationFrame(frame);
+    }
+
+    function drawDragPreview() {
+      const [sxPx, syPx] = toPixel(dragStart.simX, dragStart.simY);
+      const [cxPx, cyPx] = toPixel(dragCurrent.simX, dragCurrent.simY);
+
+      viewCtx.fillStyle = inkSoft;
+      viewCtx.beginPath();
+      viewCtx.arc(sxPx, syPx, 3, 0, Math.PI * 2);
+      viewCtx.fill();
+
+      const dxPx = cxPx - sxPx;
+      const dyPx = cyPx - syPx;
+      const dist = Math.hypot(dxPx, dyPx);
+      if (dist < 4) return;
+
+      viewCtx.strokeStyle = inkSoft;
+      viewCtx.lineWidth = 1.5;
+      viewCtx.setLineDash([4, 3]);
+      viewCtx.beginPath();
+      viewCtx.moveTo(sxPx, syPx);
+      viewCtx.lineTo(cxPx, cyPx);
+      viewCtx.stroke();
+      viewCtx.setLineDash([]);
+
+      const angle = Math.atan2(dyPx, dxPx);
+      const headLen = 7;
+      for (const spread of [Math.PI / 7, -Math.PI / 7]) {
+        viewCtx.beginPath();
+        viewCtx.moveTo(cxPx, cyPx);
+        viewCtx.lineTo(
+          cxPx - headLen * Math.cos(angle - spread),
+          cyPx - headLen * Math.sin(angle - spread),
+        );
+        viewCtx.stroke();
+      }
+
+      const dragSimDist = Math.hypot(
+        dragCurrent.simX - dragStart.simX,
+        dragCurrent.simY - dragStart.simY,
+      );
+      const speed = Math.min(dragSimDist * VELOCITY_SCALE, MAX_LAUNCH_SPEED);
+      viewCtx.font = `11px ${fontMono}`;
+      viewCtx.fillStyle = inkSoft;
+      viewCtx.fillText(`v ≈ ${speed.toFixed(2)}`, cxPx + 8, cyPx - 8);
+    }
+
+    function pointerSim(e) {
+      const rect = viewCanvas.getBoundingClientRect();
+      return toSim(e.clientX - rect.left, e.clientY - rect.top);
+    }
+
+    function launchDragged(e) {
+      if (!dragStart || e.pointerId !== dragStart.pointerId) return;
+      const [ex, ey] = pointerSim(e);
+      const rawVx = ex - dragStart.simX;
+      const rawVy = ey - dragStart.simY;
+      const dist = Math.hypot(rawVx, rawVy);
+
+      let vx = 0;
+      let vy = 0;
+      if (dist > CLICK_THRESHOLD_SIM) {
+        vx = rawVx * VELOCITY_SCALE;
+        vy = rawVy * VELOCITY_SCALE;
+        const speed = Math.hypot(vx, vy);
+        if (speed > MAX_LAUNCH_SPEED) {
+          vx = (vx / speed) * MAX_LAUNCH_SPEED;
+          vy = (vy / speed) * MAX_LAUNCH_SPEED;
+        }
+      }
+
+      const color = hexToRgb(particleColors[colorCursor % particleColors.length]);
+      colorCursor++;
+      particles.push({
+        state: [dragStart.simX, vx, dragStart.simY, vy],
+        color,
+        history: [],
+        alive: true,
+      });
+      playing = true;
+      toggleBtn.textContent = "일시정지";
+      dragStart = null;
+      dragCurrent = null;
     }
 
     viewCanvas.addEventListener("pointerdown", (e) => {
       hint.style.display = "none";
-      const rect = viewCanvas.getBoundingClientRect();
-      const [sx, sy] = toSim(e.clientX - rect.left, e.clientY - rect.top);
-      const color = hexToRgb(particleColors[colorCursor % particleColors.length]);
-      colorCursor++;
-      particles.push({ state: [sx, 0, sy, 0], color, history: [], alive: true });
-      playing = true;
-      toggleBtn.textContent = "일시정지";
+      viewCanvas.setPointerCapture(e.pointerId);
+      const [sx, sy] = pointerSim(e);
+      dragStart = { simX: sx, simY: sy, pointerId: e.pointerId };
+      dragCurrent = { simX: sx, simY: sy };
+    });
+
+    viewCanvas.addEventListener("pointermove", (e) => {
+      if (!dragStart || e.pointerId !== dragStart.pointerId) return;
+      const [sx, sy] = pointerSim(e);
+      dragCurrent = { simX: sx, simY: sy };
+    });
+
+    viewCanvas.addEventListener("pointerup", launchDragged);
+    viewCanvas.addEventListener("pointercancel", () => {
+      dragStart = null;
+      dragCurrent = null;
     });
 
     toggleBtn.addEventListener("click", () => {
