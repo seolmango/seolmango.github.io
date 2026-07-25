@@ -1,0 +1,4 @@
+Contact: mailto:seolchaehwan70@gmail.com
+Preferred-Languages: ko, en
+Canonical: https://seolmango.github.io/.well-known/security.txt
+Expires: 2027-07-25T00:00:00.000Z
