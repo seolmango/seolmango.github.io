@@ -1,0 +1,8 @@
+{
+  "description": "위키백과 문서 두 개 사이를 링크만 타고 가는 최단 경로를 찾고, 각 링크가 쓰인 문장을 보여 주는 서비스입니다.",
+  "language": "Go",
+  "created_at": null,
+  "pushed_at": null,
+  "homepage": null,
+  "default_branch": "HEAD"
+}

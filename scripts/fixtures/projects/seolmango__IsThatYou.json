@@ -1,0 +1,8 @@
+{
+  "description": "카카오톡 대화 내보내기 파일로 모델을 학습해, 문장만 보고 누가 한 말인지 구분하는 프로젝트입니다.",
+  "language": "Python",
+  "created_at": null,
+  "pushed_at": null,
+  "homepage": null,
+  "default_branch": "HEAD"
+}

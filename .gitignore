@@ -30,3 +30,4 @@ Thumbs.db
 **/.impeccable/live/*.png
 # impeccable-ignore-end
 .impeccable/readmes/
+.impeccable/tasks/

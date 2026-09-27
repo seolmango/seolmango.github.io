@@ -1,0 +1,116 @@
+{
+  "projects": [
+    {
+      "repo": "example/grain-measure",
+      "featured": true,
+      "title": "결정립 관찰 기록",
+      "summary": "현미경 이미지와 측정 메모를 한곳에서 대조하는 예시 프로젝트입니다.",
+      "field": "materials",
+      "period": "2026",
+      "tags": [
+        "미세조직",
+        "이미지 분석"
+      ],
+      "links": [
+        {
+          "label": "예시 보고서",
+          "url": "https://example.com/grain-report"
+        },
+        {
+          "label": "발표 자료",
+          "url": "https://example.com/grain-slides"
+        }
+      ],
+      "thumbnail": {
+        "src": "/images/sample/micrograph.svg",
+        "alt": "예시 결정립 구조 도식"
+      }
+    },
+    {
+      "repo": "example/bragg-explorer",
+      "featured": true,
+      "title": "브래그 회절 탐색기",
+      "summary": "각도와 간격을 바꾸며 회절 조건을 살펴보는 예시 도구입니다.",
+      "field": "both",
+      "period": "2025–2026",
+      "tags": [
+        "XRD",
+        "시각화",
+        "TypeScript"
+      ],
+      "links": [
+        {
+          "label": "설계 메모",
+          "url": "https://example.com/bragg-notes"
+        }
+      ],
+      "thumbnail": {
+        "src": "/images/sample/xrd-pattern.svg",
+        "alt": "예시 회절 패턴"
+      },
+      "playground": "bragg"
+    },
+    {
+      "repo": "example/phase-atlas",
+      "featured": false,
+      "title": "이원계 상태도 읽기 노트",
+      "summary": "상 경계와 영역을 단계별로 표시하는 예시 자료입니다.",
+      "field": "materials",
+      "period": "2025",
+      "tags": [
+        "상평형",
+        "학습 자료"
+      ],
+      "links": [
+        {
+          "label": "예시 도해",
+          "url": "https://example.com/phase-diagram"
+        }
+      ],
+      "thumbnail": {
+        "src": "/images/sample/phase-diagram.svg",
+        "alt": "예시 이원 공정 상태도"
+      }
+    },
+    {
+      "repo": "example/lab-ledger",
+      "featured": false,
+      "title": "실험 데이터 장부",
+      "summary": "파일과 조건, 처리 이력을 함께 찾는 예시 소프트웨어입니다.",
+      "field": "software",
+      "period": "2024–2025",
+      "tags": [
+        "데이터 관리",
+        "웹"
+      ],
+      "links": [
+        {
+          "label": "데모",
+          "url": "https://example.com/lab-ledger-demo"
+        },
+        {
+          "label": "설명 문서",
+          "url": "https://example.com/lab-ledger-docs"
+        }
+      ]
+    },
+    {
+      "repo": "example/reading-index",
+      "featured": false,
+      "title": "논문 읽기 색인",
+      "summary": "읽은 문헌과 남긴 질문을 다시 찾기 위한 예시 도구입니다.",
+      "field": "software",
+      "period": "2024",
+      "tags": [
+        "검색",
+        "기록"
+      ],
+      "links": [
+        {
+          "label": "사용 예시",
+          "url": "https://example.com/reading-index"
+        }
+      ]
+    }
+  ]
+}

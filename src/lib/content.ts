@@ -1,11 +1,14 @@
 import profileData from '../data/profile.json';
-import { getCollection, type CollectionEntry } from 'astro:content';
 import categoryData from '../data/categories.json';
 import postData from '../data/generated/velog-posts.json';
 import sampleProfileData from '../data/sample/profile.json';
 import sampleCategoryData from '../data/sample/categories.json';
 import samplePostData from '../data/sample/velog-posts.json';
-import { sanitizeFeedHtml } from '../../scripts/lib/feed-html.mjs';
+import projectData from '../data/generated/github-projects.json';
+import projectConfig from '../data/projects.json';
+import sampleProjectData from '../data/sample/github-projects.json';
+import sampleProjectConfig from '../data/sample/projects.json';
+import { sanitizeFeedHtml, sanitizeReadmeHtml } from '../../scripts/lib/feed-html.mjs';
 
 export const isSampleMode = import.meta.env.MODE === 'sample';
 const profileSource = isSampleMode ? sampleProfileData : profileData;
@@ -38,8 +41,14 @@ export type Profile = {
   photo: Image | null;
   velog: { username: string };
 };
-export type Project = CollectionEntry<'projects'> | CollectionEntry<'sampleProjects'>;
-export type Category = { id: string; label: string; field?: Project['data']['field'] };
+export type ProjectData = {
+  id: string; repo: string; url: string; title: string; summary: string;
+  field: 'materials' | 'software' | 'both'; period: string; tags: string[];
+  links: Link[]; thumbnail: Image | null; html: string; updatedAt: string;
+  featured: boolean; playground?: string;
+};
+export type Project = { id: string; data: ProjectData };
+export type Category = { id: string; label: string; field?: ProjectData['field'] };
 export type Post = {
   isSample: boolean;
   id: string;
@@ -165,18 +174,25 @@ function webUrl(value: string): boolean {
     return false;
   }
 }
-export async function getProjects(): Promise<Project[]> {
-  const projects: Project[] = isSampleMode
-    ? await getCollection('sampleProjects')
-    : await getCollection('projects');
-  return projects.sort((a, b) =>
-    Number(b.data.featured) - Number(a.data.featured) ||
-    a.data.order - b.data.order ||
-    (b.data.period ?? '').localeCompare(a.data.period ?? '', 'ko'),
-  );
+export function getProjects(): Project[] {
+  const source = isSampleMode ? sampleProjectData : projectData;
+  const config = isSampleMode ? sampleProjectConfig : projectConfig;
+  const extras = new Map(config.projects.map((item) => [item.repo, item]));
+  return source.projects.map((item) => {
+    const meta = extras.get(item.repo);
+    const base = `https://raw.githubusercontent.com/${item.repo}/HEAD/README.md`;
+    const data: ProjectData = {
+      ...item,
+      field: ['materials', 'software', 'both'].includes(item.field) ? item.field as ProjectData['field'] : 'software',
+      html: sanitizeReadmeHtml(item.html, base, { allowSiteImages: isSampleMode }),
+      featured: meta?.featured === true,
+      ...('playground' in (meta ?? {}) && { playground: (meta as { playground?: string }).playground }),
+    };
+    return { id: item.id, data };
+  });
 }
-export async function getFeaturedProjects(limit = 3): Promise<Project[]> {
-  const projects = await getProjects();
+export function getFeaturedProjects(limit = 3): Project[] {
+  const projects = getProjects();
   return projects.filter((project) => project.data.featured).slice(0, limit);
 }
 export function getCategories(): Category[] {

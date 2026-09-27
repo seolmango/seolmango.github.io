@@ -46,11 +46,33 @@ function resolve(value, baseUrl) {
   }
 }
 
-/** @param {string} html @param {string} baseUrl @param {{ allowSiteImages?: boolean, allowExternalLinks?: boolean }} [options] */
+function readmeUrl(value, baseUrl, kind) {
+  if (!value || value.startsWith('#')) return value;
+  if (value.startsWith('//')) return '';
+  if (value.startsWith('/')) {
+    const match = baseUrl.match(/^(https:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/[^/]+)\//i);
+    if (match) value = `${match[1]}${value}`;
+  }
+  if (/^https?:\/\//i.test(value)) {
+    if (kind === 'img') return value.replace(
+      /^https:\/\/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)$/i,
+      'https://raw.githubusercontent.com/$1/$2/$3/$4',
+    );
+    return value;
+  }
+  const resolved = resolve(value, baseUrl);
+  if (kind === 'img') return resolved;
+  return resolved.replace(
+    /^https:\/\/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)$/i,
+    'https://github.com/$1/$2/blob/$3/$4',
+  );
+}
+
+/** @param {string} html @param {string} baseUrl @param {{ allowSiteImages?: boolean, allowExternalLinks?: boolean, readme?: boolean }} [options] */
 export function sanitizeFeedHtml(html, baseUrl, options = {}) {
   if (!html) return '';
   // Preserve a safe outbound link for embedded media before removing the embed.
-  const withEmbeds = html.replace(
+  const withEmbeds = options.readme ? html : html.replace(
     /<iframe\b([^>]*)>(?:[\s\S]*?<\/iframe\s*>)?/gi,
     (_, attributes) => {
       const match = attributes.match(
@@ -65,7 +87,7 @@ export function sanitizeFeedHtml(html, baseUrl, options = {}) {
     },
   );
   return sanitizeHtml(withEmbeds, {
-    allowedTags: tags,
+    allowedTags: options.readme ? [...tags, 'details', 'summary', 'span'] : tags,
     allowedAttributes: {
       a: ['href', 'title', 'rel'],
       img: [
@@ -94,7 +116,7 @@ export function sanitizeFeedHtml(html, baseUrl, options = {}) {
       h1: 'h2',
       a: (tagName, attribs) => {
         if (options.allowExternalLinks === false) return { tagName: 'span', attribs: {} };
-        const href = attribs.href ? resolve(attribs.href, baseUrl) : '';
+        const href = options.readme ? readmeUrl(attribs.href, baseUrl, 'a') : attribs.href ? resolve(attribs.href, baseUrl) : '';
         const result = { ...attribs, href };
         if (/^https?:\/\//i.test(href)) result.rel = 'noopener noreferrer';
         else delete result.rel;
@@ -102,7 +124,7 @@ export function sanitizeFeedHtml(html, baseUrl, options = {}) {
       },
       img: (tagName, attribs) => {
         const siteImage = options.allowSiteImages && /^\/(?!\/)/.test(attribs.src ?? '');
-        const src = siteImage ? attribs.src : attribs.src ? resolve(attribs.src, baseUrl) : '';
+        const src = siteImage ? attribs.src : options.readme ? readmeUrl(attribs.src, baseUrl, 'img') : attribs.src ? resolve(attribs.src, baseUrl) : '';
         return {
           tagName,
           attribs: {
@@ -126,6 +148,11 @@ export function sanitizeFeedHtml(html, baseUrl, options = {}) {
       (!frame.attribs.src || !/^https?:\/\//i.test(frame.attribs.src) &&
         !(options.allowSiteImages && /^\/(?!\/)/.test(frame.attribs.src))),
   });
+}
+
+/** @param {string} html @param {string} baseUrl @param {{ allowSiteImages?: boolean }} [options] */
+export function sanitizeReadmeHtml(html, baseUrl, options = {}) {
+  return sanitizeFeedHtml(html, baseUrl, { ...options, readme: true });
 }
 
 const namedEntities = {

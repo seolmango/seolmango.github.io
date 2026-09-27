@@ -1,0 +1,8 @@
+{
+  "description": "두 은하의 충돌을 Python으로 시뮬레이션하고 matplotlib로 영상을 만드는 코드입니다.",
+  "language": "Python",
+  "created_at": null,
+  "pushed_at": null,
+  "homepage": null,
+  "default_branch": "HEAD"
+}

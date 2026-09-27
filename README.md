@@ -18,12 +18,13 @@ Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 현
 
 ## 내용 수정하기 (레이아웃 코드는 건드리지 않아도 됩니다)
 
-프로필과 글 분류는 `src/data/`의 JSON에서, 프로젝트는 `src/content/projects/`의 Markdown에서 수정합니다. 수정 후 `npm run check`를 실행해 형식을 확인하세요.
+프로필과 글 분류, 프로젝트 목록은 `src/data/`의 JSON에서 수정합니다. 프로젝트 본문은 원본 GitHub 저장소의 README에서 가져옵니다. 수정 후 `npm run check`를 실행해 형식을 확인하세요.
 
 | 파일 | 내용 |
 | --- | --- |
 | `src/data/profile.json` | 사이트 이름, 이름, 한 줄 소개, 소개 글, 링크, Velog 사용자명 |
-| `src/content/projects/<id>.md` | 프로젝트 소개와 본문. 파일 이름이 주소의 `<id>`가 됩니다. |
+| `src/data/projects.json` | 저장소 주소, 표시 순서, 대표 프로젝트 지정 및 README에 없는 값의 기본값 |
+| `src/data/generated/github-projects.json` | README에서 자동 생성한 프로젝트 데이터. 직접 편집하지 마세요. |
 | `src/data/categories.json` | 글 분류와 분류 지정 규칙 |
 | `src/data/generated/velog-posts.json` | 자동 생성 파일. **직접 수정하지 마세요.** |
 
@@ -65,56 +66,11 @@ Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 현
 
 사진 파일은 `public/images/` 폴더에 넣고 `src`에 `/images/파일이름`을 적습니다. `alt`(사진 설명)는 화면 낭독기 사용자를 위해 반드시 적어야 합니다.
 
-### 2. 프로젝트 — `src/content/projects/<id>.md`
+### 2. 프로젝트 — GitHub README
 
-프로젝트마다 Markdown 파일을 하나씩 만듭니다. 파일 이름(`my-project.md`)이 `/projects/my-project/`의 주소가 됩니다. 위쪽 `---` 사이에는 목록과 메타데이터를, 아래에는 블로그 글처럼 자유로운 Markdown 본문을 씁니다.
+`src/data/projects.json`의 `projects` 배열에 `owner/name` 형식의 저장소를 추가합니다. 배열 순서가 표시 순서이며 `featured: true`를 지정하면 첫 화면에 표시됩니다. 같은 항목의 `title`, `summary`, `field`, `period`, `tags`, `links`, `thumbnail`은 README 설정이 없을 때 쓰는 기본값입니다.
 
-| 키 | 의미 |
-| --- | --- |
-| `title`, `summary`, `field` | 필수. 제목, 짧은 설명, 분야(`materials`·`software`·`both`) |
-| `repo` | 원본 GitHub 저장소 URL |
-| `links` | 추가 링크 목록 (`label`, `url`) |
-| `images` | 본문 아래에 표시할 그림 목록 (`src`, `alt`, 선택 `caption`) |
-| `thumbnail` | 선택 썸네일 (`src`, `alt`). 없으면 첫 번째 `images`를 사용 |
-| `tags`, `period` | 태그 목록과 기간 표기 |
-| `featured` | `true`면 첫 화면의 대표 프로젝트에 표시 |
-| `order` | 작은 숫자부터 정렬. 기본값 `100` |
-| `playground` | 연결할 플레이그라운드의 slug (예: `bragg`) |
-
-이미지 주소는 `/` 또는 `https://`로 시작해야 합니다. 로컬 파일은 `public/images/`에 두고 `/images/파일이름`을 적습니다. `thumbnail`과 `images`가 모두 없으면 제목과 분야 선형으로 만든 자동 썸네일이 표시됩니다. 목록은 대표 프로젝트 먼저, 그다음 `order`, 같은 순서에서는 `period` 내림차순으로 정렬됩니다.
-
-전체 파일 예시 (`src/content/projects/my-project.md`):
-
-```md
----
-title: "프로젝트 이름"
-summary: "무엇을 다루는지 한두 문장으로 적습니다."
-field: "materials"
-repo: "https://github.com/seolmango/my-project"
-links:
-  - label: "발표 자료"
-    url: "https://example.com/slides"
-images:
-  - src: "/images/my-project-1.jpg"
-    alt: "현미경 관찰 사진"
-    caption: "시편 A의 결정립"
-thumbnail:
-  src: "/images/my-project-cover.jpg"
-  alt: "프로젝트 대표 이미지"
-tags: ["Python", "상평형"]
-period: "2026"
-featured: true
-order: 10
----
-
-## 무엇을 만들었나
-
-프로젝트의 배경과 범위를 적습니다.
-
-## 어떻게 동작하나
-
-방법과 결과를 설명하고 필요한 링크나 그림을 연결합니다.
-```
+원본 README 맨 위에 넣을 설정 블록, 본문 숨기기, 이미지와 링크 주소 규칙은 [프로젝트 README 작성 규칙](docs/project-readme-format.md)을 참고하세요. 로컬에서 `npm run import:projects`를 실행하면 `src/data/generated/github-projects.json`이 갱신됩니다. 네트워크 없이 시험할 때는 `npm run import:projects -- --fixture-dir scripts/fixtures/projects`를 사용합니다.
 
 ### 3. Velog 연결 — `src/data/profile.json`의 `velog.username`
 
@@ -178,13 +134,13 @@ npm run build:sample   # 예시 데이터로 빌드 (확인용, 배포하지 마
 워크플로는 두 개입니다.
 
 - `.github/workflows/deploy.yml`: `main`에 푸시하거나 수동 실행하면 Astro 공식 액션으로 빌드해 GitHub Pages에 배포합니다.
-- `.github/workflows/import-velog.yml`: 매일 한 번, 또는 수동 실행으로 Velog 글을 가져옵니다. 바뀐 내용이 있을 때만 커밋하고, 그 뒤 배포 워크플로를 실행합니다.
+- `.github/workflows/import-content.yml`: 매일 한 번, 또는 수동 실행으로 Velog 글과 GitHub 프로젝트 README를 가져옵니다. 바뀐 내용이 있을 때만 커밋하고, 그 뒤 배포 워크플로를 실행합니다.
 
 처음 한 번 GitHub 저장소에서 설정해야 할 것:
 
 1. **Settings → Pages → Build and deployment → Source**를 **GitHub Actions**로 바꿉니다.
 2. **Settings → Actions → General → Workflow permissions**가 조직 정책 등으로 막혀 있지 않은지 확인합니다. 워크플로가 필요한 권한(커밋, 배포 실행)은 파일 안에 선언되어 있어 별도 비밀 값은 필요 없습니다.
-3. **Actions** 탭에서 "Import Velog RSS"를 한 번 수동 실행해 동작을 확인합니다. (Velog 사용자명을 정한 뒤)
+3. **Actions** 탭에서 "Import content"를 한 번 수동 실행해 동작을 확인합니다. (Velog 사용자명을 정한 뒤)
 
 참고: GitHub는 60일 동안 저장소 활동이 없으면 예약 워크플로를 자동으로 멈춥니다. 그럴 때는 Actions 탭에서 다시 켜면 됩니다.
 

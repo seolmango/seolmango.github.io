@@ -1,0 +1,8 @@
+{
+  "description": "피보나치 수열의 첫 자릿수 분포가 진법별 벤포드 법칙을 따르는지 확인하는 프로그램입니다.",
+  "language": "Python",
+  "created_at": null,
+  "pushed_at": null,
+  "homepage": null,
+  "default_branch": "HEAD"
+}

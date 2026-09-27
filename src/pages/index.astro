@@ -7,7 +7,7 @@ import { getProfile, getPosts, getFeaturedProjects } from '../lib/content';
 import { playground } from '../lib/playground';
 const profile = getProfile();
 const posts = getPosts().slice(0, 5);
-const projects = await getFeaturedProjects(3);
+const projects = getFeaturedProjects(3);
 ---
 <BaseLayout>
   <div class="page-head home-head">

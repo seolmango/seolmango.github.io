@@ -1,0 +1,132 @@
+{
+  "projects": [
+    {
+      "id": "grain-measure",
+      "repo": "example/grain-measure",
+      "url": "https://github.com/example/grain-measure",
+      "title": "결정립 관찰 기록",
+      "summary": "현미경 이미지와 측정 메모를 한곳에서 대조하는 예시 프로젝트입니다.",
+      "field": "materials",
+      "period": "2026",
+      "tags": [
+        "미세조직",
+        "이미지 분석"
+      ],
+      "links": [
+        {
+          "label": "예시 보고서",
+          "url": "https://example.com/grain-report"
+        },
+        {
+          "label": "발표 자료",
+          "url": "https://example.com/grain-slides"
+        }
+      ],
+      "thumbnail": {
+        "src": "/images/sample/micrograph.svg",
+        "alt": "예시 결정립 구조 도식"
+      },
+      "html": "<blockquote>\n<p>이 프로젝트는 화면 미리보기용 가상 예시입니다.</p>\n</blockquote>\n<p>현미경 이미지와 측정 메모를 한곳에서 대조하는 예시 프로젝트입니다.</p>\n<p>여러 시야의 이미지를 정리하고 관찰 조건을 함께 기록하는 가상의 작업입니다.</p>\n<p>측정 기준과 이미지 출처를 연결하는 화면 구성을 시험합니다.</p>\n<h2>기록 형식</h2>\n<ul>\n<li>작업의 배경과 범위를 적습니다.</li>\n<li>사용한 자료와 도구를 연결합니다.</li>\n<li>결과 이미지를 캡션과 함께 설명합니다.</li>\n</ul>\n<pre><code class=\"language-text\">예시: 관찰 → 정리 → 비교\n</code></pre>\n<figure>\n  <img src=\"/images/sample/micrograph.svg\" alt=\"예시 결정립 구조 도식\" loading=\"lazy\" decoding=\"async\" referrerpolicy=\"no-referrer\" />\n  <figcaption>그림 1. 결정립 경계 화면</figcaption>\n</figure>\n",
+      "updatedAt": ""
+    },
+    {
+      "id": "bragg-explorer",
+      "repo": "example/bragg-explorer",
+      "url": "https://github.com/example/bragg-explorer",
+      "title": "브래그 회절 탐색기",
+      "summary": "각도와 간격을 바꾸며 회절 조건을 살펴보는 예시 도구입니다.",
+      "field": "both",
+      "period": "2025–2026",
+      "tags": [
+        "XRD",
+        "시각화",
+        "TypeScript"
+      ],
+      "links": [
+        {
+          "label": "설계 메모",
+          "url": "https://example.com/bragg-notes"
+        }
+      ],
+      "thumbnail": {
+        "src": "/images/sample/xrd-pattern.svg",
+        "alt": "예시 회절 패턴"
+      },
+      "html": "<blockquote>\n<p>이 프로젝트는 화면 미리보기용 가상 예시입니다.</p>\n</blockquote>\n<p>각도와 간격을 바꾸며 회절 조건을 살펴보는 예시 도구입니다.</p>\n<p>기본 식을 그래프 위에서 살펴볼 수 있도록 구성한 가상의 학습 프로젝트입니다.</p>\n<h2>기록 형식</h2>\n<ul>\n<li>작업의 배경과 범위를 적습니다.</li>\n<li>사용한 자료와 도구를 연결합니다.</li>\n<li>결과 이미지를 캡션과 함께 설명합니다.</li>\n</ul>\n<pre><code class=\"language-text\">예시: 관찰 → 정리 → 비교\n</code></pre>\n<figure>\n  <img src=\"/images/sample/xrd-pattern.svg\" alt=\"예시 회절 패턴\" loading=\"lazy\" decoding=\"async\" referrerpolicy=\"no-referrer\" />\n  <figcaption>그림 1. 각도별 피크 표현</figcaption>\n</figure>\n",
+      "updatedAt": ""
+    },
+    {
+      "id": "phase-atlas",
+      "repo": "example/phase-atlas",
+      "url": "https://github.com/example/phase-atlas",
+      "title": "이원계 상태도 읽기 노트",
+      "summary": "상 경계와 영역을 단계별로 표시하는 예시 자료입니다.",
+      "field": "materials",
+      "period": "2025",
+      "tags": [
+        "상평형",
+        "학습 자료"
+      ],
+      "links": [
+        {
+          "label": "예시 도해",
+          "url": "https://example.com/phase-diagram"
+        }
+      ],
+      "thumbnail": {
+        "src": "/images/sample/phase-diagram.svg",
+        "alt": "예시 이원 공정 상태도"
+      },
+      "html": "<blockquote>\n<p>이 프로젝트는 화면 미리보기용 가상 예시입니다.</p>\n</blockquote>\n<p>상 경계와 영역을 단계별로 표시하는 예시 자료입니다.</p>\n<p>수업에서 익힌 상태도 읽기 순서를 간단한 도식으로 정리한 가상 프로젝트입니다.</p>\n<h2>기록 형식</h2>\n<ul>\n<li>작업의 배경과 범위를 적습니다.</li>\n<li>사용한 자료와 도구를 연결합니다.</li>\n<li>결과 이미지를 캡션과 함께 설명합니다.</li>\n</ul>\n<pre><code class=\"language-text\">예시: 관찰 → 정리 → 비교\n</code></pre>\n<figure>\n  <img src=\"/images/sample/phase-diagram.svg\" alt=\"예시 이원 공정 상태도\" loading=\"lazy\" decoding=\"async\" referrerpolicy=\"no-referrer\" />\n  <figcaption>그림 1. 단순화한 상 영역</figcaption>\n</figure>\n",
+      "updatedAt": ""
+    },
+    {
+      "id": "lab-ledger",
+      "repo": "example/lab-ledger",
+      "url": "https://github.com/example/lab-ledger",
+      "title": "실험 데이터 장부",
+      "summary": "파일과 조건, 처리 이력을 함께 찾는 예시 소프트웨어입니다.",
+      "field": "software",
+      "period": "2024–2025",
+      "tags": [
+        "데이터 관리",
+        "웹"
+      ],
+      "links": [
+        {
+          "label": "데모",
+          "url": "https://example.com/lab-ledger-demo"
+        },
+        {
+          "label": "설명 문서",
+          "url": "https://example.com/lab-ledger-docs"
+        }
+      ],
+      "thumbnail": null,
+      "html": "<blockquote>\n<p>이 프로젝트는 화면 미리보기용 가상 예시입니다.</p>\n</blockquote>\n<p>파일과 조건, 처리 이력을 함께 찾는 예시 소프트웨어입니다.</p>\n<p>원본 데이터의 위치와 분석 단계 사이의 연결을 시각적으로 검토하는 가상 도구입니다.</p>\n<p>검색 결과를 간결한 행 목록으로 제공하는 구성을 시험합니다.</p>\n<h2>기록 형식</h2>\n<ul>\n<li>작업의 배경과 범위를 적습니다.</li>\n<li>사용한 자료와 도구를 연결합니다.</li>\n<li>결과 이미지를 캡션과 함께 설명합니다.</li>\n</ul>\n<pre><code class=\"language-text\">예시: 관찰 → 정리 → 비교\n</code></pre>\n<figure>\n  <img src=\"/images/sample/tool-screenshot.svg\" alt=\"예시 도구 화면\" loading=\"lazy\" decoding=\"async\" referrerpolicy=\"no-referrer\" />\n  <figcaption>그림 1. 화면 구성 예시</figcaption>\n</figure>\n",
+      "updatedAt": ""
+    },
+    {
+      "id": "reading-index",
+      "repo": "example/reading-index",
+      "url": "https://github.com/example/reading-index",
+      "title": "논문 읽기 색인",
+      "summary": "읽은 문헌과 남긴 질문을 다시 찾기 위한 예시 도구입니다.",
+      "field": "software",
+      "period": "2024",
+      "tags": [
+        "검색",
+        "기록"
+      ],
+      "links": [
+        {
+          "label": "사용 예시",
+          "url": "https://example.com/reading-index"
+        }
+      ],
+      "thumbnail": null,
+      "html": "<blockquote>\n<p>이 프로젝트는 화면 미리보기용 가상 예시입니다.</p>\n</blockquote>\n<p>읽은 문헌과 남긴 질문을 다시 찾기 위한 예시 도구입니다.</p>\n<p>제목, 주제, 메모를 연결하는 작은 가상 색인입니다. 긴 문헌 목록의 탐색 흐름을 확인합니다.</p>\n<h2>기록 형식</h2>\n<ul>\n<li>작업의 배경과 범위를 적습니다.</li>\n<li>사용한 자료와 도구를 연결합니다.</li>\n<li>결과 이미지를 캡션과 함께 설명합니다.</li>\n</ul>\n<pre><code class=\"language-text\">예시: 관찰 → 정리 → 비교\n</code></pre>\n<figure>\n  <img src=\"/images/sample/tool-screenshot.svg\" alt=\"예시 도구 화면\" loading=\"lazy\" decoding=\"async\" referrerpolicy=\"no-referrer\" />\n  <figcaption>그림 1. 화면 구성 예시</figcaption>\n</figure>\n",
+      "updatedAt": ""
+    }
+  ]
+}

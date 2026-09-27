@@ -1,0 +1,8 @@
+{
+  "description": "곡과 사용자, 셋 리스트를 정하면 각자 볼 가사·악보 화면이 실시간으로 동기화되는 온라인 프롬프터입니다.",
+  "language": "Flask",
+  "created_at": null,
+  "pushed_at": null,
+  "homepage": null,
+  "default_branch": "HEAD"
+}

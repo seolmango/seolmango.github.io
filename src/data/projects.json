@@ -1,0 +1,272 @@
+{
+  "projects": [
+    {
+      "repo": "seolmango/HydrogenOrbitalVisualizer",
+      "featured": true,
+      "title": "수소 원자 오비탈 시각화",
+      "summary": "수소 원자의 파동 함수로 전자 구름의 모양을 계산해 3차원으로 시각화하는 프로그램입니다.",
+      "field": "both",
+      "period": "2024",
+      "tags": [
+        "Python",
+        "양자역학",
+        "시각화"
+      ],
+      "links": [],
+      "thumbnail": {
+        "src": "https://raw.githubusercontent.com/seolmango/HydrogenOrbitalVisualizer/HEAD/example/2px.webp",
+        "alt": "2px 오비탈의 전자 구름을 시각화한 결과"
+      }
+    },
+    {
+      "repo": "seolmango/galaxy_simulation",
+      "featured": true,
+      "title": "두 은하의 충돌 시뮬레이션",
+      "summary": "두 은하의 충돌을 Python으로 시뮬레이션하고 matplotlib로 영상을 만드는 코드입니다.",
+      "field": "software",
+      "period": "2023",
+      "tags": [
+        "Python",
+        "NumPy",
+        "matplotlib"
+      ],
+      "links": [
+        {
+          "label": "시뮬레이션 영상 (YouTube)",
+          "url": "https://youtu.be/efWby_ctrzI"
+        }
+      ],
+      "thumbnail": {
+        "src": "https://raw.githubusercontent.com/seolmango/galaxy_simulation/HEAD/example.jpg",
+        "alt": "두 은하가 충돌하는 시뮬레이션의 한 장면"
+      }
+    },
+    {
+      "repo": "seolmango/KHAOS-Tracking-Algorithm",
+      "id": "khaos-tracking",
+      "featured": true,
+      "title": "KHAOS 비행 궤적 추정 (EKF)",
+      "summary": "로켓 비행 중의 IMU·GPS·기압 센서 데이터를 확장 칼만 필터로 종합해 비행 궤적을 추정하는 저장소의 포크입니다.",
+      "field": "both",
+      "period": "2026",
+      "tags": [
+        "Python",
+        "EKF",
+        "센서 융합",
+        "로켓"
+      ],
+      "links": [
+        {
+          "label": "원본 저장소 (snu-hanaro)",
+          "url": "https://github.com/snu-hanaro/KHAOS-Tracking-Algorithm"
+        }
+      ]
+    },
+    {
+      "repo": "seolmango/project-surf",
+      "featured": true,
+      "title": "project-surf: 위키백과 서핑",
+      "summary": "위키백과 문서 두 개 사이를 링크만 타고 가는 최단 경로를 찾고, 각 링크가 쓰인 문장을 보여 주는 서비스입니다.",
+      "field": "software",
+      "period": "2026",
+      "tags": [
+        "Go",
+        "그래프 탐색",
+        "위키백과"
+      ],
+      "links": []
+    },
+    {
+      "repo": "seolmango/graphColoringProblemSolveBySA",
+      "id": "graph-coloring-sa",
+      "featured": false,
+      "title": "모의 담금질로 푸는 그래프 색칠 문제",
+      "summary": "최솟값을 찾는 모의 담금질 기법으로 그래프 색칠 문제를 푸는 Python 코드입니다.",
+      "field": "software",
+      "period": "2022",
+      "tags": [
+        "Python",
+        "최적화",
+        "그래프 색칠"
+      ],
+      "links": []
+    },
+    {
+      "repo": "seolmango/IF-rocket-project-code",
+      "featured": false,
+      "title": "로켓 동아리 I.F 추력 측정 코드",
+      "summary": "광주과학고등학교 로켓 동아리 I.F의 프로젝트에 쓰는 코드를 모은 저장소입니다.",
+      "field": "both",
+      "period": "2024",
+      "tags": [
+        "Arduino",
+        "Python",
+        "로드셀"
+      ],
+      "links": []
+    },
+    {
+      "repo": "seolmango/threeParticle",
+      "featured": false,
+      "title": "제한된 3입자계 시뮬레이션",
+      "summary": "무거운 두 입자와 가벼운 한 입자로 이루어진 제한된 3입자계 문제를 시뮬레이션하는 코드입니다.",
+      "field": "software",
+      "period": "2024",
+      "tags": [
+        "Python",
+        "수치 해석"
+      ],
+      "links": []
+    },
+    {
+      "repo": "seolmango/FibonacciBenfordLawCheck",
+      "id": "fibonacci-benford",
+      "featured": false,
+      "title": "피보나치 수열과 벤포드 법칙",
+      "summary": "피보나치 수열의 첫 자릿수 분포가 진법별 벤포드 법칙을 따르는지 확인하는 프로그램입니다.",
+      "field": "software",
+      "period": "2023",
+      "tags": [
+        "Python",
+        "수학",
+        "벤포드 법칙"
+      ],
+      "links": [],
+      "thumbnail": {
+        "src": "https://raw.githubusercontent.com/seolmango/FibonacciBenfordLawCheck/HEAD/results/result(Base10_10000).png",
+        "alt": "10진법에서 피보나치 수열 10000개의 첫 자릿수 분포 그래프"
+      }
+    },
+    {
+      "repo": "seolmango/IsThatYou",
+      "featured": false,
+      "title": "IsThatYou",
+      "summary": "카카오톡 대화 내보내기 파일로 모델을 학습해, 문장만 보고 누가 한 말인지 구분하는 프로젝트입니다.",
+      "field": "software",
+      "period": "2025",
+      "tags": [
+        "Python",
+        "TensorFlow",
+        "자연어 처리"
+      ],
+      "links": [],
+      "thumbnail": {
+        "src": "https://raw.githubusercontent.com/seolmango/IsThatYou/HEAD/fordocs/2.png",
+        "alt": "사람별 대화 데이터 수를 보여 주는 터미널 화면"
+      }
+    },
+    {
+      "repo": "seolmango/isNell",
+      "featured": false,
+      "title": "isNELL",
+      "summary": "가사가 록 밴드 NELL의 가사와 비슷한지 판별하는 모델을 학습하고 평가하는 프로젝트입니다.",
+      "field": "software",
+      "period": "2024",
+      "tags": [
+        "Python",
+        "자연어 처리",
+        "Jupyter"
+      ],
+      "links": []
+    },
+    {
+      "repo": "0-inf/KoreanBadwordDetection",
+      "featured": false,
+      "title": "한국어 욕설 탐지 모듈 (0-inf)",
+      "summary": "딥러닝 없이 동작하는 Python 한국어 욕설 필터링 모듈입니다. 0-inf 팀 저장소입니다.",
+      "field": "software",
+      "period": "2023",
+      "tags": [
+        "Python",
+        "0-inf"
+      ],
+      "links": [
+        {
+          "label": "후속 버전 badwordDetection2",
+          "url": "https://github.com/0-inf/badwordDetection2"
+        }
+      ]
+    },
+    {
+      "repo": "0-inf/switchio",
+      "featured": false,
+      "title": "switch: 술래잡기 io 게임 (0-inf)",
+      "summary": "술래잡기 규칙에 스킬을 더한 최대 8인 io 게임입니다. 0-inf 팀 저장소와 개인 리메이크 저장소가 있습니다.",
+      "field": "software",
+      "period": "2026",
+      "tags": [
+        "JavaScript",
+        "TypeScript",
+        "게임"
+      ],
+      "links": [
+        {
+          "label": "리메이크 저장소 swITchRemake",
+          "url": "https://github.com/seolmango/swITchRemake"
+        }
+      ]
+    },
+    {
+      "repo": "seolmango/LivePrompt",
+      "featured": false,
+      "title": "LivePrompt",
+      "summary": "곡과 사용자, 셋 리스트를 정하면 각자 볼 가사·악보 화면이 실시간으로 동기화되는 온라인 프롬프터입니다.",
+      "field": "software",
+      "period": "2025",
+      "tags": [
+        "Flask",
+        "실시간 동기화"
+      ],
+      "links": []
+    },
+    {
+      "repo": "seolmango/gsa-lang",
+      "featured": false,
+      "title": "GSA-Lang",
+      "summary": "광주과학고등학교 학생들에게 익숙한 문장으로 코드를 쓰는 장난스러운 프로그래밍 언어입니다.",
+      "field": "software",
+      "period": "2024",
+      "tags": [
+        "Python",
+        "인터프리터"
+      ],
+      "links": []
+    },
+    {
+      "repo": "seolmango/hardmodelife",
+      "featured": false,
+      "title": "HardModeLife: 물리 볼륨 조절기",
+      "summary": "볼륨을 조절하려면 물리 값을 설정하고 시뮬레이션해야 하는, 일부러 복잡하게 만든 장난감입니다.",
+      "field": "software",
+      "period": "2022",
+      "tags": [
+        "HTML",
+        "JavaScript",
+        "물리 시뮬레이션"
+      ],
+      "links": [
+        {
+          "label": "라이브 데모",
+          "url": "https://seolmango.github.io/hardmodelife/physicsVolume/"
+        }
+      ],
+      "thumbnail": {
+        "src": "https://raw.githubusercontent.com/seolmango/hardmodelife/HEAD/physicsVolume/example.png",
+        "alt": "physicsVolume 화면"
+      }
+    },
+    {
+      "repo": "seolmango/UnusualChromeExtension",
+      "featured": false,
+      "title": "정상은 아닌 크롬 확장 기능들",
+      "summary": "재미로 만든 테스트용 크롬 확장 기능 모음입니다.",
+      "field": "software",
+      "period": "2022",
+      "tags": [
+        "JavaScript",
+        "Chrome Extension"
+      ],
+      "links": []
+    }
+  ]
+}

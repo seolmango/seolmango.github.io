@@ -1,5 +1,4 @@
 ---
-import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BackLink from '../../components/BackLink.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
@@ -8,7 +7,7 @@ import { getProjects, type Project } from '../../lib/content';
 import { playground } from '../../lib/playground';
 
 export async function getStaticPaths() {
-  const projects = await getProjects();
+  const projects = getProjects();
   return projects.map((project, index) => ({
     params: { id: project.id },
     props: {
@@ -25,11 +24,13 @@ interface Props {
   next?: Project;
 }
 const { project, previous, next } = Astro.props;
-const { Content } = await render(project);
-const { title, summary, period, field, tags, repo, links, images, playground: playgroundSlug } = project.data;
-const hero = project.data.thumbnail ?? images[0];
-const heroImage = images.find((image) => image.src === hero?.src);
-const gallery = images.filter((image) => image.src !== hero?.src);
+const { title, summary, period, field, tags, url, links, html, thumbnail, playground: playgroundSlug } = project.data;
+const firstBodyImage = html.match(/<img\b[^>]*\bsrc="([^"]+)"/i)?.[1]?.replaceAll('&amp;', '&');
+const hero = thumbnail?.src && thumbnail.src !== firstBodyImage ? thumbnail : null;
+const cleanSummary = summary.replace(/\s+/g, ' ').trim();
+const displayHtml = html.replace(/^\s*(<blockquote>[\s\S]*?<\/blockquote>\s*)?<p>([\s\S]*?)<\/p>/i,
+  (whole, prefix, paragraph) => paragraph.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() === cleanSummary
+    ? (prefix ?? '') : whole);
 const playgroundLink = playground.find((item) => item.slug === playgroundSlug);
 ---
 <BaseLayout title={title} description={summary} canonical={Astro.url.href}>
@@ -43,7 +44,7 @@ const playgroundLink = playground.find((item) => item.slug === playgroundSlug);
     </p>
     <p class="project-lead measure">{summary}</p>
     <div class="project-links">
-      {repo && <ExternalLink href={repo} label="GitHub 저장소" />}
+      <ExternalLink href={url} label="GitHub 저장소" />
       {links.map((link) => <ExternalLink href={link.url} label={link.label} />)}
       {playgroundLink && <a href={`/playground/${playgroundLink.slug}/`}>플레이그라운드에서 보기</a>}
     </div>
@@ -51,15 +52,11 @@ const playgroundLink = playground.find((item) => item.slug === playgroundSlug);
   <article class="project-article">
     {hero && <figure class="hero-figure">
       <img src={hero.src} alt={hero.alt} />
-      <figcaption>그림 1. {heroImage?.caption ?? hero.alt}</figcaption>
+      <figcaption>그림 1. {hero.alt}</figcaption>
     </figure>}
-    <div class="prose"><Content /></div>
-    {gallery.length > 0 && <div class="project-gallery">
-      {gallery.map((image, index) => <figure>
-        <img src={image.src} alt={image.alt} loading="lazy" />
-        <figcaption>그림 {index + (hero ? 2 : 1)}. {image.caption ?? image.alt}</figcaption>
-      </figure>)}
-    </div>}
+    {displayHtml.trim()
+      ? <div class="prose" set:html={displayHtml} />
+      : <p class="empty">README 내용을 불러오지 못했습니다. GitHub 저장소에서 확인해 주세요.</p>}
   </article>
   <nav class="project-neighbors" aria-label="프로젝트 이동">
     {previous ? <a href={`/projects/${previous.id}/`}><span>이전 프로젝트</span><strong>{previous.data.title}</strong></a> : <span></span>}

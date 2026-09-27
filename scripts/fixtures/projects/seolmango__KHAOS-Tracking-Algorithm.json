@@ -1,0 +1,8 @@
+{
+  "description": "로켓 비행 중의 IMU·GPS·기압 센서 데이터를 확장 칼만 필터로 종합해 비행 궤적을 추정하는 저장소의 포크입니다.",
+  "language": "Python",
+  "created_at": null,
+  "pushed_at": null,
+  "homepage": null,
+  "default_branch": "HEAD"
+}

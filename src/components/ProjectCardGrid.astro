@@ -10,7 +10,7 @@ const { projects, entrance = false } = Astro.props;
 ---
 <div class:list={['project-grid', { entrance }]}>
   {projects.map((project) => {
-    const thumb = project.data.thumbnail ?? project.data.images[0];
+    const thumb = project.data.thumbnail;
     return <a class="project-card" href={`/projects/${project.id}/`} aria-label={project.data.title}>
       <div class="thumb-frame">
         {thumb
@@ -48,6 +48,7 @@ const { projects, entrance = false } = Astro.props;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top center;
     transition: transform 240ms ease-out;
   }
   .card-meta {
