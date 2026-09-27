@@ -1,0 +1,146 @@
+{
+  "projects": [
+    {
+      "id": "hydrogen-orbital-visualizer",
+      "title": "수소 원자 오비탈 시각화",
+      "summary": "수소 원자의 파동 함수로 전자 구름의 모양을 계산해 3차원으로 시각화하는 프로그램입니다.",
+      "description": [
+        "주양자수·부양자수·자기 양자수를 골라 해당 오비탈의 확률 밀도를 그립니다. README에 슈뢰딩거 방정식, 정규화, 양자수의 의미를 함께 정리했습니다."
+      ],
+      "field": "both",
+      "repo": "https://github.com/seolmango/HydrogenOrbitalVisualizer",
+      "images": [
+        {
+          "src": "https://raw.githubusercontent.com/seolmango/HydrogenOrbitalVisualizer/HEAD/example/2px.webp",
+          "alt": "2px 오비탈의 전자 구름을 시각화한 결과",
+          "caption": "2px 오비탈 시각화 예시"
+        }
+      ],
+      "tags": ["Python", "양자역학", "시각화"],
+      "period": "2024",
+      "featured": true
+    },
+    {
+      "id": "galaxy-simulation",
+      "title": "두 은하의 충돌 시뮬레이션",
+      "summary": "두 은하의 충돌을 Python으로 시뮬레이션하고 matplotlib로 영상을 만드는 코드입니다.",
+      "description": [
+        "두 은하의 은하면 방향, 별의 수, 질량비를 입력하면 시뮬레이션 결과를 저장하고, 별도 스크립트로 영상을 만듭니다. Verkade(2020)의 교육용 은하 충돌 시뮬레이션을 참고했습니다."
+      ],
+      "field": "software",
+      "repo": "https://github.com/seolmango/galaxy_simulation",
+      "links": [
+        { "label": "시뮬레이션 영상 (YouTube)", "url": "https://youtu.be/efWby_ctrzI" }
+      ],
+      "images": [
+        {
+          "src": "https://raw.githubusercontent.com/seolmango/galaxy_simulation/HEAD/example.jpg",
+          "alt": "두 은하가 충돌하는 시뮬레이션의 한 장면",
+          "caption": "시뮬레이션 결과 예시"
+        }
+      ],
+      "tags": ["Python", "NumPy", "matplotlib"],
+      "period": "2023",
+      "featured": true
+    },
+    {
+      "id": "if-rocket-project-code",
+      "title": "로켓 동아리 I.F 추력 측정 코드",
+      "summary": "광주과학고등학교 로켓 동아리 I.F의 프로젝트에 쓰는 코드를 모은 저장소입니다.",
+      "description": [
+        "로드셀과 아두이노로 만든 추력 테스트 장치의 업로드 코드와, 시리얼 통신으로 받은 값을 CSV로 저장하는 데이터 수집 코드를 담고 있습니다."
+      ],
+      "field": "both",
+      "repo": "https://github.com/seolmango/IF-rocket-project-code",
+      "tags": ["Arduino", "Python", "로드셀"],
+      "period": "2024",
+      "featured": true
+    },
+    {
+      "id": "project-surf",
+      "title": "project-surf: 위키백과 서핑",
+      "summary": "위키백과 문서 두 개 사이를 링크만 타고 가는 최단 경로를 찾고, 각 링크가 쓰인 문장을 보여 주는 서비스입니다.",
+      "description": [
+        "위키백과 덤프로 링크 그래프 스냅샷을 만들고 Go 서버에서 경로를 찾습니다. Claude Code와 OpenAI Codex를 활용해 만들었습니다."
+      ],
+      "field": "software",
+      "repo": "https://github.com/seolmango/project-surf",
+      "tags": ["Go", "그래프 탐색", "위키백과"],
+      "period": "2026",
+      "featured": true
+    },
+    {
+      "id": "three-particle",
+      "title": "제한된 3입자계 시뮬레이션",
+      "summary": "무거운 두 입자와 가벼운 한 입자로 이루어진 제한된 3입자계 문제를 시뮬레이션하는 코드입니다.",
+      "description": [
+        "라그랑주점 주변의 퍼텐셜을 그리고, 조건에 맞춰 제3입자의 운동을 계산합니다."
+      ],
+      "field": "software",
+      "repo": "https://github.com/seolmango/threeParticle",
+      "tags": ["Python", "수치 해석"],
+      "period": "2024"
+    },
+    {
+      "id": "is-that-you",
+      "title": "IsThatYou",
+      "summary": "카카오톡 대화 내보내기 파일로 모델을 학습해, 문장만 보고 누가 한 말인지 구분하는 프로젝트입니다.",
+      "description": [
+        "형태소 분석 후 Embedding–GRU–Dense로 이어지는 모델을 학습합니다. 사람별 데이터 양이 고를수록 정확도가 높아집니다."
+      ],
+      "field": "software",
+      "repo": "https://github.com/seolmango/IsThatYou",
+      "images": [
+        {
+          "src": "https://raw.githubusercontent.com/seolmango/IsThatYou/HEAD/fordocs/1.png",
+          "alt": "IsThatYou 학습 과정 화면",
+          "caption": "학습 실행 화면"
+        }
+      ],
+      "tags": ["Python", "TensorFlow", "자연어 처리"],
+      "period": "2025"
+    },
+    {
+      "id": "korean-badword-detection",
+      "title": "한국어 욕설 탐지 모듈 (0-inf)",
+      "summary": "딥러닝 없이 동작하는 Python 한국어 욕설 필터링 모듈입니다. 0-inf 팀 저장소입니다.",
+      "field": "software",
+      "repo": "https://github.com/0-inf/KoreanBadwordDetection",
+      "links": [
+        { "label": "후속 버전 badwordDetection2", "url": "https://github.com/0-inf/badwordDetection2" }
+      ],
+      "tags": ["Python", "0-inf"],
+      "period": "2023"
+    },
+    {
+      "id": "switchio",
+      "title": "switch: 술래잡기 io 게임 (0-inf)",
+      "summary": "술래잡기 규칙에 스킬을 더한 최대 8인 io 게임입니다. 0-inf 팀 저장소와 개인 리메이크 저장소가 있습니다.",
+      "field": "software",
+      "repo": "https://github.com/0-inf/switchio",
+      "links": [
+        { "label": "리메이크 저장소 swITchRemake", "url": "https://github.com/seolmango/swITchRemake" }
+      ],
+      "tags": ["JavaScript", "TypeScript", "게임"],
+      "period": "2026"
+    },
+    {
+      "id": "live-prompt",
+      "title": "LivePrompt",
+      "summary": "곡과 사용자, 셋 리스트를 정하면 각자 볼 가사·악보 화면이 실시간으로 동기화되는 온라인 프롬프터입니다.",
+      "field": "software",
+      "repo": "https://github.com/seolmango/LivePrompt",
+      "tags": ["Flask", "실시간 동기화"],
+      "period": "2025"
+    },
+    {
+      "id": "gsa-lang",
+      "title": "GSA-Lang",
+      "summary": "광주과학고등학교 학생들에게 익숙한 문장으로 코드를 쓰는 장난스러운 프로그래밍 언어입니다.",
+      "field": "software",
+      "repo": "https://github.com/seolmango/gsa-lang",
+      "tags": ["Python", "인터프리터"],
+      "period": "2024"
+    }
+  ]
+}

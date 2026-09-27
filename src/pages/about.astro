@@ -1,0 +1,101 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ExternalLink from '../components/ExternalLink.astro';
+import { getProfile, linkText } from '../lib/content';
+const profile = getProfile();
+const recordGroups = new Map<string, typeof profile.records>();
+for (const record of profile.records) {
+  const group = recordGroups.get(record.group) ?? [];
+  group.push(record);
+  recordGroups.set(record.group, group);
+}
+---
+<BaseLayout title="소개">
+  <div class="page-head">
+    <h1>소개</h1>
+  </div>
+  <div class="about-layout">
+    {profile.photo && <figure class="about-photo"><img src={profile.photo.src} alt={profile.photo.alt} width="360" height="450" /></figure>}
+    <div class="measure">
+      {profile.about.length
+        ? profile.about.map((paragraph) => <p>{paragraph}</p>)
+        : <p class="muted">소개 글을 준비하고 있습니다.</p>}
+    </div>
+  </div>
+  {Array.from(recordGroups, ([group, records]) => (
+    <section class="section">
+      <h2 class="section-rule">{group}</h2>
+      {records.map((record) => (
+        <div class="row record-row">
+          {record.period && <div class="row-label">{record.period}</div>}
+          <div class="row-main">
+            <h3>{record.url
+              ? <ExternalLink href={record.url} label={record.title} />
+              : record.title}</h3>
+            {record.detail && <p>{record.detail}</p>}
+          </div>
+        </div>
+      ))}
+    </section>
+  ))}
+  <section class="section">
+    <h2 class="section-rule">연락 · 링크</h2>
+    {profile.links.length ? (
+      <dl>
+        {profile.links.map((link) => (
+          <div class="row">
+            <dt class="row-label">{link.label}</dt>
+            <dd class="row-main">{link.url.startsWith('mailto:')
+              ? <a href={link.url}>{linkText(link.url)}</a>
+              : <ExternalLink href={link.url} label={linkText(link.url)} />}</dd>
+          </div>
+        ))}
+      </dl>
+    ) : (
+      <p class="empty">공개할 연락처가 아직 없습니다.</p>
+    )}
+  </section>
+</BaseLayout>
+<style>
+  dd {
+    margin: 0;
+  }
+  .about-layout {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s-6);
+  }
+  .about-photo {
+    width: min(10rem, 100%);
+    border: 1px solid var(--rule);
+  }
+  .about-photo img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  @media (min-width: 48rem) {
+    .record-row .row-main:only-child {
+      grid-column: 2;
+    }
+    .about-layout {
+      display: grid;
+      grid-template-columns: 9rem minmax(0, 40rem);
+      gap: var(--s-8);
+    }
+    .about-photo {
+      grid-column: 1;
+      grid-row: 1;
+      width: 9rem;
+    }
+    .about-layout > .measure {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .about-layout > .measure:only-child {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

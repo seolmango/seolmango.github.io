@@ -1,0 +1,47 @@
+{
+  "siteTitle": "seolmango",
+  "siteDescription": "재료과학과 소프트웨어 작업을 함께 기록하는 예시 연구 노트입니다.",
+  "name": "예시 이름",
+  "tagline": "금속 조직을 관찰하고, 그 과정을 돕는 작은 도구를 만듭니다. (예시 문구)",
+  "intro": [
+    "재료의 구조와 성질 사이를 공부하며 관찰한 것을 기록합니다. 이 소개는 레이아웃 확인용 예시입니다.",
+    "실험과 분석에 쓰는 작은 소프트웨어도 함께 다룹니다."
+  ],
+  "about": [
+    "금속의 미세조직과 상변태를 읽는 과정에 관심이 있습니다. 표본을 준비하고 관찰값을 정리하는 흐름을 차분히 기록합니다.",
+    "재료 실험에서 나온 데이터를 코드로 다루면 반복 작업을 줄이고 판단 근거를 다시 확인하기 쉬워집니다.",
+    "이 노트에는 공부하며 정리한 개념, 실험 방법을 검토한 메모, 작은 분석 도구의 제작 과정을 모읍니다.",
+    "여기에 있는 이름과 활동은 모두 화면 미리보기를 위한 예시입니다. 실제 소개와 이력은 소유자가 나중에 작성합니다."
+  ],
+  "records": [
+    { "group": "학력", "title": "가상 재료과학 연구학교", "detail": "예시 학사 과정", "period": "20XX.03 – 20XX.02" },
+    { "group": "학력", "title": "가상 과학고등학교", "detail": "예시 졸업", "period": "20XX.02" },
+    { "group": "활동", "title": "가상 결정 관찰 모임", "detail": "화면 확인용 예시 활동", "period": "20XX" },
+    { "group": "활동", "title": "가상 실험 기록 프로젝트", "detail": "화면 확인용 예시 프로젝트", "period": "20XX –" }
+  ],
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/seolmango"
+    },
+    {
+      "label": "Velog",
+      "url": "https://velog.io/@example/posts"
+    },
+    {
+      "label": "이메일",
+      "url": "mailto:example@example.com"
+    },
+    {
+      "label": "이력서 PDF",
+      "url": "https://example.com/cv.pdf"
+    }
+  ],
+  "photo": {
+    "src": "/images/sample/portrait.svg",
+    "alt": "예시 프로필 사진 자리"
+  },
+  "velog": {
+    "username": "example"
+  }
+}

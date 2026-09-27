@@ -1,0 +1,35 @@
+{
+  "siteTitle": "seolmango",
+  "siteDescription": "재료과학과 소프트웨어 작업을 함께 기록하는 개인 연구 노트입니다.",
+  "name": "설채환",
+  "tagline": "재료과학을 공부하며, 궁금한 현상을 코드로 직접 만들어 봅니다.",
+  "intro": [],
+  "about": [
+    "서울대학교 재료공학부에서 공부하고 있습니다. 교과서 속 현상을 직접 계산해 보고 싶을 때, 또는 필요한 도구가 없을 때 코드를 씁니다.",
+    "수소 원자 오비탈 시각화, 은하 충돌과 제한된 3입자계 시뮬레이션처럼 물리 현상을 수치로 따라가 보는 작업을 해 왔습니다.",
+    "광주과학고등학교 로켓 동아리 I.F에서는 로드셀과 아두이노로 만든 추력 측정 장치의 코드를 맡았고, 0-inf 팀에서 한국어 욕설 탐지 모듈과 io 게임 switch를 만들었습니다."
+  ],
+  "records": [
+    { "group": "학력", "title": "서울대학교 재료공학부", "detail": "학사 과정", "period": "2025.03 – 2029.02 (예정)" },
+    { "group": "학력", "title": "광주과학고등학교", "detail": "졸업", "period": "2022.03 – 2025.02" },
+    { "group": "논문", "title": "A Degree Reduction Method for an Efficient QUBO Formulation for the Graph Coloring Problem", "detail": "한국수학교육학회 (순수 및 응용수학)", "period": "2024.02" },
+    { "group": "활동", "title": "2026 NYPC Master Track 참가", "detail": "4인 팀 · 플레이어 AI 대전 방식 · 예선 864팀 중 143위", "period": "2026.07" },
+    { "group": "활동", "title": "로켓 동아리 I.F", "detail": "추력 측정 장치 코드 작성", "period": "광주과학고등학교" },
+    { "group": "활동", "title": "0-inf 팀", "detail": "한국어 욕설 탐지 모듈, io 게임 switch 등 팀 프로젝트", "period": "2023 –", "url": "https://github.com/0-inf" },
+    { "group": "자격", "title": "투자자산운용사", "detail": "금융투자협회", "period": "2026.01" },
+    { "group": "자격", "title": "재무위험관리사", "detail": "금융투자협회", "period": "2026.09" }
+  ],
+  "links": [
+    { "label": "GitHub", "url": "https://github.com/seolmango" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/chaehwan-%EC%84%A4%EC%B1%84%ED%99%98-seol-728796430/" },
+    { "label": "0-inf 팀", "url": "https://github.com/0-inf" },
+    { "label": "0-inf YouTube", "url": "https://www.youtube.com/@zerotoinf" }
+  ],
+  "photo": {
+    "src": "https://avatars.githubusercontent.com/u/65744726?v=4",
+    "alt": "창가에 놓인 음료 사진 (GitHub 프로필 이미지)"
+  },
+  "velog": {
+    "username": ""
+  }
+}

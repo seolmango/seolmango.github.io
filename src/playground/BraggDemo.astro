@@ -1,0 +1,364 @@
+---
+import { calculatePeaks, chartPeaks } from './bragg';
+const initial = calculatePeaks();
+const plotted = chartPeaks(initial);
+---
+<div id="bragg-demo" class="demo">
+  <form aria-label="회절 조건">
+    <fieldset>
+      <legend>결정 구조</legend>
+      <div class="radios">
+        <label>
+          <input type="radio" name="structure" value="SC"/>
+          단순 입방 (SC)
+        </label>
+        <label>
+          <input type="radio" name="structure" value="BCC"/>
+          체심 입방 (BCC)
+        </label>
+        <label>
+          <input type="radio" name="structure" value="FCC" checked/>
+          면심 입방 (FCC)
+        </label>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>격자 상수 a (Å)</legend>
+      <div class="lattice">
+        <label class="visually-hidden" for="lattice-number">수치</label>
+        <input id="lattice-number" type="number" min="2" max="6" step="0.01" value="3.60" inputmode="decimal"/>
+        <label class="visually-hidden" for="lattice-range">범위</label>
+        <input id="lattice-range" type="range" min="2" max="6" step="0.01" value="3.60"/>
+      </div>
+    </fieldset>
+    <div class="select-wrap">
+      <label for="radiation">X선 파장</label>
+      <select id="radiation">
+        <option value="cu">Cu Kα (1.5406 Å)</option>
+        <option value="co">Co Kα (1.7890 Å)</option>
+        <option value="mo">Mo Kα (0.7107 Å)</option>
+      </select>
+    </div>
+    <p class="small muted">2θ 범위: 10°–120°</p>
+  </form>
+  <div class="chart" role="img" aria-label="계산된 X선 회절 피크 그래프">
+    <svg id="peak-chart" viewBox="0 0 1000 232" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 220H1000" class="axis-line"/>
+      {Array.from({ length: 23 }, (_, i) => i * 5 + 10).map((degree) => {
+        const x = ((degree - 10) / 110) * 1000;
+        return <path d={`M${x} 220V${degree % 10 === 0 ? 231 : 226}`} class="tick"/>;
+      })}
+      {plotted.map((peak) => (
+        <path d={`M${peak.x * 10} 220V${220 - peak.intensity * 1.7}`} class="peak"/>
+      ))}
+    </svg>
+    <div id="peak-labels" class="peak-labels">
+      {plotted.filter((peak) => peak.label).map((peak) => (
+        <span
+          class:list={{ 'edge-left': peak.x < 5, 'edge-right': peak.x > 95 }}
+          style={`left:${Math.max(5, Math.min(95, peak.x))}%;bottom:${(peak.intensity / 100) * 65 + 18}%`}
+        >{peak.hkl}</span>
+      ))}
+    </div>
+    <div class="axis-numbers numeric">
+      {Array.from({ length: 12 }, (_, i) => 10 + i * 10).map((n) => (
+        <span class:list={{ 'edge-left': n === 10, 'edge-right': n === 120, 'odd-decade': n % 20 !== 0 }} style={`left:${((n - 10) / 110) * 100}%`}>{n}</span>
+      ))}
+    </div>
+    <p class="label quiet axis-title">2θ (°)</p>
+  </div>
+  <p id="peak-summary" class="small numeric" aria-live="polite">FCC · a = 3.60 Å · λ = 1.5406 Å · 피크 {initial.length}개</p>
+  <div class="table-wrap">
+    <table>
+      <caption>계산된 반사</caption>
+      <thead>
+        <tr>
+          <th scope="col">hkl</th>
+          <th scope="col">h²+k²+l²</th>
+          <th scope="col">d (Å)</th>
+          <th scope="col">2θ (°)</th>
+          <th scope="col">강도 (%)</th>
+        </tr>
+      </thead>
+      <tbody id="peak-table">
+        {initial.map((peak) => (
+          <tr>
+            <td>{peak.hkl}</td>
+            <td>{peak.s}</td>
+            <td>{peak.d.toFixed(4)}</td>
+            <td>{peak.twoTheta.toFixed(2)}</td>
+            <td>{Math.round(peak.intensity)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+  <noscript>
+    <p class="small muted">값을 바꾸려면 자바스크립트가 필요합니다. 이 결과는 기본값으로 계산된 것입니다.</p>
+  </noscript>
+</div>
+<script>
+  import { calculatePeaks, chartPeaks, wavelengths } from './bragg';
+  import type { Structure, Radiation } from './bragg';
+  const root = document.querySelector<HTMLElement>('#bragg-demo');
+  if (root) {
+    const number = root.querySelector<HTMLInputElement>('#lattice-number')!;
+    const range = root.querySelector<HTMLInputElement>('#lattice-range')!;
+    const radiation = root.querySelector<HTMLSelectElement>('#radiation')!;
+    const chart = root.querySelector<SVGSVGElement>('#peak-chart')!;
+    const labels = root.querySelector<HTMLElement>('#peak-labels')!;
+    const table = root.querySelector<HTMLTableSectionElement>('#peak-table')!;
+    const summary = root.querySelector<HTMLElement>('#peak-summary')!;
+    function draw() {
+      const structure = root!.querySelector<HTMLInputElement>(
+        'input[name="structure"]:checked',
+      )!.value as Structure;
+      const a = Math.min(6, Math.max(2, Number(number.value) || 3.6));
+      const wavelength = wavelengths[radiation.value as Radiation];
+      const peaks = calculatePeaks(structure, a, wavelength);
+      chart.querySelectorAll('.peak').forEach((node) => node.remove());
+      labels.replaceChildren();
+      for (const peak of chartPeaks(peaks)) {
+        const path = document.createElementNS(
+          'http://www.w3.org/2000/svg',
+          'path',
+        );
+        path.setAttribute(
+          'd',
+          `M${peak.x * 10} 220V${220 - peak.intensity * 1.7}`,
+        );
+        path.setAttribute('class', 'peak');
+        chart.append(path);
+        if (peak.label) {
+          const span = document.createElement('span');
+          span.textContent = peak.hkl;
+          span.style.left = `${Math.max(5, Math.min(95, peak.x))}%`;
+          span.style.bottom = `${(peak.intensity / 100) * 65 + 18}%`;
+          if (peak.x < 5) span.classList.add('edge-left');
+          if (peak.x > 95) span.classList.add('edge-right');
+          labels.append(span);
+        }
+      }
+      table.replaceChildren();
+      for (const peak of peaks) {
+        const tr = document.createElement('tr');
+        for (const value of [
+          peak.hkl,
+          peak.s,
+          peak.d.toFixed(4),
+          peak.twoTheta.toFixed(2),
+          Math.round(peak.intensity),
+        ]) {
+          const td = document.createElement('td');
+          td.textContent = String(value);
+          tr.append(td);
+        }
+        table.append(tr);
+      }
+      summary.textContent = `${structure} · a = ${a.toFixed(2)} Å · λ = ${wavelength.toFixed(4)} Å · 피크 ${peaks.length}개`;
+    }
+    number.addEventListener('input', () => {
+      range.value = number.value;
+      draw();
+    });
+    range.addEventListener('input', () => {
+      number.value = range.value;
+      draw();
+    });
+    root
+      .querySelectorAll('input[name="structure"]')
+      .forEach((input) => input.addEventListener('change', draw));
+    radiation.addEventListener('change', draw);
+  }
+</script>
+<style>
+  .demo {
+    max-width: 40rem;
+    margin-top: 3rem;
+  }
+  .demo form {
+    border-block: 1px solid var(--rule);
+    padding-block: 1.5rem;
+    display: grid;
+    gap: 1.5rem;
+  }
+  fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  legend,
+  .select-wrap > label {
+    font-size: var(--t-small);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .radios {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+  .radios label {
+    white-space: nowrap;
+  }
+  .lattice {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .lattice input[type='number'] {
+    width: 6rem;
+    min-height: 40px;
+    background: var(--ground);
+    border: 1px solid var(--rule);
+    border-radius: 0;
+    padding: 0.25rem 0.5rem;
+  }
+  .lattice input[type='range'] {
+    width: min(15rem, 100%);
+    min-width: 0;
+    flex: 1;
+  }
+  .select-wrap {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .select-wrap > label {
+    margin: 0;
+  }
+  select {
+    background: var(--ground);
+    border: 1px solid var(--rule);
+    border-radius: 0;
+    color: var(--ink);
+    min-height: 40px;
+    padding: 0.3rem;
+  }
+  .chart {
+    position: relative;
+    margin-top: 3rem;
+    height: 18rem;
+  }
+  .chart svg {
+    width: 100%;
+    height: 14rem;
+    overflow: visible;
+  }
+  .chart :global(.axis-line),
+  .chart :global(.tick) {
+    stroke: var(--rule-strong);
+    stroke-width: 1;
+  }
+  .chart :global(.peak) {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+  }
+  .peak-labels {
+    position: absolute;
+    inset: 0 0 3rem;
+    pointer-events: none;
+  }
+  .peak-labels :global(span) {
+    position: absolute;
+    transform: translateX(-50%);
+    font-size: var(--t-label);
+    color: var(--ink-2);
+    white-space: nowrap;
+  }
+  .peak-labels :global(.edge-left) {
+    transform: none;
+  }
+  .peak-labels :global(.edge-right) {
+    transform: translateX(-100%);
+  }
+  .axis-numbers {
+    position: relative;
+    font-size: var(--t-label);
+    color: var(--ink-3);
+    margin-top: 0.2rem;
+    height: 1.5em;
+  }
+  .axis-numbers span {
+    position: absolute;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+  /* Narrow screens keep every other decade so numerals never collide. */
+  @media (max-width: 38rem) {
+    .axis-numbers .odd-decade {
+      display: none;
+    }
+  }
+  .axis-numbers .edge-left {
+    transform: translateX(0);
+  }
+  .axis-numbers .edge-right {
+    transform: translateX(-100%);
+  }
+  .axis-title {
+    text-align: right;
+  }
+  .table-wrap {
+    max-width: 100%;
+    overflow-x: auto;
+    margin-top: 2rem;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+    font-size: var(--t-small);
+    font-variant-numeric: tabular-nums;
+  }
+  caption {
+    text-align: left;
+    font-size: var(--t-h3);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+  table :global(th),
+  table :global(td) {
+    text-align: right;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  table :global(th:first-child),
+  table :global(td:first-child) {
+    text-align: left;
+    padding-left: 0;
+  }
+  table :global(th:last-child),
+  table :global(td:last-child) {
+    padding-right: 0;
+  }
+  @media (max-width: 38rem) {
+    .radios {
+      display: grid;
+      gap: 0.25rem;
+    }
+    .chart {
+      height: 16rem;
+    }
+    .chart svg {
+      height: 12rem;
+    }
+    table :global(th),
+    table :global(td) {
+      padding: 0.5rem 0.4rem;
+    }
+    table :global(th) {
+      white-space: normal;
+    }
+  }
+</style>

@@ -1,0 +1,15 @@
+---
+import { getVelog } from '../lib/content';
+import ExternalLink from './ExternalLink.astro';
+const velog = getVelog();
+---
+<div class="empty">
+  {velog.configured ? (
+    <>
+      <p>아직 가져온 글이 없습니다.</p>
+      {velog.profileUrl && <p class="small"><ExternalLink href={velog.profileUrl} label="Velog에서 글 보기" /></p>}
+    </>
+  ) : (
+    <p>아직 연결된 Velog 계정이 없습니다. 계정이 정해지면 글을 이곳에 자동으로 정리합니다.</p>
+  )}
+</div>

@@ -1,0 +1,42 @@
+---
+import type { Project } from '../lib/content';
+interface Props {
+  field: Project['field'];
+  markOnly?: boolean;
+}
+const { field, markOnly = false } = Astro.props;
+const labels = {
+  materials: '재료과학',
+  software: '소프트웨어',
+  both: '재료 + 코드',
+};
+---
+<span class="field">
+  <svg viewBox="0 0 20 8" width="20" height="8" aria-hidden="true" fill="none" stroke="currentColor">
+    <g class:list={{ materials: field === 'materials', software: field === 'software', both: field === 'both' }}>
+      <path d="M0 4h20" />
+      {field === 'both' && <path d="M0 7h20" />}
+    </g>
+  </svg>
+  {!markOnly && labels[field]}
+</span>
+<style>
+  .field {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-2);
+    font-size: var(--t-label);
+    font-weight: 500;
+  }
+  .materials {
+    stroke-width: 1.5;
+  }
+  .software {
+    stroke-width: 1.5;
+    stroke-dasharray: 3 2;
+  }
+  .both {
+    stroke-width: 1;
+  }
+</style>

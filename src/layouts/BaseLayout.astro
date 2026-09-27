@@ -1,0 +1,54 @@
+---
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+import '../styles/global.css';
+import { getProfile, isSampleMode } from '../lib/content';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+interface Props {
+  title?: string;
+  description?: string;
+  canonical?: string;
+}
+const { title, description, canonical } = Astro.props;
+const profile = getProfile();
+const pageTitle = title ? `${title} · ${profile.siteTitle}` : profile.siteTitle;
+const pageDescription = description || profile.siteDescription;
+const canonicalUrl = canonical || Astro.url.href;
+---
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#f5f6f4" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#15181b" media="(prefers-color-scheme: dark)" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    {isSampleMode && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={canonicalUrl} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ko_KR" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <a class="skip" href="#main">본문으로 건너뛰기</a>
+    {isSampleMode && <div class="sample-notice">예시 데이터로 채운 미리보기입니다. 실제 배포에는 포함되지 않습니다.</div>}
+    <SiteHeader />
+    <main id="main" class="plate">
+      <slot />
+    </main>
+    <SiteFooter />
+  </body>
+</html>
+<style>
+  .sample-notice {
+    border-bottom: 1px solid var(--rule);
+    color: var(--ink-2);
+    font-size: var(--t-label);
+    line-height: 1.5;
+    padding: var(--s-2) 1.25rem;
+    text-align: center;
+  }
+</style>

@@ -1,0 +1,28 @@
+{
+  "categories": [
+    {
+      "id": "materials",
+      "label": "재료과학",
+      "field": "materials"
+    },
+    {
+      "id": "software",
+      "label": "소프트웨어",
+      "field": "software"
+    },
+    {
+      "id": "study",
+      "label": "공부 기록"
+    }
+  ],
+  "tagMap": {
+    "상평형": "materials",
+    "XRD": "materials",
+    "Python": "software",
+    "기록": "study"
+  },
+  "postMap": {
+    "https://velog.io/@example/semester-review": "study",
+    "https://velog.io/@example/paper-reading": "study"
+  }
+}

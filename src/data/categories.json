@@ -1,0 +1,8 @@
+{
+  "categories": [
+    { "id": "materials", "label": "재료과학", "field": "materials" },
+    { "id": "software", "label": "소프트웨어", "field": "software" }
+  ],
+  "tagMap": {},
+  "postMap": {}
+}

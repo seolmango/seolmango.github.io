@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BraggDemo from '../../playground/BraggDemo.astro';
+import BackLink from '../../components/BackLink.astro';
+---
+<BaseLayout title="X선 회절 피크 계산기">
+  <div class="page-head">
+    <h1>X선 회절 피크 계산기</h1>
+  </div>
+  <div class="notice measure">데모 — 플레이그라운드 구조를 보여 주는 예시이며, 실제 연구 프로젝트가 아닙니다.</div>
+  <div class="measure explanation">
+    <p>브래그 법칙 nλ = 2d sinθ와 입방정 결정의 면간 거리 d = a/√(h²+k²+l²)를 이용해 회절각을 계산합니다.</p>
+    <p>상대 강도는 다중도와 로렌츠 편광 인자만 반영한 근사치이며, 원자 산란 인자·구조 인자·시료 효과·온도 인자는 무시합니다.</p>
+  </div>
+  <BraggDemo/>
+  <p class="back">
+    <BackLink href="/playground/" label="플레이그라운드"/>
+  </p>
+</BaseLayout>
+<style>
+  .notice {
+    border-block: 1px solid var(--rule);
+    padding-block: 1rem;
+    color: var(--ink-2);
+  }
+  .explanation {
+    margin-top: 2rem;
+  }
+  .back {
+    margin-top: 3rem;
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import BlogCategoryNav from '../../../components/BlogCategoryNav.astro';
+import PostRows from '../../../components/PostRows.astro';
+import { getUsedCategories, getPostsByCategory } from '../../../lib/content';
+export function getStaticPaths() {
+  return getUsedCategories().map((category) => ({
+    params: { id: category.id },
+    props: { category },
+  }));
+}
+interface Props {
+  category: { id: string; label: string };
+}
+const { category } = Astro.props;
+const posts = getPostsByCategory(category.id);
+---
+<BaseLayout title={`${category.label} · 글`}>
+  <div class="page-head">
+    <h1>글</h1>
+    <p class="measure muted">{category.label} 분류의 Velog 글입니다.</p>
+  </div>
+  <BlogCategoryNav active={category.id}/>
+  <PostRows posts={posts} years/>
+</BaseLayout>

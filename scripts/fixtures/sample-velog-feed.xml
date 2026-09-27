@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"><channel><title>Example Velog</title>
+  <item><title><![CDATA[예시 글 1 (테스트용)]]></title><link>https://velog.io/@example/sample-post-1</link><pubDate>Sun, 27 Sep 2026 00:00:00 GMT</pubDate><category>재료과학</category><description><![CDATA[<h1>예시</h1><p>첫 번째 글 <a href="/other">링크</a></p><img src="/images/test.png"><script>alert(1)</script><iframe src="https://www.youtube.com/embed/fake"></iframe>]]></description></item>
+  <item><title>예시 글 2 (테스트용)</title><link>https://velog.io/@example/sample-post-2</link><pubDate>Sat, 26 Sep 2026 00:00:00 GMT</pubDate><description><![CDATA[<p>두 번째 가짜 글입니다.</p>]]></description></item>
+  <item><title>예시 글 3 (테스트용)</title><link>https://velog.io/@example/sample-post-3</link><pubDate>Fri, 25 Sep 2026 00:00:00 GMT</pubDate><description><![CDATA[<p>세 번째 가짜 글입니다.</p>]]></description></item>
+</channel></rss>

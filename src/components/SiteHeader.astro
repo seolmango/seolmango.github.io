@@ -1,0 +1,73 @@
+---
+import { getProfile } from '../lib/content';
+const profile = getProfile();
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/about/', label: '소개' },
+  { href: '/projects/', label: '프로젝트' },
+  { href: '/blog/', label: '글' },
+  { href: '/playground/', label: '플레이그라운드' },
+];
+---
+<header class="site-header">
+  <div class="plate bar">
+    <a class="brand" href="/">{profile.displayName}</a>
+    <nav aria-label="주 메뉴">
+      {nav.map((item) => (
+        <a
+          href={item.href}
+          aria-current={path === item.href ? 'page' : path.startsWith(item.href) ? 'true' : undefined}
+        >{item.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--rule);
+  }
+  .bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    min-height: 4rem;
+  }
+  .brand {
+    font-weight: 600;
+    text-decoration: none;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 1.5rem;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    font-size: var(--t-small);
+  }
+  nav a[aria-current] {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  @media (max-width: 42rem) {
+    .bar {
+      display: block;
+      padding-top: 0.5rem;
+    }
+    .brand {
+      display: block;
+    }
+    nav {
+      justify-content: flex-start;
+      gap: 0 var(--s-6);
+    }
+    nav a {
+      font-size: var(--t-label);
+    }
+  }
+</style>

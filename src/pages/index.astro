@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SystemAxis from '../components/SystemAxis.astro';
+import PostRows from '../components/PostRows.astro';
+import ProjectRows from '../components/ProjectRows.astro';
+import BlogEmpty from '../components/BlogEmpty.astro';
+import { getProfile, getPosts, getFeaturedProjects } from '../lib/content';
+import { playground } from '../lib/playground';
+const profile = getProfile();
+const posts = getPosts().slice(0, 5);
+const projects = getFeaturedProjects(6);
+---
+<BaseLayout>
+  <div class="page-head">
+    <h1>{profile.displayName}</h1>
+    <p class="measure muted">{profile.tagline || profile.siteDescription}</p>
+    {profile.intro.map((paragraph) => <p class="measure">{paragraph}</p>)}
+  </div>
+  <SystemAxis projects={projects}/>
+  <section class="section" aria-labelledby="recent">
+    <h2 id="recent" class="section-rule">최근 글</h2>
+    {posts.length ? <PostRows posts={posts}/> : <BlogEmpty/>}
+    <p class="section-more">
+      <a href="/blog/">모든 글 보기</a>
+    </p>
+  </section>
+  <section class="section" aria-labelledby="projects">
+    <h2 id="projects" class="section-rule">프로젝트</h2>
+    {projects.length
+      ? <ProjectRows projects={projects}/>
+      : <p class="empty">소개할 프로젝트를 정리하고 있습니다.</p>}
+    <p class="section-more">
+      <a href="/projects/">모든 프로젝트 보기</a>
+    </p>
+  </section>
+  <section class="section" aria-labelledby="playground">
+    <h2 id="playground" class="section-rule">플레이그라운드</h2>
+    {playground.map((item) => (
+      <div class="row">
+        <div class="row-label"></div>
+        <div class="row-main">
+          <h3><a href={`/playground/${item.slug}/`}>{item.title}</a></h3>
+          <p>{item.summary}</p>
+          <p class="label quiet">데모 · 실제 연구 프로젝트가 아닙니다</p>
+        </div>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

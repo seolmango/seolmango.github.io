@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T00:00:00Z",
+  "title": "Design System: seolmango.github.io",
+  "extensions": {
+    "colorMeta": {
+      "plate-white": { "role": "neutral", "displayName": "Cool Plate White", "canonical": "#f5f6f4", "cssVar": "--ground", "tonalRamp": ["#1f201f", "#393a39", "#555655", "#737472", "#939492", "#b4b5b3", "#d5d6d4", "#f5f6f4"] },
+      "graphite-ink": { "role": "neutral", "displayName": "Graphite Ink", "canonical": "#1c2024", "cssVar": "--ink", "tonalRamp": ["#1c2024", "#33383e", "#4b5159", "#646b74", "#7f8690", "#9ba1aa", "#c1c5ca", "#e8eaec"] },
+      "graphite-ink-2": { "role": "neutral", "displayName": "Graphite Ink 2", "canonical": "#474d55", "cssVar": "--ink-2", "tonalRamp": ["#1c2024", "#33383e", "#474d55", "#646b74", "#7f8690", "#9ba1aa", "#c1c5ca", "#e8eaec"] },
+      "graphite-ink-3": { "role": "neutral", "displayName": "Graphite Ink 3", "canonical": "#656b73", "cssVar": "--ink-3", "tonalRamp": ["#1c2024", "#33383e", "#4b5159", "#656b73", "#7f8690", "#9ba1aa", "#c1c5ca", "#e8eaec"] },
+      "hairline-grey": { "role": "neutral", "displayName": "Hairline Grey", "canonical": "#c9cdd1", "cssVar": "--rule", "tonalRamp": ["#22262a", "#3b4045", "#565b61", "#72777d", "#8f949a", "#adb1b6", "#c9cdd1", "#eceef0"] },
+      "rule-strong": { "role": "neutral", "displayName": "Strong Rule", "canonical": "#1c2024", "cssVar": "--rule-strong", "tonalRamp": ["#1c2024", "#33383e", "#4b5159", "#646b74", "#7f8690", "#9ba1aa", "#c1c5ca", "#e8eaec"] },
+      "steel-blue": { "role": "primary", "displayName": "Steel-Blue Boundary Line", "canonical": "#2c5877", "cssVar": "--accent", "tonalRamp": ["#0f1f2b", "#1a3549", "#2c5877", "#3f6f92", "#5d8aab", "#93b9d6", "#bcd3e5", "#e4eef5"] },
+      "selection-mist": { "role": "neutral", "displayName": "Selection Mist", "canonical": "#d3e0ea", "cssVar": "--selection", "tonalRamp": ["#0f1f2b", "#1a3549", "#2c5877", "#3f6f92", "#5d8aab", "#93b9d6", "#d3e0ea", "#eef4f8"] },
+      "graphite-plate-dark": { "role": "neutral", "displayName": "Graphite Plate (dark ground)", "canonical": "#15181b", "cssVar": "--ground (dark)", "tonalRamp": ["#15181b", "#262a2e", "#393e43", "#4f555b", "#686e75", "#848a90", "#a6abb0", "#cdd0d3"] },
+      "chalk-ink-dark": { "role": "neutral", "displayName": "Chalk Ink (dark)", "canonical": "#e4e6e4", "cssVar": "--ink (dark)", "tonalRamp": ["#232423", "#3d3f3d", "#595b59", "#777977", "#979997", "#b8bab8", "#e4e6e4", "#f4f5f4"] },
+      "chalk-ink-2-dark": { "role": "neutral", "displayName": "Chalk Ink 2 (dark)", "canonical": "#b4b9be", "cssVar": "--ink-2 (dark)", "tonalRamp": ["#22262a", "#3b4045", "#565b61", "#72777d", "#8e949a", "#b4b9be", "#d3d6d9", "#eceef0"] },
+      "chalk-ink-3-dark": { "role": "neutral", "displayName": "Chalk Ink 3 (dark)", "canonical": "#8e949a", "cssVar": "--ink-3 (dark)", "tonalRamp": ["#22262a", "#3b4045", "#565b61", "#72777d", "#8e949a", "#b4b9be", "#d3d6d9", "#eceef0"] },
+      "hairline-grey-dark": { "role": "neutral", "displayName": "Hairline Grey (dark)", "canonical": "#353a40", "cssVar": "--rule (dark)", "tonalRamp": ["#15181b", "#23272b", "#353a40", "#4b5158", "#646b72", "#80878e", "#a3a9af", "#cbcfd3"] },
+      "steel-blue-dark": { "role": "primary", "displayName": "Steel-Blue Boundary Line (dark)", "canonical": "#93b9d6", "cssVar": "--accent (dark)", "tonalRamp": ["#0f1f2b", "#1a3549", "#2c5877", "#3f6f92", "#5d8aab", "#93b9d6", "#bcd3e5", "#e4eef5"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Page title only; the owner's name on the home page.", "cssVar": "--t-display" },
+      "headline": { "displayName": "Headline", "purpose": "Section headings under a hairline.", "cssVar": "--t-h2" },
+      "title": { "displayName": "Title", "purpose": "Entry titles inside notebook rows; table caption.", "cssVar": "--t-h3" },
+      "body": { "displayName": "Body", "purpose": "Running text capped at 40rem; word-break keep-all.", "cssVar": "--t-body" },
+      "body-small": { "displayName": "Body small", "purpose": "Navigation, more links, project links, footer, excerpts, legends.", "cssVar": "--t-small" },
+      "label": { "displayName": "Label", "purpose": "Dates, indices, provenance lines, field marks, captions, axis names; tabular figures.", "cssVar": "--t-label" },
+      "code": { "displayName": "Code", "purpose": "Code blocks and inline code in post prose only." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "link-shift", "value": "color 150ms ease-out, text-decoration-color 150ms ease-out", "purpose": "Links move to steel blue on hover and focus." },
+      { "name": "axis-point", "value": "stroke-width 150ms ease-out", "purpose": "Axis point thickens to 3px while its project row is hovered or focused." },
+      { "name": "reduced-motion", "value": "transition: none", "purpose": "All transitions removed under prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "narrow-plot", "value": "38rem", "purpose": "Playground chart drops alternate decade numerals; radios stack." },
+      { "name": "header-stack", "value": "42rem", "purpose": "Below this, site name stacks above the nav." },
+      { "name": "two-column-row", "value": "48rem", "purpose": "Rows become 9rem label column plus 40rem content column; plate padding 2rem." }
+    ],
+    "layout": {
+      "plateMaxWidth": "64rem",
+      "measure": "40rem",
+      "labelColumn": "9rem",
+      "columnGap": "2rem"
+    }
+  },
+  "components": [
+    {
+      "name": "Notebook Row",
+      "kind": "card",
+      "refersTo": "notebook-row",
+      "description": "The core list unit for posts, projects, and playground entries: tabular label column, content column, provenance line; hairline between rows.",
+      "html": "<div class=\"ds-rows\"><article class=\"ds-row\"><div class=\"ds-row-label\">2026. 9. 10.</div><div class=\"ds-row-main\"><h3><a href=\"#\">글 제목</a></h3><p class=\"ds-excerpt\">요약 두 줄까지 표시되는 발췌문입니다.</p><p class=\"ds-prov\"><svg viewBox=\"0 0 20 8\" width=\"20\" height=\"8\" fill=\"none\" stroke=\"currentColor\"><path d=\"M0 4h20\" stroke-width=\"1.5\"/></svg> 재료과학 · <a href=\"#\">Velog 원문</a></p></div></article><article class=\"ds-row\"><div class=\"ds-row-label\">2026. 6. 4.</div><div class=\"ds-row-main\"><h3><a href=\"#\">두 번째 글</a></h3><p class=\"ds-excerpt\">두 번째 발췌문입니다.</p></div></article></div>",
+      "css": ".ds-row { display: grid; grid-template-columns: 9rem minmax(0, 40rem); gap: 2rem; padding-block: 1.5rem; font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif; color: var(--ink, #1c2024); } .ds-row ~ .ds-row { border-top: 1px solid var(--rule, #c9cdd1); } .ds-row-label { color: var(--ink-3, #656b73); font-size: 0.8125rem; font-weight: 500; font-variant-numeric: tabular-nums; } .ds-row-main h3 { margin: 0 0 0.5rem; font-size: 1.25rem; font-weight: 600; line-height: 1.3; letter-spacing: -0.02em; } .ds-row-main a { color: inherit; text-decoration-color: var(--rule, #c9cdd1); text-decoration-thickness: 1px; text-underline-offset: 0.25em; transition: color 150ms ease-out, text-decoration-color 150ms ease-out; } .ds-row-main a:hover, .ds-row-main a:focus-visible { color: var(--accent, #2c5877); text-decoration-color: var(--accent, #2c5877); } .ds-row-main a:focus-visible { outline: 2px solid var(--accent, #2c5877); outline-offset: 3px; } .ds-excerpt { margin: 0; color: var(--ink-2, #474d55); font-size: 0.9375rem; line-height: 1.75; } .ds-prov { margin: 0.75rem 0 0; color: var(--ink-3, #656b73); font-size: 0.8125rem; font-weight: 500; }"
+    },
+    {
+      "name": "Field Mark",
+      "kind": "chip",
+      "refersTo": "field-mark",
+      "description": "Field expressed as a line form: solid 재료과학, dashed 소프트웨어, double 재료 + 코드. Never a coloured chip.",
+      "html": "<div class=\"ds-marks\"><span class=\"ds-field\"><svg viewBox=\"0 0 20 8\" width=\"20\" height=\"8\" fill=\"none\" stroke=\"currentColor\"><path d=\"M0 4h20\" stroke-width=\"1.5\"/></svg>재료과학</span><span class=\"ds-field\"><svg viewBox=\"0 0 20 8\" width=\"20\" height=\"8\" fill=\"none\" stroke=\"currentColor\"><path d=\"M0 4h20\" stroke-width=\"1.5\" stroke-dasharray=\"3 2\"/></svg>소프트웨어</span><span class=\"ds-field\"><svg viewBox=\"0 0 20 8\" width=\"20\" height=\"8\" fill=\"none\" stroke=\"currentColor\"><path d=\"M0 4h20M0 7h20\" stroke-width=\"1\"/></svg>재료 + 코드</span></div>",
+      "css": ".ds-marks { display: flex; gap: 1.5rem; flex-wrap: wrap; } .ds-field { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--ink-2, #474d55); font: 500 0.8125rem/1.5 'Pretendard Variable', Pretendard, system-ui, sans-serif; }"
+    },
+    {
+      "name": "System Axis",
+      "kind": "custom",
+      "refersTo": "system-axis",
+      "description": "Home-page plate: three field bands on one graphite baseline with ticks, steel-blue band boundaries and numbered project points.",
+      "html": "<div class=\"ds-axis\"><div class=\"ds-axis-names\"><span>재료과학</span><span>재료 + 코드</span><span>소프트웨어</span></div><svg viewBox=\"0 0 100 32\" preserveAspectRatio=\"none\"><path d=\"M0 14H100\" class=\"ds-base\"/><path d=\"M35 2V14M65 2V14\" class=\"ds-boundary\"/><path d=\"M0 14V23M5 14V19M10 14V19M15 14V19M20 14V19M25 14V23M30 14V19M35 14V19M40 14V19M45 14V19M50 14V23M55 14V19M60 14V19M65 14V19M70 14V19M75 14V23M80 14V19M85 14V19M90 14V19M95 14V19M100 14V23\" class=\"ds-base\"/><path d=\"M17.5 4V14\" class=\"ds-point\"/><path d=\"M50 4V14\" class=\"ds-point\"/></svg><a class=\"ds-pt\" href=\"#\" style=\"left:17.5%\">1</a><a class=\"ds-pt\" href=\"#\" style=\"left:50%\">2</a></div>",
+      "css": ".ds-axis { position: relative; height: 6rem; max-width: 40rem; font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif; } .ds-axis-names { display: flex; color: var(--ink-3, #656b73); font-size: 0.8125rem; } .ds-axis-names span { width: 33.333%; text-align: center; } .ds-axis svg { display: block; width: 100%; height: 3.5rem; margin-top: 0.9rem; } .ds-axis path { vector-effect: non-scaling-stroke; } .ds-base { stroke: var(--rule-strong, #1c2024); stroke-width: 1px; } .ds-boundary { stroke: var(--accent, #2c5877); stroke-width: 1px; } .ds-point { stroke: var(--accent, #2c5877); stroke-width: 2px; transition: stroke-width 150ms ease-out; } .ds-axis:hover .ds-point { stroke-width: 3px; } .ds-pt { position: absolute; top: 1.8rem; transform: translateX(-50%); min-width: 1.25rem; text-align: center; font-size: 0.8125rem; line-height: 1.4; font-variant-numeric: tabular-nums; color: var(--accent, #2c5877); background: var(--ground, #f5f6f4); text-decoration: none; } .ds-pt:hover, .ds-pt:focus-visible { font-weight: 600; text-decoration: underline; } .ds-pt:focus-visible { outline: 2px solid var(--accent, #2c5877); outline-offset: 3px; }"
+    },
+    {
+      "name": "Site Navigation",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Site name left linking home; four Korean items right; current item in steel blue with a 1px bottom line.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-brand\" href=\"#\">이름</a><nav><a href=\"#\">소개</a><a href=\"#\">프로젝트</a><a href=\"#\" aria-current=\"page\">글</a><a href=\"#\">플레이그라운드</a></nav></header>",
+      "css": ".ds-header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; min-height: 4rem; border-bottom: 1px solid var(--rule, #c9cdd1); font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif; color: var(--ink, #1c2024); } .ds-brand { font-weight: 600; color: inherit; text-decoration: none; } .ds-header nav { display: flex; flex-wrap: wrap; gap: 0 1.5rem; } .ds-header nav a { display: inline-flex; align-items: center; min-height: 44px; font-size: 0.9375rem; color: inherit; text-decoration: none; border-bottom: 1px solid transparent; transition: color 150ms ease-out; } .ds-header a:hover, .ds-header a:focus-visible { color: var(--accent, #2c5877); } .ds-header a:focus-visible { outline: 2px solid var(--accent, #2c5877); outline-offset: 3px; } .ds-header nav a[aria-current] { color: var(--accent, #2c5877); border-color: var(--accent, #2c5877); }"
+    },
+    {
+      "name": "Original Article Link",
+      "kind": "button",
+      "refersTo": "original-link",
+      "description": "The prominent Velog original link on post pages: a full-width steel-blue row between two hairlines.",
+      "html": "<div class=\"ds-original\"><a href=\"#\">Velog에서 원문 보기<svg viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.25\"><path d=\"M2 10 10 2M4 2h6v6\"/></svg></a></div>",
+      "css": ".ds-original { max-width: 40rem; border-block: 1px solid var(--rule, #c9cdd1); font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif; } .ds-original a { display: flex; align-items: center; justify-content: space-between; min-height: 44px; padding-block: 0.75rem; color: var(--accent, #2c5877); font-weight: 600; text-decoration: none; } .ds-original a:hover { text-decoration: underline; text-underline-offset: 0.25em; } .ds-original a:focus-visible { outline: 2px solid var(--accent, #2c5877); outline-offset: 3px; }"
+    },
+    {
+      "name": "Inline and External Link",
+      "kind": "custom",
+      "refersTo": "inline-link",
+      "description": "Ink text with a grey 1px underline; steel blue on hover and focus; external links carry a 12px arrow.",
+      "html": "<p class=\"ds-p\">본문 속 <a href=\"#\">링크</a>와 <a href=\"#\">GitHub 저장소<svg viewBox=\"0 0 12 12\" width=\"12\" height=\"12\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.25\"><path d=\"M2 10 10 2M4 2h6v6\"/></svg></a></p>",
+      "css": ".ds-p { font: 400 1.0625rem/1.75 'Pretendard Variable', Pretendard, system-ui, sans-serif; color: var(--ink, #1c2024); } .ds-p a { color: inherit; text-decoration-color: var(--rule, #c9cdd1); text-decoration-thickness: 1px; text-underline-offset: 0.25em; transition: color 150ms ease-out, text-decoration-color 150ms ease-out; } .ds-p a svg { margin-left: 0.25em; vertical-align: baseline; } .ds-p a:hover, .ds-p a:focus-visible { color: var(--accent, #2c5877); text-decoration-color: var(--accent, #2c5877); } .ds-p a:focus-visible { outline: 2px solid var(--accent, #2c5877); outline-offset: 3px; }"
+    },
+    {
+      "name": "Numeric Field",
+      "kind": "input",
+      "refersTo": "field-input",
+      "description": "Square hairline-bordered input on the plate ground, as in the playground demo.",
+      "html": "<label class=\"ds-field-wrap\"><span>격자 상수 a (Å)</span><input class=\"ds-input\" type=\"number\" value=\"3.60\" step=\"0.01\"></label>",
+      "css": ".ds-field-wrap { display: flex; gap: 0.75rem; align-items: center; font: 600 0.9375rem 'Pretendard Variable', Pretendard, system-ui, sans-serif; color: var(--ink, #1c2024); } .ds-input { width: 6rem; min-height: 40px; padding: 0.25rem 0.5rem; background: var(--ground, #f5f6f4); color: inherit; border: 1px solid var(--rule, #c9cdd1); border-radius: 0; font: 400 1.0625rem 'Pretendard Variable', Pretendard, system-ui, sans-serif; font-variant-numeric: tabular-nums; caret-color: var(--accent, #2c5877); } .ds-input:hover { border-color: var(--ink-3, #656b73); } .ds-input:focus-visible { outline: 2px solid var(--accent, #2c5877); outline-offset: 3px; }"
+    },
+    {
+      "name": "Numbered Figure",
+      "kind": "custom",
+      "refersTo": "figure",
+      "description": "Content image in a 1px hairline frame, caption below numbered 그림 n.",
+      "html": "<figure class=\"ds-fig\"><div class=\"ds-fig-img\"></div><figcaption>그림 1. 캡션은 이미지 아래에 둡니다.</figcaption></figure>",
+      "css": ".ds-fig { margin: 0; max-width: 40rem; font-family: 'Pretendard Variable', Pretendard, system-ui, sans-serif; } .ds-fig-img { aspect-ratio: 4 / 3; border: 1px solid var(--rule, #c9cdd1); background: var(--ground, #f5f6f4); } .ds-fig figcaption { margin-top: 0.5rem; color: var(--ink-3, #656b73); font-size: 0.8125rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Phase-Diagram Plate",
+    "overview": "The site is set like a printed binary phase-diagram plate kept in a tidy research notebook. Materials science and software are the two components of one system and sit on one axis; everything else is hairlines, ticks, small labels, and numbered rows. The ground is a cool plate white with graphite ink, and a single steel-blue line marks what is live: links, focus, axis boundaries, and data points.\n\nDensity is that of a notebook index, not a landing page. Content lives in one left-aligned column of about 40rem, with a 9rem margin column for dates and indices on wider screens. There are no cards, no shadows, no rounded corners, and no decorative imagery; figures appear only when a project or post supplies them, and they are numbered and captioned like plates in a report. Motion is a 150ms colour or stroke change on hover and focus, removed under reduced motion.\n\nLight is the default; dark mode follows the system and becomes a graphite plate with chalk ink, keeping the same line grammar.",
+    "keyCharacteristics": [
+      "One Korean workhorse sans (Pretendard) on a fixed stepped scale, tabular figures for dates and indices.",
+      "Structure through 1px hairline rules, never through fills or elevation.",
+      "Steel blue is a signal, not a decoration.",
+      "Categories and fields are expressed as line forms (solid, dashed, double), never as coloured chips.",
+      "Numbered notebook rows with a provenance line on every entry."
+    ],
+    "rules": [
+      { "name": "The One Signal Rule", "body": "Steel blue is reserved for links on hover/focus and current state, focus rings, axis boundaries, and data points. It is never a fill, a background, or a heading colour.", "section": "colors" },
+      { "name": "The Ink Ladder Rule", "body": "Hierarchy of text is carried by three ink steps (ink, ink-2, ink-3), not by extra hues.", "section": "colors" },
+      { "name": "The Tabular Figures Rule", "body": "Every date, index, count, and measured value uses tabular numerals so columns of numbers align like a lab table.", "section": "typography" },
+      { "name": "The Fixed Step Rule", "body": "Only the six size tokens exist; only the display step is fluid.", "section": "typography" },
+      { "name": "The Hairline Rule", "body": "Separation is a 1px rule in hairline grey. If something needs to feel grouped, add space or a rule, never a shadow or a fill.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do separate content with 1px hairline-grey rules and whitespace from the spacing scale.",
+      "Do set every date, index, count, and measurement in tabular figures at label size.",
+      "Do give every entry a provenance line: category or field, then the original Velog or GitHub link.",
+      "Do mark field and category with a line form: solid for 재료과학, dashed for 소프트웨어, double for 재료 + 코드.",
+      "Do number figures \"그림 n.\" with the caption below the image in ink-3 label type.",
+      "Do keep steel blue to links on hover and focus, the current state, focus rings, axis boundaries, and data points.",
+      "Do keep hit targets at least 44px for navigation and the original-article link, and remove transitions under reduced motion."
+    ],
+    "donts": [
+      "Don't use shadows, rounded corners, or filled card containers.",
+      "Don't express categories, fields, or states as coloured chips or badges.",
+      "Don't introduce a second accent colour or use steel blue as a fill or heading colour.",
+      "Don't add decorative imagery or hero banners; images appear only as numbered figures supplied by content.",
+      "Don't add type sizes outside the six-step scale."
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { playground } from '../../lib/playground';
+---
+<BaseLayout title="플레이그라운드">
+  <div class="page-head">
+    <h1>플레이그라운드</h1>
+    <p class="measure muted">브라우저에서 직접 만져 보는 작은 실험을 모았습니다. 각 페이지는 필요한 곳에서만 스크립트를 사용합니다.</p>
+  </div>
+  {playground.map((item) => (
+    <div class="row">
+      <div class="row-label"></div>
+      <div class="row-main">
+        <h2><a href={`/playground/${item.slug}/`}>{item.title}</a></h2>
+        <p>{item.summary}</p>
+        <p class="label quiet">데모 · 실제 연구 프로젝트가 아닙니다</p>
+      </div>
+    </div>
+  ))}
+</BaseLayout>

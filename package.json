@@ -1,0 +1,29 @@
+{
+  "name": "seolmango-github-io",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:sample": "astro dev --mode sample",
+    "build": "astro build",
+    "build:sample": "astro build --mode sample",
+    "preview": "astro preview",
+    "check": "astro check",
+    "import:velog": "node scripts/import-velog.mjs"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "astro": "^7.3.5",
+    "fast-xml-parser": "^5.11.1",
+    "pretendard": "^1.3.9",
+    "sanitize-html": "^2.17.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@openai/codex": "^0.157.1",
+    "@types/sanitize-html": "^2.16.1",
+    "typescript": "^6.0.3"
+  }
+}

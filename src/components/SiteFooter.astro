@@ -1,0 +1,41 @@
+---
+import { getProfile, getSyncInfo, formatDate } from '../lib/content';
+import ExternalLink from './ExternalLink.astro';
+const profile = getProfile();
+const sync = getSyncInfo();
+---
+<footer class="site-footer">
+  <div class="plate">
+    <div class="foot-main">
+      <span>© {new Date().getFullYear()} {profile.displayName}</span>
+      <div class="links">
+        {profile.links.map((link) => link.url.startsWith('mailto:')
+          ? <a href={link.url}>{link.label}</a>
+          : <ExternalLink href={link.url} label={link.label} />)}
+      </div>
+    </div>
+    <p class="label quiet">글은 Velog에서 가져와 정리합니다.{sync && <> 마지막 동기화: <span class="numeric">{formatDate(sync.updatedAt)}</span></>}</p>
+  </div>
+</footer>
+<style>
+  .site-footer {
+    margin-top: var(--s-24);
+    border-top: 1px solid var(--rule);
+    padding-block: var(--s-6) var(--s-12);
+    font-size: var(--t-small);
+  }
+  .foot-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  .site-footer p {
+    margin-top: 0.75rem;
+  }
+</style>

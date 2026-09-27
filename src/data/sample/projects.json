@@ -1,0 +1,153 @@
+{
+  "projects": [
+    {
+      "id": "grain-measure",
+      "title": "결정립 관찰 기록",
+      "summary": "현미경 이미지와 측정 메모를 한곳에서 대조하는 예시 프로젝트입니다.",
+      "description": [
+        "여러 시야의 이미지를 정리하고 관찰 조건을 함께 기록하는 가상의 작업입니다.",
+        "측정 기준과 이미지 출처를 연결하는 화면 구성을 시험합니다."
+      ],
+      "field": "materials",
+      "repo": "https://github.com/example/grain-measure",
+      "links": [
+        {
+          "label": "예시 보고서",
+          "url": "https://example.com/grain-report"
+        },
+        {
+          "label": "발표 자료",
+          "url": "https://example.com/grain-slides"
+        }
+      ],
+      "tags": [
+        "미세조직",
+        "이미지 분석"
+      ],
+      "period": "2026",
+      "featured": true,
+      "images": [
+        {
+          "src": "/images/sample/micrograph.svg",
+          "alt": "예시 결정립 구조 도식",
+          "caption": "결정립 경계 화면"
+        },
+        {
+          "src": "/images/sample/tool-screenshot.svg",
+          "alt": "예시 측정 도구 화면",
+          "caption": "측정값 정리 화면"
+        }
+      ]
+    },
+    {
+      "id": "bragg-explorer",
+      "title": "브래그 회절 탐색기",
+      "summary": "각도와 간격을 바꾸며 회절 조건을 살펴보는 예시 도구입니다.",
+      "description": [
+        "기본 식을 그래프 위에서 살펴볼 수 있도록 구성한 가상의 학습 프로젝트입니다."
+      ],
+      "field": "both",
+      "repo": "https://github.com/example/bragg-explorer",
+      "links": [
+        {
+          "label": "설계 메모",
+          "url": "https://example.com/bragg-notes"
+        }
+      ],
+      "tags": [
+        "XRD",
+        "시각화",
+        "TypeScript"
+      ],
+      "period": "2025–2026",
+      "playground": "bragg",
+      "featured": true,
+      "images": [
+        {
+          "src": "/images/sample/xrd-pattern.svg",
+          "alt": "예시 회절 패턴",
+          "caption": "각도별 피크 표현"
+        },
+        {
+          "src": "/images/sample/tool-screenshot.svg",
+          "alt": "예시 탐색 도구 화면"
+        }
+      ]
+    },
+    {
+      "id": "phase-atlas",
+      "title": "이원계 상태도 읽기 노트",
+      "summary": "상 경계와 영역을 단계별로 표시하는 예시 자료입니다.",
+      "description": [
+        "수업에서 익힌 상태도 읽기 순서를 간단한 도식으로 정리한 가상 프로젝트입니다."
+      ],
+      "field": "materials",
+      "repo": "https://github.com/example/phase-atlas",
+      "links": [
+        {
+          "label": "예시 도해",
+          "url": "https://example.com/phase-diagram"
+        }
+      ],
+      "tags": [
+        "상평형",
+        "학습 자료"
+      ],
+      "period": "2025",
+      "images": [
+        {
+          "src": "/images/sample/phase-diagram.svg",
+          "alt": "예시 이원 공정 상태도",
+          "caption": "단순화한 상 영역"
+        }
+      ]
+    },
+    {
+      "id": "lab-ledger",
+      "title": "실험 데이터 장부",
+      "summary": "파일과 조건, 처리 이력을 함께 찾는 예시 소프트웨어입니다.",
+      "description": [
+        "원본 데이터의 위치와 분석 단계 사이의 연결을 시각적으로 검토하는 가상 도구입니다.",
+        "검색 결과를 간결한 행 목록으로 제공하는 구성을 시험합니다."
+      ],
+      "field": "software",
+      "repo": "https://github.com/example/lab-ledger",
+      "links": [
+        {
+          "label": "데모",
+          "url": "https://example.com/lab-ledger-demo"
+        },
+        {
+          "label": "설명 문서",
+          "url": "https://example.com/lab-ledger-docs"
+        }
+      ],
+      "tags": [
+        "데이터 관리",
+        "웹"
+      ],
+      "period": "2024–2025"
+    },
+    {
+      "id": "reading-index",
+      "title": "논문 읽기 색인",
+      "summary": "읽은 문헌과 남긴 질문을 다시 찾기 위한 예시 도구입니다.",
+      "description": [
+        "제목, 주제, 메모를 연결하는 작은 가상 색인입니다. 긴 문헌 목록의 탐색 흐름을 확인합니다."
+      ],
+      "field": "software",
+      "repo": "https://github.com/example/reading-index",
+      "links": [
+        {
+          "label": "사용 예시",
+          "url": "https://example.com/reading-index"
+        }
+      ],
+      "tags": [
+        "검색",
+        "기록"
+      ],
+      "period": "2024"
+    }
+  ]
+}

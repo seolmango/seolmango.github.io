@@ -1,0 +1,46 @@
+---
+import { getPosts, getUsedCategories } from '../lib/content';
+interface Props {
+  active?: string;
+}
+const { active } = Astro.props;
+const categories = getUsedCategories(),
+  count = getPosts().length;
+---
+{count > 0 && (
+  <nav class="categories" aria-label="글 분류">
+    <a href="/blog/" aria-current={!active ? 'page' : undefined}>전체 <span>{count}</span></a>
+    {categories.map((category) => (
+      <a href={`/blog/category/${category.id}/`} aria-current={active === category.id ? 'page' : undefined}>
+        {category.label} <span>{category.count}</span>
+      </a>
+    ))}
+  </nav>
+)}
+<style>
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.5rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1rem;
+  }
+  .categories a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    font-size: var(--t-small);
+  }
+  .categories a[aria-current] {
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .categories span {
+    color: var(--ink-3);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--t-label);
+  }
+</style>
