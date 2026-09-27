@@ -14,16 +14,16 @@ npm run build    # dist/ 에 정적 사이트 생성
 npm run preview  # 빌드 결과 미리 보기
 ```
 
-Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 이 경우 글 목록에는 빈 상태 안내가 표시됩니다.
+Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 현재 `sampleFallback` 설정에서는 실제 글이 없을 때 예시 글을 표시합니다.
 
 ## 내용 수정하기 (레이아웃 코드는 건드리지 않아도 됩니다)
 
-직접 고치는 파일은 모두 `src/data/`에 있습니다. JSON 형식이므로 쉼표와 따옴표에 주의하세요. 수정 후 `npm run check`를 실행하면 잘못된 값이 있을 때 어느 파일의 어느 항목인지 알려 줍니다.
+프로필과 글 분류는 `src/data/`의 JSON에서, 프로젝트는 `src/content/projects/`의 Markdown에서 수정합니다. 수정 후 `npm run check`를 실행해 형식을 확인하세요.
 
 | 파일 | 내용 |
 | --- | --- |
 | `src/data/profile.json` | 사이트 이름, 이름, 한 줄 소개, 소개 글, 링크, Velog 사용자명 |
-| `src/data/projects.json` | 프로젝트 목록 |
+| `src/content/projects/<id>.md` | 프로젝트 소개와 본문. 파일 이름이 주소의 `<id>`가 됩니다. |
 | `src/data/categories.json` | 글 분류와 분류 지정 규칙 |
 | `src/data/generated/velog-posts.json` | 자동 생성 파일. **직접 수정하지 마세요.** |
 
@@ -34,13 +34,15 @@ Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 이
 | `siteTitle` | 사이트 이름. 탭 제목과 머리글에 쓰입니다. | 필수 |
 | `siteDescription` | 사이트 설명. 첫 화면과 검색 결과 설명에 쓰입니다. | 필수 |
 | `name` | 공개할 이름 | `siteTitle`을 대신 표시 |
+| `englishName` | 소개 제목 아래에 표시할 영문 이름 | 표시하지 않음 |
 | `tagline` | 첫 화면의 한 줄 소개 | `siteDescription`을 대신 표시 |
 | `intro` | 첫 화면 소개 문단 목록 (`["첫 문단", "둘째 문단"]`) | 표시하지 않음 |
 | `about` | 소개 페이지 문단 목록 | "소개 글을 준비하고 있습니다." |
 | `records` | 학력·논문·자격·활동 같은 이력 목록. `group`이 같은 항목끼리 묶여 소개 페이지에 표시 | 비워 두면 이력 섹션 숨김 |
-| `links` | 링크 목록. 개수 제한 없음. 적은 순서대로 소개 페이지와 바닥글에 표시 | 링크 숨김 |
+| `links` | 링크 목록. 개수 제한 없음. `label`, `url`, 선택 `text`(소개 페이지에 보이는 주소 글자)를 지정 | 링크 숨김 |
 | `photo` | 프로필 사진 `{ "src": "/images/profile.jpg", "alt": "사진 설명" }` | `null`이면 사진 없음 |
-| `velog.username` | Velog 사용자명 (`@` 없이) | 글 목록에 빈 상태 안내 |
+| `velog.username` | Velog 사용자명 (`@` 없이) | 실제 글이 없으면 `sampleFallback` 설정에 따라 예시 글 또는 빈 상태 안내 표시 |
+| `sampleFallback` | `true`면 아직 실제 글이 없는 동안 예시 글을 표시합니다. 실제 글을 채우면 자동으로 사라지며, 예시 글을 끄려면 `false`로 설정합니다. | `false`처럼 동작 |
 
 이력은 다음처럼 적습니다. `group`(묶을 제목)과 `title`(항목 이름)은 필수이고, `detail`(설명), `period`(기간 또는 시기), `url`(원문 링크)은 선택 사항입니다. 그룹은 처음 등장한 순서대로 표시되며, `url`에는 `http://` 또는 `https://` 주소만 사용할 수 있습니다.
 
@@ -51,11 +53,11 @@ Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 이
 ]
 ```
 
-링크는 이렇게 적습니다. 주소는 `https://…` 또는 `mailto:…` 형식이어야 합니다.
+링크는 이렇게 적습니다. 주소는 `https://…` 또는 `mailto:…` 형식이어야 합니다. `text`를 적으면 소개 페이지의 자동 주소 표기를 대신합니다.
 
 ```json
 "links": [
-  { "label": "GitHub", "url": "https://github.com/seolmango" },
+  { "label": "GitHub", "url": "https://github.com/seolmango", "text": "github.com/seolmango" },
   { "label": "이메일", "url": "mailto:me@example.com" },
   { "label": "이력서 PDF", "url": "https://example.com/cv.pdf" }
 ]
@@ -63,43 +65,56 @@ Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 이
 
 사진 파일은 `public/images/` 폴더에 넣고 `src`에 `/images/파일이름`을 적습니다. `alt`(사진 설명)는 화면 낭독기 사용자를 위해 반드시 적어야 합니다.
 
-### 2. 프로젝트 — `src/data/projects.json`
+### 2. 프로젝트 — `src/content/projects/<id>.md`
 
-`projects` 배열에 항목을 추가합니다. 위에 있을수록 먼저 표시되고, `featured: true`인 항목이 첫 화면에 먼저 나옵니다.
+프로젝트마다 Markdown 파일을 하나씩 만듭니다. 파일 이름(`my-project.md`)이 `/projects/my-project/`의 주소가 됩니다. 위쪽 `---` 사이에는 목록과 메타데이터를, 아래에는 블로그 글처럼 자유로운 Markdown 본문을 씁니다.
 
-```json
-{
-  "projects": [
-    {
-      "id": "my-project",
-      "title": "프로젝트 이름",
-      "summary": "한두 문장 설명",
-      "description": ["조금 더 긴 설명 문단"],
-      "field": "materials",
-      "repo": "https://github.com/seolmango/my-project",
-      "links": [
-        { "label": "발표 자료", "url": "https://example.com/slides" },
-        { "label": "보고서", "url": "https://example.com/report.pdf" }
-      ],
-      "images": [
-        { "src": "/images/my-project-1.jpg", "alt": "현미경 관찰 사진", "caption": "시편 A의 결정립" }
-      ],
-      "tags": ["Python", "상평형"],
-      "period": "2026",
-      "playground": "bragg",
-      "featured": true
-    }
-  ]
-}
+| 키 | 의미 |
+| --- | --- |
+| `title`, `summary`, `field` | 필수. 제목, 짧은 설명, 분야(`materials`·`software`·`both`) |
+| `repo` | 원본 GitHub 저장소 URL |
+| `links` | 추가 링크 목록 (`label`, `url`) |
+| `images` | 본문 아래에 표시할 그림 목록 (`src`, `alt`, 선택 `caption`) |
+| `thumbnail` | 선택 썸네일 (`src`, `alt`). 없으면 첫 번째 `images`를 사용 |
+| `tags`, `period` | 태그 목록과 기간 표기 |
+| `featured` | `true`면 첫 화면의 대표 프로젝트에 표시 |
+| `order` | 작은 숫자부터 정렬. 기본값 `100` |
+| `playground` | 연결할 플레이그라운드의 slug (예: `bragg`) |
+
+이미지 주소는 `/` 또는 `https://`로 시작해야 합니다. 로컬 파일은 `public/images/`에 두고 `/images/파일이름`을 적습니다. `thumbnail`과 `images`가 모두 없으면 제목과 분야 선형으로 만든 자동 썸네일이 표시됩니다. 목록은 대표 프로젝트 먼저, 그다음 `order`, 같은 순서에서는 `period` 내림차순으로 정렬됩니다.
+
+전체 파일 예시 (`src/content/projects/my-project.md`):
+
+```md
+---
+title: "프로젝트 이름"
+summary: "무엇을 다루는지 한두 문장으로 적습니다."
+field: "materials"
+repo: "https://github.com/seolmango/my-project"
+links:
+  - label: "발표 자료"
+    url: "https://example.com/slides"
+images:
+  - src: "/images/my-project-1.jpg"
+    alt: "현미경 관찰 사진"
+    caption: "시편 A의 결정립"
+thumbnail:
+  src: "/images/my-project-cover.jpg"
+  alt: "프로젝트 대표 이미지"
+tags: ["Python", "상평형"]
+period: "2026"
+featured: true
+order: 10
+---
+
+## 무엇을 만들었나
+
+프로젝트의 배경과 범위를 적습니다.
+
+## 어떻게 동작하나
+
+방법과 결과를 설명하고 필요한 링크나 그림을 연결합니다.
 ```
-
-- 필수: `id`(영문 소문자·숫자·하이픈, 중복 불가), `title`, `summary`, `field`
-- `field`: `materials`(재료과학), `software`(소프트웨어), `both`(재료 + 코드). 첫 화면과 프로젝트 페이지의 축 위 위치가 이 값으로 정해집니다.
-- `repo`: 원본 GitHub 저장소 주소. 있으면 "GitHub 저장소" 링크가 붙습니다.
-- `links`: 저장소 외의 링크를 원하는 만큼 추가합니다.
-- `images`: 프로젝트 사진·그림 목록. 파일은 `public/images/`에 넣습니다. 프로젝트 페이지에 "그림 1.", "그림 2." 순서로 캡션과 함께 표시됩니다.
-- `playground`: 플레이그라운드 페이지와 연결할 때 그 페이지의 slug (예: `bragg`)
-- 나머지는 모두 선택 사항입니다.
 
 ### 3. Velog 연결 — `src/data/profile.json`의 `velog.username`
 
@@ -111,7 +126,7 @@ Velog 계정이 없거나 인터넷이 끊겨 있어도 빌드는 됩니다. 이
 
 - 원문 주소, 발행일, 피드에 있는 태그와 본문을 그대로 보존합니다. 피드에 없는 내용은 만들지 않습니다.
 - 본문 HTML은 허용 목록 방식으로 정리합니다. 스크립트·스타일·삽입 프레임은 제거되고, 삽입 프레임은 "삽입된 콘텐츠 보기" 링크로 바뀝니다. 상대 경로 이미지와 링크는 원문 기준 절대 주소로 바뀝니다.
-- 모든 글 페이지에 "Velog에서 원문 보기" 링크가 있고, 검색 엔진용 대표 주소(canonical)도 Velog 원문을 가리킵니다.
+- 실제 Velog 글 페이지에는 "Velog에서 원문 보기" 링크가 있고, 검색 엔진용 대표 주소(canonical)도 Velog 원문을 가리킵니다. 예시 글에는 원문 링크가 없고, 자체 주소를 canonical로 쓰며 검색 엔진 수집을 막습니다.
 - 같은 주소의 글은 한 번만 저장됩니다. Velog RSS는 최근 글만 보여 주므로, 피드에서 빠진 예전 글도 지우지 않고 유지합니다. Velog에서 삭제한 글을 사이트에서도 지우려면 생성 파일에서 해당 항목을 지우고 커밋하세요.
 - 네트워크 오류 등으로 가져오기에 실패하면 마지막으로 성공한 데이터를 그대로 둡니다. 내용이 바뀌지 않았으면 파일도 커밋도 생기지 않습니다.
 - `velog.username`을 바꾸면 이전 계정의 글은 새 계정의 글로 대체됩니다.
@@ -153,10 +168,10 @@ npm run dev:sample     # 예시 데이터로 개발 서버 실행
 npm run build:sample   # 예시 데이터로 빌드 (확인용, 배포하지 마세요)
 ```
 
-- 예시 데이터는 `src/data/sample/`, 예시 그림은 `public/images/sample/`에 있습니다. 이름·글·프로젝트는 모두 가짜입니다.
+- 예시 프로필과 글 데이터는 `src/data/sample/`, 예시 프로젝트 본문은 `src/content/sample-projects/`, 예시 그림은 `public/images/sample/`에 있습니다. 이름·글·프로젝트는 모두 가짜입니다.
 - 이 모드에서는 화면 맨 위에 "예시 데이터로 채운 미리보기" 안내가 붙고 검색 엔진 수집이 막힙니다.
-- 일반 `npm run dev`, `npm run build`와 GitHub Pages 배포는 예시 데이터를 전혀 쓰지 않습니다.
-- 실제 정보가 다 채워지면 `src/data/sample/`과 `public/images/sample/`은 지워도 됩니다. (지울 때는 `src/lib/content.ts`의 예시 데이터 import도 함께 지워야 합니다.)
+- 일반 `npm run dev`, `npm run build`와 GitHub Pages 배포는 실제 프로필·프로젝트를 사용합니다. 단, `src/data/profile.json`의 `sampleFallback`이 `true`이고 실제 Velog 글이 하나도 없을 때만 예시 글과 예시 분류를 표시합니다. 예시 글에는 표시가 붙고 가짜 외부 주소로 연결되지 않습니다. 실제 글이 하나라도 생기면 예시 글은 전부 사라집니다.
+- 예시 모드와 공개 예시 글 대체 기능을 모두 끈 뒤에만 `src/data/sample/`, `src/content/sample-projects/`, `public/images/sample/`을 정리하세요. 관련 예시 데이터 import와 컬렉션 정의도 함께 수정해야 합니다.
 
 ## 배포 (GitHub Pages)
 

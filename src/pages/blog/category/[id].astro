@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import BlogCategoryNav from '../../../components/BlogCategoryNav.astro';
 import PostRows from '../../../components/PostRows.astro';
+import SamplePostsNotice from '../../../components/SamplePostsNotice.astro';
 import { getUsedCategories, getPostsByCategory } from '../../../lib/content';
 export function getStaticPaths() {
   return getUsedCategories().map((category) => ({
@@ -14,12 +15,14 @@ interface Props {
 }
 const { category } = Astro.props;
 const posts = getPostsByCategory(category.id);
+const showingSamples = posts.length > 0 && posts.every((post) => post.isSample);
 ---
 <BaseLayout title={`${category.label} · 글`}>
   <div class="page-head">
     <h1>글</h1>
-    <p class="measure muted">{category.label} 분류의 Velog 글입니다.</p>
+    <p class="measure muted">{showingSamples ? `${category.label} 분류의 예시 글입니다.` : `${category.label} 분류의 Velog 글입니다.`}</p>
   </div>
   <BlogCategoryNav active={category.id}/>
+  {showingSamples && <SamplePostsNotice/>}
   <PostRows posts={posts} years/>
 </BaseLayout>

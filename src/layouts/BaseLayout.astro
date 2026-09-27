@@ -8,8 +8,9 @@ interface Props {
   title?: string;
   description?: string;
   canonical?: string;
+  noindex?: boolean;
 }
-const { title, description, canonical } = Astro.props;
+const { title, description, canonical, noindex = false } = Astro.props;
 const profile = getProfile();
 const pageTitle = title ? `${title} · ${profile.siteTitle}` : profile.siteTitle;
 const pageDescription = description || profile.siteDescription;
@@ -24,7 +25,7 @@ const canonicalUrl = canonical || Astro.url.href;
     <meta name="theme-color" content="#15181b" media="(prefers-color-scheme: dark)" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
-    {isSampleMode && <meta name="robots" content="noindex" />}
+    {(isSampleMode || noindex) && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={canonicalUrl} />
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={pageDescription} />

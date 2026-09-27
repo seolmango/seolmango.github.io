@@ -1,36 +1,32 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import SystemAxis from '../components/SystemAxis.astro';
 import PostRows from '../components/PostRows.astro';
-import ProjectRows from '../components/ProjectRows.astro';
+import ProjectCardGrid from '../components/ProjectCardGrid.astro';
 import BlogEmpty from '../components/BlogEmpty.astro';
 import { getProfile, getPosts, getFeaturedProjects } from '../lib/content';
 import { playground } from '../lib/playground';
 const profile = getProfile();
 const posts = getPosts().slice(0, 5);
-const projects = getFeaturedProjects(6);
+const projects = await getFeaturedProjects(3);
 ---
 <BaseLayout>
-  <div class="page-head">
+  <div class="page-head home-head">
     <h1>{profile.displayName}</h1>
-    <p class="measure muted">{profile.tagline || profile.siteDescription}</p>
+    <p class="measure home-tagline">{profile.tagline || profile.siteDescription}</p>
     {profile.intro.map((paragraph) => <p class="measure">{paragraph}</p>)}
   </div>
-  <SystemAxis projects={projects}/>
+  <section class="section" aria-labelledby="projects">
+    <h2 id="projects" class="section-rule">대표 프로젝트</h2>
+    {projects.length
+      ? <ProjectCardGrid projects={projects} entrance />
+      : <p class="empty">대표 프로젝트를 정리하고 있습니다.</p>}
+    <p class="section-more"><a href="/projects/">모든 프로젝트 보기</a></p>
+  </section>
   <section class="section" aria-labelledby="recent">
     <h2 id="recent" class="section-rule">최근 글</h2>
     {posts.length ? <PostRows posts={posts}/> : <BlogEmpty/>}
     <p class="section-more">
       <a href="/blog/">모든 글 보기</a>
-    </p>
-  </section>
-  <section class="section" aria-labelledby="projects">
-    <h2 id="projects" class="section-rule">프로젝트</h2>
-    {projects.length
-      ? <ProjectRows projects={projects}/>
-      : <p class="empty">소개할 프로젝트를 정리하고 있습니다.</p>}
-    <p class="section-more">
-      <a href="/projects/">모든 프로젝트 보기</a>
     </p>
   </section>
   <section class="section" aria-labelledby="playground">
@@ -47,3 +43,13 @@ const projects = getFeaturedProjects(6);
     ))}
   </section>
 </BaseLayout>
+<style>
+  .home-head h1 { font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem); }
+  .home-tagline {
+    color: var(--ink-2);
+    font-size: var(--t-h3);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .section-more { margin-inline-start: 0; }
+</style>

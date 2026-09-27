@@ -1,7 +1,7 @@
 ---
 import type { Project } from '../lib/content';
 interface Props {
-  field: Project['field'];
+  field: Project['data']['field'];
   markOnly?: boolean;
 }
 const { field, markOnly = false } = Astro.props;

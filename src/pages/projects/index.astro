@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectCardGrid from '../../components/ProjectCardGrid.astro';
+import { getProjects } from '../../lib/content';
+const projects = await getProjects();
+---
+<BaseLayout title="프로젝트">
+  <div class="page-head">
+    <h1>프로젝트</h1>
+    <p class="measure muted">재료과학과 소프트웨어 작업을 함께 모았습니다. 각 프로젝트의 기록과 원본 저장소를 살펴볼 수 있습니다.</p>
+  </div>
+  <section aria-label="프로젝트 목록">
+    {projects.length
+      ? <ProjectCardGrid projects={projects} />
+      : <p class="empty">소개할 프로젝트를 정리하고 있습니다.</p>}
+  </section>
+</BaseLayout>

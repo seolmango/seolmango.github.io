@@ -13,6 +13,7 @@ for (const record of profile.records) {
 <BaseLayout title="소개">
   <div class="page-head">
     <h1>소개</h1>
+    {profile.englishName && <p class="english-name label muted">{profile.englishName}</p>}
   </div>
   <div class="about-layout">
     {profile.photo && <figure class="about-photo"><img src={profile.photo.src} alt={profile.photo.alt} width="360" height="450" /></figure>}
@@ -46,8 +47,8 @@ for (const record of profile.records) {
           <div class="row">
             <dt class="row-label">{link.label}</dt>
             <dd class="row-main">{link.url.startsWith('mailto:')
-              ? <a href={link.url}>{linkText(link.url)}</a>
-              : <ExternalLink href={link.url} label={linkText(link.url)} />}</dd>
+              ? <a href={link.url}>{link.text || linkText(link.url)}</a>
+              : <ExternalLink href={link.url} label={link.text || linkText(link.url)} />}</dd>
           </div>
         ))}
       </dl>
@@ -57,6 +58,7 @@ for (const record of profile.records) {
   </section>
 </BaseLayout>
 <style>
+  .english-name { margin-top: var(--s-2); }
   dd {
     margin: 0;
   }

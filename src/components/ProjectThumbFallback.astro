@@ -1,0 +1,78 @@
+---
+import type { Project } from '../lib/content';
+interface Props {
+  title: string;
+  field: Project['data']['field'];
+}
+const { title, field } = Astro.props;
+---
+<div class:list={['project-thumb-fallback', field]} aria-hidden="true">
+  <span class="thumb-title">{title}</span>
+  <span class="thumb-lines"><i></i><i></i><i></i></span>
+</div>
+<style>
+  .project-thumb-fallback {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: var(--s-6);
+    overflow: hidden;
+    background: color-mix(in srgb, var(--accent) 8%, var(--ground));
+  }
+  .software {
+    background: color-mix(in srgb, var(--mango) 12%, var(--ground));
+  }
+  .both {
+    background: color-mix(in srgb, var(--accent) 8%, var(--ground));
+  }
+  .both::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: color-mix(in srgb, var(--mango) 12%, var(--ground));
+    clip-path: polygon(100% 0, 100% 100%, 0 100%);
+  }
+  .both::after {
+    content: '';
+    position: absolute;
+    width: 150%;
+    height: 1px;
+    top: 50%;
+    left: -25%;
+    background: var(--rule);
+    transform: rotate(-36.87deg);
+  }
+  .thumb-title {
+    position: relative;
+    z-index: 1;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+    color: var(--ink);
+    font-size: clamp(1.25rem, 2.8vw, 1.9rem);
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
+  }
+  .thumb-lines {
+    position: absolute;
+    z-index: 1;
+    left: var(--s-6);
+    right: var(--s-6);
+    bottom: var(--s-6);
+    display: flex;
+    gap: var(--s-4);
+  }
+  .thumb-lines i {
+    display: block;
+    width: 20%;
+    height: 5px;
+    border-top: 1px solid var(--ink-2);
+  }
+  .software .thumb-lines i { border-top-style: dashed; }
+  .both .thumb-lines i { border-bottom: 1px solid var(--ink-2); }
+</style>

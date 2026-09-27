@@ -3,14 +3,17 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCategoryNav from '../../components/BlogCategoryNav.astro';
 import BlogEmpty from '../../components/BlogEmpty.astro';
 import PostRows from '../../components/PostRows.astro';
+import SamplePostsNotice from '../../components/SamplePostsNotice.astro';
 import { getPosts } from '../../lib/content';
 const posts = getPosts();
+const showingSamples = posts.length > 0 && posts.every((post) => post.isSample);
 ---
 <BaseLayout title="글">
   <div class="page-head">
     <h1>글</h1>
-    <p class="measure muted">Velog에서 쓴 글을 이곳에 모았습니다. 원문과 댓글은 Velog에 있습니다.</p>
+    <p class="measure muted">{showingSamples ? 'Velog 글을 모아 두는 공간입니다.' : 'Velog에서 쓴 글을 이곳에 모았습니다. 원문과 댓글은 Velog에 있습니다.'}</p>
   </div>
   <BlogCategoryNav/>
+  {showingSamples && <SamplePostsNotice/>}
   {posts.length?<PostRows posts={posts} years/>:<BlogEmpty/>}
 </BaseLayout>

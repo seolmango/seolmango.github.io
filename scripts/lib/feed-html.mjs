@@ -46,7 +46,7 @@ function resolve(value, baseUrl) {
   }
 }
 
-/** @param {string} html @param {string} baseUrl @param {{ allowSiteImages?: boolean }} [options] */
+/** @param {string} html @param {string} baseUrl @param {{ allowSiteImages?: boolean, allowExternalLinks?: boolean }} [options] */
 export function sanitizeFeedHtml(html, baseUrl, options = {}) {
   if (!html) return '';
   // Preserve a safe outbound link for embedded media before removing the embed.
@@ -93,6 +93,7 @@ export function sanitizeFeedHtml(html, baseUrl, options = {}) {
     transformTags: {
       h1: 'h2',
       a: (tagName, attribs) => {
+        if (options.allowExternalLinks === false) return { tagName: 'span', attribs: {} };
         const href = attribs.href ? resolve(attribs.href, baseUrl) : '';
         const result = { ...attribs, href };
         if (/^https?:\/\//i.test(href)) result.rel = 'noopener noreferrer';

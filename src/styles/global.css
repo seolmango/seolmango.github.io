@@ -8,7 +8,8 @@
   --rule: #c9cdd1;
   --rule-strong: #1c2024;
   --accent: #2c5877;
-  --selection: #d3e0ea;
+  --mango: #e2a336;
+  --selection: color-mix(in srgb, var(--mango) 30%, var(--ground));
   --t-label: 0.8125rem;
   --t-small: 0.9375rem;
   --t-body: 1.0625rem;
@@ -34,7 +35,8 @@
     --rule: #353a40;
     --rule-strong: #e4e6e4;
     --accent: #93b9d6;
-    --selection: #2c5877;
+    --mango: #f0b454;
+    --selection: color-mix(in srgb, var(--mango) 24%, var(--ground));
   }
 }
 /* Base */

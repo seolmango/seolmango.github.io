@@ -1,7 +1,9 @@
 {
   "siteTitle": "seolmango",
   "siteDescription": "재료과학과 소프트웨어 작업을 함께 기록하는 개인 연구 노트입니다.",
-  "name": "설채환",
+  "sampleFallback": true,
+  "name": "",
+  "englishName": "Chaehwan Seol",
   "tagline": "재료과학을 공부하며, 궁금한 현상을 코드로 직접 만들어 봅니다.",
   "intro": [],
   "about": [
@@ -21,7 +23,7 @@
   ],
   "links": [
     { "label": "GitHub", "url": "https://github.com/seolmango" },
-    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/chaehwan-%EC%84%A4%EC%B1%84%ED%99%98-seol-728796430/" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/in/chaehwan-%EC%84%A4%EC%B1%84%ED%99%98-seol-728796430/", "text": "linkedin.com/in/chaehwan-seol" },
     { "label": "0-inf 팀", "url": "https://github.com/0-inf" },
     { "label": "0-inf YouTube", "url": "https://www.youtube.com/@zerotoinf" }
   ],

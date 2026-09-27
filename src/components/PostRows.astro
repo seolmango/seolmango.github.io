@@ -25,7 +25,7 @@ let year = '';
         <h3><a href={`/blog/${post.id}/`}>{post.title}</a></h3>
         {post.excerpt && <p class="excerpt small">{post.excerpt}</p>}
         <p class="label provenance">
-          {category ? <>{category.field && <FieldMark field={category.field} markOnly/>} {category.label}</> : '분류 없음'} · <ExternalLink href={post.url} label="Velog 원문" />
+          {category ? <>{category.field && <FieldMark field={category.field} markOnly/>} {category.label}</> : '분류 없음'} · {post.isSample ? <span class="sample-label">예시 글</span> : <ExternalLink href={post.url} label="Velog 원문" />}
         </p>
       </div>
     </article>
@@ -46,6 +46,11 @@ let year = '';
   }
   .provenance {
     margin-top: 0.75rem;
+  }
+  .sample-label {
+    color: var(--ink-3);
+    border: 1px solid var(--rule);
+    padding: 0.1em 0.4em;
   }
   .row-main h3 {
     font-size: var(--t-h3);

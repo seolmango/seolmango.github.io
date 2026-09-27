@@ -18,7 +18,7 @@ const { post } = Astro.props;
 const category = getCategories().find((item) => item.id === post.categoryId);
 const tags = post.tags.filter((tag) => tag !== category?.label);
 ---
-<BaseLayout title={post.title} description={post.excerpt||undefined} canonical={post.url}>
+<BaseLayout title={post.title} description={post.excerpt||undefined} canonical={post.isSample ? undefined : post.url} noindex={post.isSample}>
   <article>
     <div class="page-head">
       <p class="small">
@@ -32,13 +32,13 @@ const tags = post.tags.filter((tag) => tag !== category?.label);
       </p>
     </div>
     <div class="original">
-      <ExternalLink href={post.url} label="Velog에서 원문 보기"/>
+      {post.isSample ? <p class="sample-original">예시 글입니다. Velog 계정이 연결되면 실제 글로 바뀝니다.</p> : <ExternalLink href={post.url} label="Velog에서 원문 보기"/>}
     </div>
-    {post.contentHtml?<div class="prose" set:html={post.contentHtml}/>:<p class="measure muted">피드에 본문이 포함되지 않았습니다. 원문은 Velog에서 읽을 수 있습니다.</p>}
+    {post.contentHtml?<div class="prose" set:html={post.contentHtml}/>:<p class="measure muted">{post.isSample ? '본문이 없는 예시 항목입니다.' : '피드에 본문이 포함되지 않았습니다. 원문은 Velog에서 읽을 수 있습니다.'}</p>}
     <div class="closing measure">
-      <p>이 글은 Velog RSS에서 가져온 사본입니다. 수정된 내용과 댓글은 원문에서 확인하세요.</p>
+      {!post.isSample && <p>이 글은 Velog RSS에서 가져온 사본입니다. 수정된 내용과 댓글은 원문에서 확인하세요.</p>}
       <div class="original">
-        <ExternalLink href={post.url} label="Velog에서 원문 보기"/>
+        {post.isSample ? <p class="sample-original">예시 글입니다. Velog 계정이 연결되면 실제 글로 바뀝니다.</p> : <ExternalLink href={post.url} label="Velog에서 원문 보기"/>}
       </div>
     </div>
   </article>
@@ -66,6 +66,13 @@ const tags = post.tags.filter((tag) => tag !== category?.label);
     color: var(--accent);
     font-weight: 600;
     text-decoration: none;
+    padding-block: var(--s-3);
+  }
+  .sample-original {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink-2);
     padding-block: var(--s-3);
   }
   .closing {

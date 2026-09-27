@@ -1,0 +1,108 @@
+---
+import type { Project } from '../lib/content';
+import FieldMark from './FieldMark.astro';
+import ProjectThumbFallback from './ProjectThumbFallback.astro';
+interface Props {
+  projects: Project[];
+  entrance?: boolean;
+}
+const { projects, entrance = false } = Astro.props;
+---
+<div class:list={['project-grid', { entrance }]}>
+  {projects.map((project) => {
+    const thumb = project.data.thumbnail ?? project.data.images[0];
+    return <a class="project-card" href={`/projects/${project.id}/`} aria-label={project.data.title}>
+      <div class="thumb-frame">
+        {thumb
+          ? <img src={thumb.src} alt="" loading="lazy" />
+          : <ProjectThumbFallback title={project.data.title} field={project.data.field} />}
+      </div>
+      <span class="card-meta label numeric">
+        {project.data.period && <>{project.data.period}<span aria-hidden="true"> · </span></>}
+        <FieldMark field={project.data.field} />
+      </span>
+      <span class="card-title">{project.data.title}</span>
+      <span class="card-summary">{project.data.summary}</span>
+    </a>;
+  })}
+</div>
+<style>
+  .project-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--s-8) var(--s-6);
+  }
+  .project-card {
+    display: block;
+    min-width: 0;
+    text-decoration: none;
+  }
+  .thumb-frame {
+    display: block;
+    aspect-ratio: 4 / 3;
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .thumb-frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 240ms ease-out;
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--s-1);
+    margin-top: var(--s-3);
+    color: var(--ink-3);
+  }
+  .card-title {
+    display: block;
+    margin-top: var(--s-1);
+    color: var(--ink);
+    font-size: var(--t-h3);
+    font-weight: 600;
+    line-height: 1.3;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 0.25em;
+    transition: text-decoration-color 150ms ease-out;
+  }
+  .card-summary {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    margin-top: var(--s-2);
+    color: var(--ink-2);
+    font-size: var(--t-small);
+    line-height: 1.6;
+  }
+  .project-card:hover img,
+  .project-card:focus-visible img { transform: scale(1.03); }
+  .project-card:hover .card-title,
+  .project-card:focus-visible .card-title { text-decoration-color: var(--accent); }
+  @media (min-width: 40rem) {
+    .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (min-width: 64rem) {
+    .project-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .entrance .project-card {
+      animation: arrive 400ms ease-out both;
+      animation-delay: calc(var(--i, 0) * 60ms);
+    }
+    .entrance .project-card:nth-child(2) { --i: 1; }
+    .entrance .project-card:nth-child(3) { --i: 2; }
+    @keyframes arrive {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .thumb-frame img, .card-title { transition: none; }
+  }
+</style>

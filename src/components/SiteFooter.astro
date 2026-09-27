@@ -1,8 +1,9 @@
 ---
-import { getProfile, getSyncInfo, formatDate } from '../lib/content';
+import { getProfile, getPosts, getSyncInfo, formatDate } from '../lib/content';
 import ExternalLink from './ExternalLink.astro';
 const profile = getProfile();
 const sync = getSyncInfo();
+const showingSamples = getPosts().some((post) => post.isSample);
 ---
 <footer class="site-footer">
   <div class="plate">
@@ -14,7 +15,7 @@ const sync = getSyncInfo();
           : <ExternalLink href={link.url} label={link.label} />)}
       </div>
     </div>
-    <p class="label quiet">글은 Velog에서 가져와 정리합니다.{sync && <> 마지막 동기화: <span class="numeric">{formatDate(sync.updatedAt)}</span></>}</p>
+    <p class="label quiet">{showingSamples ? '현재 글 목록에는 예시 글을 표시하고 있습니다.' : '글은 Velog에서 가져와 정리합니다.'}{sync && <> 마지막 동기화: <span class="numeric">{formatDate(sync.updatedAt)}</span></>}</p>
   </div>
 </footer>
 <style>
