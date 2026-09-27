@@ -1,0 +1,62 @@
+---
+export interface Heading {
+  id: string;
+  text: string;
+  level: 2 | 3;
+}
+
+interface Props {
+  headings: Heading[];
+  compact?: boolean;
+}
+
+const { headings, compact = false } = Astro.props;
+---
+{headings.length >= 2 && (
+  compact ? (
+    <details class="toc-compact">
+      <summary>목차</summary>
+      <ol>
+        {headings.map((heading) => (
+          <li class:list={{ nested: heading.level === 3 }}>
+            <a href={`#${heading.id}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ol>
+    </details>
+  ) : (
+    <nav class="toc" aria-label="목차">
+      <p class="toc-label">목차</p>
+      <ol>
+        {headings.map((heading) => (
+          <li class:list={{ nested: heading.level === 3 }}>
+            <a href={`#${heading.id}`}>{heading.text}</a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )
+)}
+<style>
+  .toc-label,
+  summary {
+    color: var(--ink-3);
+    font-size: var(--t-label);
+    font-weight: 500;
+  }
+  .toc-label { margin-bottom: var(--s-3); }
+  ol { list-style: none; margin: 0; padding: 0; }
+  li { margin: 0; }
+  li.nested { padding-left: var(--s-3); }
+  a {
+    display: block;
+    padding-block: var(--s-1);
+    color: var(--ink-2);
+    font-size: var(--t-label);
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+  .toc-compact { border-top: 1px solid var(--rule); padding-top: var(--s-3); }
+  summary { cursor: pointer; min-height: 44px; align-content: center; }
+  .toc-compact ol { padding-bottom: var(--s-3); }
+</style>

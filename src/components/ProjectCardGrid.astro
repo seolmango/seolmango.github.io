@@ -5,10 +5,11 @@ import ProjectThumbFallback from './ProjectThumbFallback.astro';
 interface Props {
   projects: Project[];
   entrance?: boolean;
+  featured?: boolean;
 }
-const { projects, entrance = false } = Astro.props;
+const { projects, entrance = false, featured = false } = Astro.props;
 ---
-<div class:list={['project-grid', { entrance }]}>
+<div class:list={['project-grid', { entrance, featured }]}>
   {projects.map((project) => {
     const thumb = project.data.thumbnail;
     return <a class="project-card" href={`/projects/${project.id}/`} aria-label={project.data.title}>
@@ -42,6 +43,7 @@ const { projects, entrance = false } = Astro.props;
     aspect-ratio: 4 / 3;
     border: 1px solid var(--rule);
     overflow: hidden;
+    transition: border-color 150ms ease-out;
   }
   .thumb-frame img {
     display: block;
@@ -82,14 +84,31 @@ const { projects, entrance = false } = Astro.props;
     line-height: 1.6;
   }
   .project-card:hover img,
-  .project-card:focus-visible img { transform: scale(1.03); }
+  .project-card:focus-visible img {
+    transform: scale(1.03);
+  }
+  .project-card:hover .thumb-frame,
+  .project-card:focus-visible .thumb-frame {
+    border-color: var(--mango);
+  }
   .project-card:hover .card-title,
-  .project-card:focus-visible .card-title { text-decoration-color: var(--accent); }
+  .project-card:focus-visible .card-title {
+    text-decoration-color: var(--mango);
+  }
   @media (min-width: 40rem) {
-    .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
   @media (min-width: 64rem) {
-    .project-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .project-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 72rem) {
+    .project-grid.featured {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
   }
   @media (prefers-reduced-motion: no-preference) {
     .entrance .project-card {
@@ -98,12 +117,17 @@ const { projects, entrance = false } = Astro.props;
     }
     .entrance .project-card:nth-child(2) { --i: 1; }
     .entrance .project-card:nth-child(3) { --i: 2; }
+    .entrance .project-card:nth-child(4) { --i: 3; }
     @keyframes arrive {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    .thumb-frame img, .card-title { transition: none; }
+    .thumb-frame,
+    .thumb-frame img,
+    .card-title {
+      transition: none;
+    }
   }
 </style>

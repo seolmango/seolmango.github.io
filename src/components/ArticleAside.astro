@@ -1,0 +1,92 @@
+---
+import ExternalLink from './ExternalLink.astro';
+import FieldMark from './FieldMark.astro';
+import TableOfContents, { type Heading } from './TableOfContents.astro';
+import { formatDate, type Category, type Post, type Project } from '../lib/content';
+
+type AsideData =
+  | { kind: 'project'; project: Project }
+  | { kind: 'post'; post: Post; category?: Category; tags: string[] };
+
+interface Props {
+  data: AsideData;
+  headings: Heading[];
+}
+
+const { data, headings } = Astro.props;
+---
+<aside class="article-aside" aria-label="글 정보와 목차">
+  <dl class="facts">
+    {data.kind === 'project' ? (
+      <>
+        {data.project.data.period && <><dt>기간</dt><dd>{data.project.data.period}</dd></>}
+        <dt>분야</dt><dd><FieldMark field={data.project.data.field} /></dd>
+        {data.project.data.tags.length > 0 && <><dt>태그</dt><dd>{data.project.data.tags.join(' · ')}</dd></>}
+        <dt>저장소</dt><dd><ExternalLink href={data.project.data.url} label="GitHub 저장소" /></dd>
+        {data.project.data.links.length > 0 && <>
+          <dt>링크</dt>
+          <dd class="fact-links">
+            {data.project.data.links.map((link) => <ExternalLink href={link.url} label={link.label} />)}
+          </dd>
+        </>}
+        {data.project.data.updatedAt && <><dt>업데이트</dt><dd class="numeric">{formatDate(data.project.data.updatedAt)}</dd></>}
+      </>
+    ) : (
+      <>
+        <dt>날짜</dt><dd class="numeric">{formatDate(data.post.publishedAt)}</dd>
+        {data.category && <>
+          <dt>분류</dt>
+          <dd><a href={`/blog/category/${data.post.categoryId}/`}>
+            {data.category.field && <FieldMark field={data.category.field} markOnly />}
+            {data.category.label}
+          </a></dd>
+        </>}
+        {data.tags.length > 0 && <><dt>태그</dt><dd>{data.tags.join(' · ')}</dd></>}
+        <dt class="origin-fact">원문</dt>
+        <dd class="origin-fact">
+          {data.post.isSample
+            ? <span>예시 글입니다. Velog 계정이 연결되면 실제 글로 바뀝니다.</span>
+            : <ExternalLink href={data.post.url} label="Velog에서 원문 보기" />}
+        </dd>
+      </>
+    )}
+  </dl>
+  <div class="toc-desktop"><TableOfContents headings={headings} /></div>
+  <div class="toc-mobile"><TableOfContents headings={headings} compact /></div>
+</aside>
+<style>
+  .article-aside { min-width: 0; }
+  .facts {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: var(--s-2) var(--s-3);
+    margin: 0;
+    padding: 0 0 var(--s-4);
+    font-size: var(--t-label);
+    line-height: 1.5;
+  }
+  dt { color: var(--ink-3); }
+  dd { min-width: 0; margin: 0; color: var(--ink-2); overflow-wrap: anywhere; }
+  .fact-links { display: grid; gap: var(--s-2); }
+  .origin-fact :global(a) { color: var(--accent); font-weight: 600; }
+  .numeric { font-variant-numeric: tabular-nums; }
+  .toc-desktop { display: none; }
+  @media (max-width: 71.999rem) {
+    .origin-fact { display: none; }
+  }
+  @media (min-width: 72rem) {
+    .article-aside {
+      position: sticky;
+      top: var(--s-8);
+      max-height: calc(100vh - 4rem);
+      overflow-y: auto;
+      scrollbar-color: var(--rule) transparent;
+    }
+    .facts { display: block; padding-bottom: var(--s-6); }
+    dt { margin-top: var(--s-4); }
+    dt:first-child { margin-top: 0; }
+    dd { margin-top: var(--s-1); }
+    .toc-desktop { display: block; border-top: 1px solid var(--rule); padding-top: var(--s-6); }
+    .toc-mobile { display: none; }
+  }
+</style>

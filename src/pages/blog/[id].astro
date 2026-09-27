@@ -1,84 +1,82 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleLayout from '../../components/ArticleLayout.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
-import BackLink from '../../components/BackLink.astro';
 import FieldMark from '../../components/FieldMark.astro';
-import { getPosts, getCategories, formatDate } from '../../lib/content';
-import type { Post } from '../../lib/content';
+import { getPosts, getCategories, formatDate, type Post } from '../../lib/content';
+
 export function getStaticPaths() {
   return getPosts().map((post) => ({
     params: { id: post.id },
     props: { post },
   }));
 }
+
 interface Props {
   post: Post;
 }
+
 const { post } = Astro.props;
 const category = getCategories().find((item) => item.id === post.categoryId);
 const tags = post.tags.filter((tag) => tag !== category?.label);
+const sampleNotice = '예시 글입니다. Velog 계정이 연결되면 실제 글로 바뀝니다.';
 ---
-<BaseLayout title={post.title} description={post.excerpt||undefined} canonical={post.isSample ? undefined : post.url} noindex={post.isSample}>
-  <article>
-    <div class="page-head">
-      <p class="small">
-        <BackLink href="/blog/" label="글 목록"/>
-      </p>
-      <h1>{post.title}</h1>
-      <p class="label quiet numeric meta">
-        {formatDate(post.publishedAt)}
-        {category && <> · <a href={`/blog/category/${post.categoryId}/`}>{category.field && <FieldMark field={category.field} markOnly/>} {category.label}</a></>}
-        {tags.length > 0 && <> · {tags.join(' · ')}</>}
-      </p>
+<BaseLayout
+  title={post.title}
+  description={post.excerpt || undefined}
+  canonical={post.isSample ? undefined : post.url}
+  noindex={post.isSample}
+>
+  <ArticleLayout
+    title={post.title}
+    backHref="/blog/"
+    backLabel="글 목록"
+    html={post.contentHtml}
+    emptyMessage={post.isSample
+      ? '본문이 없는 예시 항목입니다.'
+      : '피드에 본문이 포함되지 않았습니다. 원문은 Velog에서 읽을 수 있습니다.'}
+    aside={{ kind: 'post', post, category, tags }}
+  >
+    <p slot="meta" class="post-meta label numeric">
+      {formatDate(post.publishedAt)}
+      {category && <>
+        <span aria-hidden="true"> · </span>
+        <a href={`/blog/category/${post.categoryId}/`}>
+          {category.field && <FieldMark field={category.field} markOnly />}
+          {category.label}
+        </a>
+      </>}
+      {tags.length > 0 && <><span aria-hidden="true"> · </span>{tags.join(' · ')}</>}
+    </p>
+    <div slot="links" class="original original-top">
+      {post.isSample
+        ? <p class="sample-original">{sampleNotice}</p>
+        : <ExternalLink href={post.url} label="Velog에서 원문 보기" />}
     </div>
-    <div class="original">
-      {post.isSample ? <p class="sample-original">예시 글입니다. Velog 계정이 연결되면 실제 글로 바뀝니다.</p> : <ExternalLink href={post.url} label="Velog에서 원문 보기"/>}
-    </div>
-    {post.contentHtml?<div class="prose" set:html={post.contentHtml}/>:<p class="measure muted">{post.isSample ? '본문이 없는 예시 항목입니다.' : '피드에 본문이 포함되지 않았습니다. 원문은 Velog에서 읽을 수 있습니다.'}</p>}
-    <div class="closing measure">
+    <div slot="after" class="closing">
       {!post.isSample && <p>이 글은 Velog RSS에서 가져온 사본입니다. 수정된 내용과 댓글은 원문에서 확인하세요.</p>}
       <div class="original">
-        {post.isSample ? <p class="sample-original">예시 글입니다. Velog 계정이 연결되면 실제 글로 바뀝니다.</p> : <ExternalLink href={post.url} label="Velog에서 원문 보기"/>}
+        {post.isSample
+          ? <p class="sample-original">{sampleNotice}</p>
+          : <ExternalLink href={post.url} label="Velog에서 원문 보기" />}
       </div>
     </div>
-  </article>
+  </ArticleLayout>
 </BaseLayout>
 <style>
-  .page-head {
-    padding-bottom: 0;
-  }
-  .page-head h1 {
-    margin-top: 1.5rem;
-  }
-  .meta {
-    margin-top: 1rem;
-  }
-  .original {
-    max-width: 40rem;
-    border-block: 1px solid var(--rule);
-    margin-block: var(--s-6);
-  }
+  .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-1); }
+  .original { border-block: 1px solid var(--rule); margin-block: var(--s-6); }
   .original :global(a) {
     display: flex;
     align-items: center;
-    min-height: 44px;
     justify-content: space-between;
+    min-height: 44px;
+    padding-block: var(--s-3);
     color: var(--accent);
     font-weight: 600;
     text-decoration: none;
-    padding-block: var(--s-3);
   }
-  .sample-original {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    color: var(--ink-2);
-    padding-block: var(--s-3);
-  }
-  .closing {
-    margin-top: 4rem;
-    border-top: 1px solid var(--rule);
-    padding-top: 1rem;
-    color: var(--ink-2);
-  }
+  .sample-original { display: flex; align-items: center; min-height: 44px; padding-block: var(--s-3); color: var(--ink-2); }
+  .closing { margin-top: var(--s-16); border-top: 1px solid var(--rule); padding-top: var(--s-4); color: var(--ink-2); }
+  @media (min-width: 72rem) { .original-top { display: none; } }
 </style>

@@ -13,7 +13,16 @@ const showingSamples = posts.length > 0 && posts.every((post) => post.isSample);
     <h1>글</h1>
     <p class="measure muted">{showingSamples ? 'Velog 글을 모아 두는 공간입니다.' : 'Velog에서 쓴 글을 이곳에 모았습니다. 원문과 댓글은 Velog에 있습니다.'}</p>
   </div>
-  <BlogCategoryNav/>
-  {showingSamples && <SamplePostsNotice/>}
-  {posts.length?<PostRows posts={posts} years/>:<BlogEmpty/>}
+  <div class:list={['blog-layout', { 'has-categories': posts.length > 0 }]}>
+    <div class="blog-categories"><BlogCategoryNav/></div>
+    <div class="blog-list">
+      {showingSamples && <SamplePostsNotice/>}
+      {posts.length?<PostRows posts={posts} years/>:<BlogEmpty/>}
+    </div>
+  </div>
 </BaseLayout>
+<style>
+  @media (min-width: 80rem) {
+    .blog-layout:not(.has-categories) { display: block; }
+  }
+</style>

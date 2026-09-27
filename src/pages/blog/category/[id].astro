@@ -22,7 +22,11 @@ const showingSamples = posts.length > 0 && posts.every((post) => post.isSample);
     <h1>글</h1>
     <p class="measure muted">{showingSamples ? `${category.label} 분류의 예시 글입니다.` : `${category.label} 분류의 Velog 글입니다.`}</p>
   </div>
-  <BlogCategoryNav active={category.id}/>
-  {showingSamples && <SamplePostsNotice/>}
-  <PostRows posts={posts} years/>
+  <div class="blog-layout">
+    <div class="blog-categories"><BlogCategoryNav active={category.id}/></div>
+    <div class="blog-list">
+      {showingSamples && <SamplePostsNotice/>}
+      <PostRows posts={posts} years/>
+    </div>
+  </div>
 </BaseLayout>

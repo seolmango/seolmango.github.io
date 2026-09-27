@@ -23,6 +23,19 @@ const canonicalUrl = canonical || Astro.url.href;
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#f5f6f4" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#15181b" media="(prefers-color-scheme: dark)" />
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'light' || theme === 'dark') {
+          document.documentElement.dataset.theme = theme;
+          document.querySelectorAll('meta[name="theme-color"]').forEach((meta) => {
+            meta.setAttribute('content', theme === 'dark' ? '#15181b' : '#f5f6f4');
+          });
+        }
+      } catch {
+        // Storage can be unavailable; the system preference remains in effect.
+      }
+    </script>
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     {(isSampleMode || noindex) && <meta name="robots" content="noindex" />}

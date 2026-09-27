@@ -22,7 +22,7 @@ const { title, field } = Astro.props;
     background: color-mix(in srgb, var(--accent) 8%, var(--ground));
   }
   .software {
-    background: color-mix(in srgb, var(--mango) 12%, var(--ground));
+    background: var(--mango-wash);
   }
   .both {
     background: color-mix(in srgb, var(--accent) 8%, var(--ground));
@@ -75,8 +75,4 @@ const { title, field } = Astro.props;
   }
   .software .thumb-lines i { border-top-style: dashed; }
   .both .thumb-lines i { border-bottom: 1px solid var(--ink-2); }
-  @media (prefers-color-scheme: dark) {
-    .software { background: color-mix(in srgb, var(--mango) 7%, var(--ground)); }
-    .software .thumb-title { color: color-mix(in srgb, var(--mango) 12%, var(--ink)); }
-  }
 </style>

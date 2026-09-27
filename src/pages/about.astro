@@ -84,7 +84,7 @@ for (const record of profile.records) {
     }
     .about-layout {
       display: grid;
-      grid-template-columns: 9rem minmax(0, 40rem);
+      grid-template-columns: 9rem minmax(0, 48rem);
       gap: var(--s-8);
     }
     .about-photo {
@@ -99,5 +99,9 @@ for (const record of profile.records) {
     .about-layout > .measure:only-child {
       grid-column: 1 / -1;
     }
+  }
+  @media (min-width: 64rem) {
+    .about-layout { grid-template-columns: 10rem minmax(0, 48rem); }
+    .about-photo { width: 10rem; }
   }
 </style>

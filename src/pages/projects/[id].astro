@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import BackLink from '../../components/BackLink.astro';
+import ArticleLayout from '../../components/ArticleLayout.astro';
 import ExternalLink from '../../components/ExternalLink.astro';
 import FieldMark from '../../components/FieldMark.astro';
 import { getProjects, type Project } from '../../lib/content';
@@ -23,93 +23,64 @@ interface Props {
   previous?: Project;
   next?: Project;
 }
+
 const { project, previous, next } = Astro.props;
 const { title, summary, period, field, tags, url, links, html, thumbnail, playground: playgroundSlug } = project.data;
 const firstBodyImage = html.match(/<img\b[^>]*\bsrc="([^"]+)"/i)?.[1]?.replaceAll('&amp;', '&');
 const hero = thumbnail?.src && thumbnail.src !== firstBodyImage ? thumbnail : null;
 const cleanSummary = summary.replace(/\s+/g, ' ').trim();
-const displayHtml = html.replace(/^\s*(<blockquote>[\s\S]*?<\/blockquote>\s*)?<p>([\s\S]*?)<\/p>/i,
+const displayHtml = html.replace(
+  /^\s*(<blockquote>[\s\S]*?<\/blockquote>\s*)?<p>([\s\S]*?)<\/p>/i,
   (whole, prefix, paragraph) => paragraph.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim() === cleanSummary
-    ? (prefix ?? '') : whole);
+    ? (prefix ?? '') : whole,
+);
 const playgroundLink = playground.find((item) => item.slug === playgroundSlug);
 ---
 <BaseLayout title={title} description={summary} canonical={Astro.url.href}>
-  <div class="project-head">
-    <BackLink href="/projects/" label="프로젝트 목록" />
-    <h1>{title}</h1>
-    <p class="project-meta label numeric">
+  <ArticleLayout
+    title={title}
+    backHref="/projects/"
+    backLabel="프로젝트 목록"
+    html={displayHtml}
+    emptyMessage="README 내용을 불러오지 못했습니다. GitHub 저장소에서 확인해 주세요."
+    aside={{ kind: 'project', project }}
+  >
+    <p slot="meta" class="project-meta label numeric">
       {period && <>{period}<span aria-hidden="true"> · </span></>}
       <FieldMark field={field} />
       {tags.length > 0 && <><span aria-hidden="true"> · </span>{tags.join(' · ')}</>}
     </p>
-    <p class="project-lead measure">{summary}</p>
-    <div class="project-links">
+    <p slot="lead" class="project-lead">{summary}</p>
+    <div slot="links" class="project-links">
       <ExternalLink href={url} label="GitHub 저장소" />
       {links.map((link) => <ExternalLink href={link.url} label={link.label} />)}
       {playgroundLink && <a href={`/playground/${playgroundLink.slug}/`}>플레이그라운드에서 보기</a>}
     </div>
-  </div>
-  <article class="project-article">
-    {hero && <figure class="hero-figure">
+    {hero && <figure slot="before" class="hero-figure">
       <img src={hero.src} alt={hero.alt} />
       <figcaption>그림 1. {hero.alt}</figcaption>
     </figure>}
-    {displayHtml.trim()
-      ? <div class="prose" set:html={displayHtml} />
-      : <p class="empty">README 내용을 불러오지 못했습니다. GitHub 저장소에서 확인해 주세요.</p>}
-  </article>
-  <nav class="project-neighbors" aria-label="프로젝트 이동">
-    {previous ? <a href={`/projects/${previous.id}/`}><span>이전 프로젝트</span><strong>{previous.data.title}</strong></a> : <span></span>}
-    {next ? <a href={`/projects/${next.id}/`}><span>다음 프로젝트</span><strong>{next.data.title}</strong></a> : <span></span>}
-  </nav>
+    <nav slot="after" class="project-neighbors" aria-label="프로젝트 이동">
+      {previous
+        ? <a href={`/projects/${previous.id}/`}><span>이전 프로젝트</span><strong>{previous.data.title}</strong></a>
+        : <span></span>}
+      {next
+        ? <a href={`/projects/${next.id}/`}><span>다음 프로젝트</span><strong>{next.data.title}</strong></a>
+        : <span></span>}
+    </nav>
+  </ArticleLayout>
 </BaseLayout>
 <style>
-  .project-head { padding-block: var(--s-16) var(--s-12); }
-  .project-head h1 { margin-top: var(--s-6); }
-  .project-meta {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--s-1);
-    margin-top: var(--s-4);
-    color: var(--ink-3);
-  }
-  .project-lead {
-    margin-top: var(--s-6);
-    color: var(--ink-2);
-    font-size: var(--t-body);
-  }
-  .project-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2) var(--s-6);
-    margin-top: var(--s-6);
-    font-size: var(--t-small);
-  }
-  .project-article { max-width: 40rem; }
+  .project-meta { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-1); }
+  .project-lead { font-size: var(--t-body); }
+  .project-links { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); font-size: var(--t-small); }
   .hero-figure { margin-bottom: var(--s-12); }
-  figure img {
-    display: block;
-    max-width: 100%;
-    width: 100%;
-    height: auto;
-    border: 1px solid var(--rule);
-  }
-  figcaption {
-    margin-top: var(--s-2);
-    color: var(--ink-3);
-    font-size: var(--t-label);
-  }
-  .project-gallery {
-    display: grid;
-    gap: var(--s-8) var(--s-6);
-    margin-top: var(--s-12);
-  }
+  .hero-figure img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); }
+  .hero-figure figcaption { margin-top: var(--s-2); color: var(--ink-3); font-size: var(--t-label); }
   .project-neighbors {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--s-6);
-    max-width: 40rem;
     margin-top: var(--s-16);
     padding-top: var(--s-6);
     border-top: 1px solid var(--rule);
@@ -118,13 +89,6 @@ const playgroundLink = playground.find((item) => item.slug === playgroundSlug);
   .project-neighbors a:last-child { text-align: right; }
   .project-neighbors span,
   .project-neighbors strong { display: block; }
-  .project-neighbors span {
-    color: var(--ink-3);
-    font-size: var(--t-label);
-    font-weight: 500;
-  }
+  .project-neighbors span { color: var(--ink-3); font-size: var(--t-label); font-weight: 500; }
   .project-neighbors strong { font-size: var(--t-small); font-weight: 600; }
-  @media (min-width: 48rem) {
-    .project-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
 </style>

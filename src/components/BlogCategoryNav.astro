@@ -36,11 +36,21 @@ const categories = getUsedCategories(),
   }
   .categories a[aria-current] {
     color: var(--accent);
-    border-color: var(--accent);
+    border-color: var(--mango);
   }
   .categories span {
     color: var(--ink-3);
     font-variant-numeric: tabular-nums;
     font-size: var(--t-label);
+  }
+  @media (min-width: 80rem) {
+    .categories {
+      position: sticky;
+      top: var(--s-4);
+      align-items: flex-start;
+      flex-direction: column;
+      border-bottom: 0;
+      margin-bottom: 0;
+    }
   }
 </style>

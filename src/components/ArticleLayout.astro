@@ -1,0 +1,119 @@
+---
+import BackLink from './BackLink.astro';
+import ArticleAside from './ArticleAside.astro';
+import type { Heading } from './TableOfContents.astro';
+import type { Category, Post, Project } from '../lib/content';
+
+type AsideData =
+  | { kind: 'project'; project: Project }
+  | { kind: 'post'; post: Post; category?: Category; tags: string[] };
+
+interface Props {
+  title: string;
+  backHref: string;
+  backLabel: string;
+  html: string;
+  emptyMessage: string;
+  aside: AsideData;
+}
+
+const { title, backHref, backLabel, html, emptyMessage, aside } = Astro.props;
+
+const decodeEntities = (value: string) => value.replace(
+  /&(#(?:x[\da-f]+|\d+)|amp|lt|gt|quot|apos|nbsp);/gi,
+  (entity, code: string) => {
+    if (code.startsWith('#')) {
+      const numeric = code[1]?.toLowerCase() === 'x'
+        ? Number.parseInt(code.slice(2), 16)
+        : Number.parseInt(code.slice(1), 10);
+      return Number.isFinite(numeric) && numeric > 0 && numeric <= 0x10ffff
+        ? String.fromCodePoint(numeric) : entity;
+    }
+    const named: Record<string, string> = {
+      amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ',
+    };
+    return named[code.toLowerCase()] ?? entity;
+  },
+);
+
+const headingPattern = /<(h[23])\b([^>]*)>([\s\S]*?)<\/\1>/gi;
+const idPattern = /\s+id\s*=\s*(["'])(.*?)\1/i;
+const reservedIds = new Set<string>();
+for (const match of html.matchAll(headingPattern)) {
+  const id = match[2]?.match(idPattern)?.[2];
+  if (id) reservedIds.add(decodeEntities(id));
+}
+
+const usedIds = new Set<string>();
+const headings: Heading[] = [];
+const articleHtml = html.replace(headingPattern, (whole, tag: string, attributes: string, inner: string) => {
+  const text = decodeEntities(inner.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim());
+  if (!text) return whole;
+
+  const existing = attributes.match(idPattern);
+  const base = existing?.[2]
+    ? decodeEntities(existing[2])
+    : text.toLocaleLowerCase('ko-KR').replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-|-$/g, '') || 'section';
+  let id = base;
+  let suffix = 2;
+  while (usedIds.has(id) || (!existing && reservedIds.has(id))) id = `${base}-${suffix++}`;
+  usedIds.add(id);
+  headings.push({ id, text, level: tag.toLowerCase() === 'h2' ? 2 : 3 });
+
+  if (existing && id === base) return whole;
+  const escapedId = id.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+  const nextAttributes = existing
+    ? attributes.replace(idPattern, ` id="${escapedId}"`)
+    : `${attributes} id="${escapedId}"`;
+  return `<${tag}${nextAttributes}>${inner}</${tag}>`;
+});
+---
+<div class="article-head">
+  <BackLink href={backHref} label={backLabel} />
+  <h1>{title}</h1>
+  {Astro.slots.has('meta') && <div class="article-meta"><slot name="meta" /></div>}
+  {Astro.slots.has('lead') && <div class="article-lead"><slot name="lead" /></div>}
+  {Astro.slots.has('links') && <div class="article-links"><slot name="links" /></div>}
+</div>
+<div class="article-grid">
+  <ArticleAside data={aside} headings={headings} />
+  <article class="article-body">
+    <slot name="before" />
+    {articleHtml.trim()
+      ? <div class="prose article-prose" set:html={articleHtml} />
+      : <p class="article-empty">{emptyMessage}</p>}
+    <slot name="after" />
+  </article>
+</div>
+<style>
+  .article-head { padding-block: var(--s-16) 0; }
+  .article-head h1 { max-width: 56rem; margin-top: var(--s-6); }
+  .article-meta { margin-top: var(--s-4); color: var(--ink-3); }
+  .article-lead { max-width: 56rem; margin-top: var(--s-6); color: var(--ink-2); }
+  .article-links { margin-top: var(--s-6); }
+  .article-grid {
+    display: grid;
+    grid-template-areas: 'aside' 'article';
+    gap: var(--s-6);
+    margin-top: var(--s-8);
+    min-width: 0;
+  }
+  .article-grid > :global(.article-aside) { grid-area: aside; }
+  .article-body { grid-area: article; min-width: 0; }
+  .article-body :global(.prose) { max-width: none; }
+  .article-body :global(.prose img) { max-width: 100%; height: auto; }
+  .article-body :global(.prose table),
+  .article-body :global(.prose pre) { max-width: 100%; overflow-x: auto; }
+  .article-body :global(.prose h2),
+  .article-body :global(.prose h3) { scroll-margin-top: var(--s-8); }
+  .article-empty { color: var(--ink-2); }
+  @media (min-width: 72rem) {
+    .article-grid {
+      grid-template-areas: 'article aside';
+      grid-template-columns: minmax(0, 46rem) 16rem;
+      gap: var(--s-16);
+      justify-content: start;
+      align-items: start;
+    }
+  }
+</style>

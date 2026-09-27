@@ -7,18 +7,18 @@ import { getProfile, getPosts, getFeaturedProjects } from '../lib/content';
 import { playground } from '../lib/playground';
 const profile = getProfile();
 const posts = getPosts().slice(0, 5);
-const projects = getFeaturedProjects(3);
+const projects = getFeaturedProjects(4);
 ---
 <BaseLayout>
   <div class="page-head home-head">
-    <h1>{profile.displayName}</h1>
+    <h1>{profile.displayName}<span class="home-dot" aria-hidden="true">.</span></h1>
     <p class="measure home-tagline">{profile.tagline || profile.siteDescription}</p>
     {profile.intro.map((paragraph) => <p class="measure">{paragraph}</p>)}
   </div>
   <section class="section" aria-labelledby="projects">
     <h2 id="projects" class="section-rule">대표 프로젝트</h2>
     {projects.length
-      ? <ProjectCardGrid projects={projects} entrance />
+      ? <ProjectCardGrid projects={projects} entrance featured />
       : <p class="empty">대표 프로젝트를 정리하고 있습니다.</p>}
     <p class="section-more"><a href="/projects/">모든 프로젝트 보기</a></p>
   </section>
@@ -44,8 +44,17 @@ const projects = getFeaturedProjects(3);
   </section>
 </BaseLayout>
 <style>
-  .home-head h1 { font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem); }
+  .home-head {
+    max-width: 56rem;
+  }
+  .home-head h1 {
+    font-size: clamp(2rem, 1.4rem + 3vw, 3.5rem);
+  }
+  .home-dot {
+    color: var(--mango);
+  }
   .home-tagline {
+    max-width: 56rem;
     color: var(--ink-2);
     font-size: var(--t-h3);
     font-weight: 400;
